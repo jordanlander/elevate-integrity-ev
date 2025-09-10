@@ -57,7 +57,7 @@ const Hero = () => {
             <div className="fade-in-up" style={{animationDelay: '0.4s'}}>
               <p className="text-xl md:text-2xl mb-10 text-white max-w-4xl mx-auto leading-relaxed">
                 Georgia homeowners trust us for{" "}
-                <span className="font-bold text-gray-900 bg-gradient-to-r from-yellow-300 to-orange-400 px-4 py-2 rounded-xl backdrop-blur-sm border-2 border-yellow-200/50 shadow-lg">
+                <span className="inline-flex items-center font-semibold text-gray-900 bg-gradient-to-r from-yellow-300 to-orange-400 px-2 py-1 rounded-lg text-base border border-yellow-200/50 shadow-md">
                   💡 rebate-ready
                 </span>{" "}
                 EV charger installations, done right the first time by licensed electricians.
