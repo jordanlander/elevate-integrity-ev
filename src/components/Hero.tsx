@@ -26,7 +26,7 @@ const Hero = () => {
           {/* Main Headline */}
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
             Professional EV Charger
-            <span className="block text-gradient-electric">Installation</span>
+            <span className="block text-white">Installation</span>
           </h1>
           
           {/* Subheading */}
@@ -55,7 +55,7 @@ const Hero = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center fade-in-up">
             <Button 
               size="lg" 
-              className="bg-gradient-accent glow-accent cta-super text-white text-xl px-12 py-7 h-auto font-bold shadow-2xl border-2 border-accent/30"
+              className="bg-white text-primary cta-super text-xl px-12 py-7 h-auto font-bold shadow-2xl hover:bg-white/90 hover:shadow-3xl"
             >
               🚗⚡ Get My Free Estimate
             </Button>

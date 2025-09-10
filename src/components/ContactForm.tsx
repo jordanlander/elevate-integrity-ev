@@ -39,17 +39,17 @@ const ContactForm = () => {
   const contactMethods = [
     {
       icon: <Phone className="w-6 h-6" />,
-      title: "Call Us Now",
-      value: "(470) 555-2660",
-      description: "Available 24/7 for emergencies",
+      title: "Call or Text",
+      value: "470-262-2660",
+      description: "Mon–Fri: 8 am–6 pm",
       action: "Call Now",
       gradient: "bg-gradient-primary"
     },
     {
       icon: <Mail className="w-6 h-6" />,
-      title: "Email Us",
-      value: "info@integrityevsolutions.com",
-      description: "We respond within 4 hours",
+      title: "Email",
+      value: "integrityevsolutions@gmail.com",
+      description: "We respond within 24 hours",
       action: "Send Email",
       gradient: "bg-gradient-accent"
     },
