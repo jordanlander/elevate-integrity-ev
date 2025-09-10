@@ -19,10 +19,10 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222 84% 4.9%;
 
-    /* Brand colors - Electric/Energy theme */
-    --primary: 142 72% 29%; /* Deep forest green for trust/sustainability */
+    /* Brand colors - Darker professional green theme */
+    --primary: 142 76% 22%; /* Darker professional forest green */
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 142 65% 45%; /* Lighter green for hover states */
+    --primary-glow: 142 68% 35%; /* Darker green for hover states */
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222 47.4% 11.2%;
@@ -30,9 +30,9 @@ All colors MUST be HSL.
     --muted: 210 40% 96.1%;
     --muted-foreground: 215 16.3% 46.9%;
 
-    --accent: 47 100% 63%; /* Electric yellow for CTAs */
-    --accent-foreground: 222 84% 4.9%;
-    --accent-glow: 47 95% 55%;
+    --accent: 142 85% 35%; /* Darker accent green for premium look */
+    --accent-foreground: 0 0% 100%;
+    --accent-glow: 142 75% 45%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
@@ -86,9 +86,9 @@ All colors MUST be HSL.
     --popover: 222 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 142 65% 45%;
-    --primary-foreground: 222 84% 4.9%;
-    --primary-glow: 142 72% 55%;
+    --primary: 142 68% 40%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 142 75% 50%;
 
     --secondary: 217 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -96,9 +96,9 @@ All colors MUST be HSL.
     --muted: 217 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 47 100% 68%;
-    --accent-foreground: 222 84% 4.9%;
-    --accent-glow: 47 95% 60%;
+    --accent: 142 80% 45%;
+    --accent-foreground: 0 0% 100%;
+    --accent-glow: 142 70% 55%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
@@ -213,9 +213,31 @@ All colors MUST be HSL.
     pointer-events: none;
   }
   
-  /* Electric pulse animation */
+  /* Enhanced animations */
   .pulse-electric {
     animation: pulse-electric 2s ease-in-out infinite alternate;
+  }
+  
+  .fade-in-up {
+    animation: fade-in-up 0.8s ease-out forwards;
+  }
+  
+  .scale-on-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .scale-on-hover:hover {
+    transform: scale(1.05);
+  }
+  
+  .cta-super {
+    animation: cta-glow 2s ease-in-out infinite alternate;
+    transition: all 0.3s ease;
+  }
+  
+  .cta-super:hover {
+    transform: translateY(-2px) scale(1.05);
+    animation-duration: 0.5s;
   }
   
   @keyframes pulse-electric {
@@ -224,6 +246,26 @@ All colors MUST be HSL.
     }
     100% {
       box-shadow: 0 0 20px hsl(var(--electric-cyan) / 0.6), 0 0 30px hsl(var(--electric-cyan) / 0.4);
+    }
+  }
+  
+  @keyframes fade-in-up {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes cta-glow {
+    0% {
+      box-shadow: 0 4px 20px hsl(var(--accent) / 0.3), 0 0 40px hsl(var(--accent) / 0.1);
+    }
+    100% {
+      box-shadow: 0 8px 30px hsl(var(--accent) / 0.6), 0 0 60px hsl(var(--accent) / 0.3);
     }
   }
 }

@@ -52,17 +52,17 @@ const Hero = () => {
           </div>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center fade-in-up">
             <Button 
               size="lg" 
-              className="bg-gradient-accent glow-accent hover:scale-105 transition-all duration-300 text-lg px-8 py-6 h-auto font-semibold"
+              className="bg-gradient-accent glow-accent cta-super text-white text-xl px-12 py-7 h-auto font-bold shadow-2xl border-2 border-accent/30"
             >
-              Get My Free Estimate
+              🚗⚡ Get My Free Estimate
             </Button>
             <Button 
               variant="outline" 
               size="lg"
-              className="bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm transition-all duration-300 text-lg px-8 py-6 h-auto"
+              className="bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm scale-on-hover text-lg px-8 py-6 h-auto font-semibold"
             >
               View Our Work
             </Button>

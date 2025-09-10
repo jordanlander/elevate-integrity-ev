@@ -5,36 +5,40 @@ import { Star, Quote } from "lucide-react";
 const Testimonials = () => {
   const testimonials = [
     {
-      name: "Sarah Johnson",
-      location: "Alpharetta, GA",
-      service: "Tesla Charger Installation",
+      name: "Andrew Cotton",
+      location: "Flowery Branch, GA",
+      service: "Vehicle Charger Installation",
       rating: 5,
-      text: "Incredible service from start to finish! The team was professional, punctual, and explained every step of the installation process. My Tesla charger works perfectly and the installation looks clean and professional.",
-      avatar: "SJ"
+      text: "They did awesome work installing a few banks of vehicle chargers not to mention breaker boxes for our apartment remodels. Highly Recommend.",
+      avatar: "AC",
+      date: "Aug 9"
     },
     {
-      name: "Mike Chen", 
-      location: "Atlanta, GA",
-      service: "Commercial EV Charging",
+      name: "Sergio Facyson", 
+      location: "Lithonia, GA",
+      service: "Electrical Service",
       rating: 5,
-      text: "We needed EV charging for our office building and Integrity EV Solutions delivered beyond expectations. They handled all permits, rebates, and the installation was seamless. Our tenants love the new amenity!",
-      avatar: "MC"
+      text: "Staff is friendly, price was great, and on time.",
+      avatar: "SF",
+      date: "May 5"
     },
     {
-      name: "Jennifer Williams",
-      location: "Roswell, GA", 
-      service: "Panel Upgrade + EV Charger",
+      name: "Mike Joseph",
+      location: "Gainesville, GA", 
+      service: "Electrical Work",
       rating: 5,
-      text: "Our old electrical panel couldn't handle an EV charger, but they upgraded everything and installed our Ford charger in one day. The rebate assistance saved us hundreds of dollars. Highly recommend!",
-      avatar: "JW"
+      text: "Excellent work. Friendly. Affordable. Professional.",
+      avatar: "MJ",
+      date: "May 3"
     },
     {
-      name: "David Rodriguez",
-      location: "Marietta, GA",
-      service: "Electrical Troubleshooting",
+      name: "Cody's Customer",
+      location: "North Georgia",
+      service: "Complete Electrical Service",
       rating: 5,
-      text: "Had an electrical emergency late at night and they actually answered! Fixed our power issue quickly and professionally. It's rare to find such reliable service these days. Will definitely use them again.",
-      avatar: "DR"
+      text: "Cody was amazing to work with and it didn't feel like I was hiring some big corporation that didn't care about you. He took the time to do proper estimates, explained what he was gonna do, and completed all the work excellently. I felt like I was working with a neighbor as he was very personable. Highly recommend!",
+      avatar: "CC",
+      date: "Recent"
     }
   ];
 
@@ -74,36 +78,37 @@ const Testimonials = () => {
         {/* Testimonials Grid */}
         <div className="grid md:grid-cols-2 gap-8 mb-12">
           {testimonials.map((testimonial, index) => (
-            <Card key={index} className="group hover:shadow-2xl transition-all duration-500 border-0 glow-primary relative overflow-hidden">
+            <Card key={index} className="group hover:shadow-2xl transition-all duration-500 border-0 glow-primary relative overflow-hidden scale-on-hover fade-in-up" style={{animationDelay: `${index * 0.2}s`}}>
               {/* Quote Icon */}
               <div className="absolute top-4 right-4 text-primary/20">
                 <Quote className="w-8 h-8" />
               </div>
               
-              <CardContent className="p-8">
+              <CardContent className="p-6">
                 {/* Rating */}
                 <div className="flex items-center gap-1 mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
                     <Star key={i} className="w-5 h-5 fill-accent text-accent" />
                   ))}
+                  <span className="text-xs text-muted-foreground ml-2">{testimonial.date}</span>
                 </div>
 
                 {/* Testimonial Text */}
-                <blockquote className="text-foreground leading-relaxed mb-6 text-lg">
+                <blockquote className="text-foreground leading-relaxed mb-6 text-base line-clamp-4">
                   "{testimonial.text}"
                 </blockquote>
 
                 {/* Customer Info */}
                 <div className="flex items-center gap-4">
                   {/* Avatar */}
-                  <div className="w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center text-white font-bold text-lg">
+                  <div className="w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center text-white font-bold text-sm">
                     {testimonial.avatar}
                   </div>
                   
-                  <div>
-                    <div className="font-semibold text-foreground">{testimonial.name}</div>
-                    <div className="text-sm text-muted-foreground">{testimonial.location}</div>
-                    <Badge variant="secondary" className="text-xs mt-1">
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold text-foreground truncate">{testimonial.name}</div>
+                    <div className="text-sm text-muted-foreground truncate">{testimonial.location}</div>
+                    <Badge variant="secondary" className="text-xs mt-1 inline-block">
                       {testimonial.service}
                     </Badge>
                   </div>
@@ -135,14 +140,21 @@ const Testimonials = () => {
             Ready to experience the Integrity EV Solutions difference? Get your free estimate today!
           </p>
           
-          {/* Google Reviews Link */}
+          {/* Reviews Link */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Badge className="bg-white text-primary px-4 py-2">
-              ⭐⭐⭐⭐⭐ 5.0 Google Rating
-            </Badge>
+            <a 
+              href="https://nextdoor.com/pages/integrity-ev-solutions-llc-flowery-branch-ga/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="scale-on-hover"
+            >
+              <Badge className="bg-white text-primary px-4 py-2 cursor-pointer hover:bg-white/90 transition-colors">
+                ⭐⭐⭐⭐⭐ 5.0 Nextdoor Rating
+              </Badge>  
+            </a>
             <span className="text-white/80">•</span>
             <Badge className="bg-white text-primary px-4 py-2">
-              Licensed & Insured #12345
+              Licensed & Insured
             </Badge>
           </div>
         </div>
