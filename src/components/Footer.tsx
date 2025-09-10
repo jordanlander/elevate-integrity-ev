@@ -25,9 +25,11 @@ const Footer = () => {
           {/* Company Info */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-6">
-              <div className="bg-gradient-accent p-2 rounded-lg">
-                <Zap className="w-6 h-6 text-accent-foreground" />
-              </div>
+              <img 
+                src="/lovable-uploads/d923a6a4-f64f-4305-a496-04656c5a6bf2.png" 
+                alt="Integrity EV Solutions Logo" 
+                className="w-12 h-12"
+              />
               <div>
                 <div className="font-bold text-2xl">Integrity EV Solutions</div>
                 <div className="text-primary-foreground/80">Professional EV & Electrical Services</div>
@@ -141,7 +143,7 @@ const Footer = () => {
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-primary-foreground/80">
             <div>
-              © 2024 Integrity EV Solutions. All rights reserved. | Licensed Electrical Contractor | Georgia License #12345
+              © 2024 Integrity EV Solutions. All rights reserved. | Licensed Electrical Contractor | Georgia License #EN217457
             </div>
             <div className="flex gap-6">
               <a href="#privacy" className="hover:text-accent transition-colors">Privacy Policy</a>
