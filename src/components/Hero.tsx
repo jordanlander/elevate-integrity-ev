@@ -104,6 +104,7 @@ const Hero = () => {
               <Button 
                 size="lg" 
                 className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-gray-900 hover:from-yellow-300 hover:via-orange-400 hover:to-red-400 cta-super text-xl px-12 py-7 h-auto font-bold shadow-2xl hover:shadow-3xl hover:scale-110 transition-all duration-300 border-2 border-yellow-300/50"
+                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 <Zap className="w-6 h-6 mr-3" />
                 🚀 Get My Free Estimate
@@ -113,6 +114,7 @@ const Hero = () => {
                 variant="outline" 
                 size="lg"
                 className="bg-white/90 border-2 border-white text-gray-900 hover:bg-white hover:text-gray-800 backdrop-blur-sm scale-on-hover text-lg px-8 py-7 h-auto font-semibold shadow-lg transition-all duration-300"
+                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 📸 View Our Work
               </Button>

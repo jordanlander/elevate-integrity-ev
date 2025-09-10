@@ -94,7 +94,18 @@ const ContactForm = () => {
                       <h4 className="font-semibold text-foreground mb-1">{method.title}</h4>
                       <p className="font-bold text-lg text-primary mb-1">{method.value}</p>
                       <p className="text-sm text-muted-foreground mb-3">{method.description}</p>
-                      <Button variant="outline" size="sm" className="text-xs">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="text-xs"
+                        onClick={() => {
+                          if (method.title === "Call or Text") {
+                            window.location.href = "tel:4702622660";
+                          } else if (method.title === "Email") {
+                            window.location.href = "mailto:integrityevsolutions@gmail.com";
+                          }
+                        }}
+                      >
                         {method.action}
                       </Button>
                     </div>
@@ -112,7 +123,10 @@ const ContactForm = () => {
               <p className="text-sm text-foreground mb-3">
                 Electrical emergencies can't wait. We're available around the clock for urgent electrical issues.
               </p>
-              <Button className="w-full bg-gradient-accent glow-accent">
+              <Button 
+                className="w-full bg-gradient-accent glow-accent"
+                onClick={() => window.location.href = "tel:4702622660"}
+              >
                 Call Emergency Line
               </Button>
             </div>

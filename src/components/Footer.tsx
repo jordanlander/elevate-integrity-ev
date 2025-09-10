@@ -73,7 +73,7 @@ const Footer = () => {
               <div className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-accent flex-shrink-0" />
                 <div>
-                  <div className="font-semibold">470-262-2660</div>
+                  <a href="tel:4702622660" className="font-semibold hover:text-accent transition-colors">470-262-2660</a>
                   <div className="text-sm text-primary-foreground/80">Mon–Fri: 8 am–6 pm</div>
                 </div>
               </div>
@@ -81,7 +81,7 @@ const Footer = () => {
               <div className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-accent flex-shrink-0" />
                 <div>
-                  <div>integrityevsolutions@gmail.com</div>
+                  <a href="mailto:integrityevsolutions@gmail.com" className="hover:text-accent transition-colors">integrityevsolutions@gmail.com</a>
                   <div className="text-sm text-primary-foreground/80">We respond within 24 hours</div>
                 </div>
               </div>
@@ -95,21 +95,6 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* Social Links */}
-            <div className="mt-8">
-              <h4 className="font-semibold mb-4">Follow Us</h4>
-              <div className="flex gap-3">
-                <Button size="icon" variant="ghost" className="text-primary-foreground hover:text-accent hover:bg-white/10">
-                  <Facebook className="w-5 h-5" />
-                </Button>
-                <Button size="icon" variant="ghost" className="text-primary-foreground hover:text-accent hover:bg-white/10">
-                  <Instagram className="w-5 h-5" />
-                </Button>
-                <Button size="icon" variant="ghost" className="text-primary-foreground hover:text-accent hover:bg-white/10">
-                  <Linkedin className="w-5 h-5" />
-                </Button>
-              </div>
-            </div>
           </div>
 
           {/* Service Areas */}
