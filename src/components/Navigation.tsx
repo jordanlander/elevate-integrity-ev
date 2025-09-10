@@ -20,9 +20,11 @@ const Navigation = () => {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <div className="bg-gradient-primary p-2 rounded-lg">
-              <Zap className="w-6 h-6 text-white" />
-            </div>
+            <img 
+              src="/lovable-uploads/d923a6a4-f64f-4305-a496-04656c5a6bf2.png" 
+              alt="Integrity EV Solutions Logo" 
+              className="w-12 h-12"
+            />
             <div>
               <div className="font-bold text-xl text-foreground">Integrity EV Solutions</div>
               <div className="text-xs text-muted-foreground">Licensed & Certified</div>
