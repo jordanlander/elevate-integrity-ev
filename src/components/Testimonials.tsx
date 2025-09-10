@@ -53,24 +53,26 @@ const Testimonials = () => {
     <section className="py-20 bg-background" id="testimonials">
       <div className="container mx-auto px-4">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <Badge className="mb-4 bg-gradient-primary text-white">Customer Reviews</Badge>
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
-            What Our Customers
-            <span className="text-gradient-electric block">Are Saying</span>
+        <div className="text-center mb-20">
+          <Badge className="mb-6 bg-gradient-to-r from-emerald-600 to-green-700 text-white px-6 py-3 text-base font-semibold">Customer Reviews</Badge>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 text-foreground leading-tight">
+            What Our Customers{" "}
+            <span className="bg-gradient-to-r from-emerald-600 to-green-700 bg-clip-text text-transparent">
+              Are Saying
+            </span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Don't just take our word for it. See why Georgia homeowners and businesses trust us with their electrical needs.
           </p>
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
           {stats.map((stat, index) => (
-            <div key={index} className="text-center p-6 bg-card rounded-xl glow-primary">
-              <div className="text-4xl mb-2">{stat.icon}</div>
-              <div className="text-3xl font-bold text-primary mb-1">{stat.number}</div>
-              <div className="text-sm text-muted-foreground">{stat.label}</div>
+            <div key={index} className="text-center p-6 bg-gradient-to-br from-emerald-50 to-green-100 dark:from-emerald-900/20 dark:to-green-800/20 rounded-xl border-2 border-emerald-200/50 dark:border-emerald-700/50 hover:shadow-lg transition-all duration-300">
+              <div className="text-4xl mb-3">{stat.icon}</div>
+              <div className="text-3xl font-bold text-emerald-700 dark:text-emerald-400 mb-2">{stat.number}</div>
+              <div className="text-sm text-muted-foreground font-medium">{stat.label}</div>
             </div>
           ))}
         </div>
@@ -119,9 +121,9 @@ const Testimonials = () => {
         </div>
 
         {/* Trust Indicators */}
-        <div className="bg-gradient-primary rounded-2xl p-8 text-white text-center">
-          <h3 className="text-2xl font-bold mb-4">Join Our Satisfied Customers</h3>
-          <div className="flex justify-center items-center gap-8 mb-6 flex-wrap">
+        <div className="bg-gradient-to-r from-emerald-600 via-green-700 to-emerald-800 rounded-2xl p-8 text-white text-center shadow-xl">
+          <h3 className="text-2xl md:text-3xl font-bold mb-6">Join Our Satisfied Customers</h3>
+          <div className="flex justify-center items-center gap-8 mb-8 flex-wrap">
             <div className="text-center">
               <div className="text-3xl font-bold">500+</div>
               <div className="text-white/90 text-sm">Happy Customers</div>
@@ -136,7 +138,7 @@ const Testimonials = () => {
             </div>
           </div>
           
-          <p className="text-white/90 mb-6">
+          <p className="text-white/90 mb-8 text-lg">
             Ready to experience the Integrity EV Solutions difference? Get your free estimate today!
           </p>
           
@@ -148,12 +150,12 @@ const Testimonials = () => {
               rel="noopener noreferrer"
               className="scale-on-hover"
             >
-              <Badge className="bg-white text-primary px-4 py-2 cursor-pointer hover:bg-white/90 transition-colors">
+              <Badge className="bg-white text-emerald-700 px-6 py-3 cursor-pointer hover:bg-white/90 transition-colors text-base font-semibold">
                 ⭐⭐⭐⭐⭐ 5.0 Nextdoor Rating
               </Badge>  
             </a>
             <span className="text-white/80">•</span>
-            <Badge className="bg-white text-primary px-4 py-2">
+            <Badge className="bg-white text-emerald-700 px-6 py-3 text-base font-semibold">
               Licensed & Insured
             </Badge>
           </div>

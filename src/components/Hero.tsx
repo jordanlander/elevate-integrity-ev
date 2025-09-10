@@ -4,7 +4,7 @@ import { Zap, Shield, Award, Clock, ChevronRight } from "lucide-react";
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen bg-gradient-to-br from-emerald-500 via-teal-600 to-blue-700 overflow-hidden">
+    <section className="relative min-h-screen bg-gradient-to-br from-emerald-600 via-green-700 to-emerald-800 overflow-hidden">
       {/* Animated Circuit Pattern Background */}
       <div className="absolute inset-0 opacity-15">
         <div 
@@ -18,7 +18,7 @@ const Hero = () => {
       {/* Floating Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-yellow-400/20 to-orange-500/20 rounded-full blur-xl animate-bounce" style={{animationDelay: '1s', animationDuration: '3s'}}></div>
-        <div className="absolute top-40 right-20 w-20 h-20 bg-gradient-to-r from-cyan-400/30 to-blue-500/30 rounded-full blur-lg animate-bounce" style={{animationDelay: '2s', animationDuration: '4s'}}></div>
+        <div className="absolute top-40 right-20 w-20 h-20 bg-gradient-to-r from-green-400/30 to-emerald-500/30 rounded-full blur-lg animate-bounce" style={{animationDelay: '2s', animationDuration: '4s'}}></div>
         <div className="absolute bottom-40 left-20 w-24 h-24 bg-gradient-to-r from-green-400/25 to-emerald-500/25 rounded-full blur-xl animate-bounce" style={{animationDelay: '0.5s', animationDuration: '3.5s'}}></div>
       </div>
 
