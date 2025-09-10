@@ -112,7 +112,7 @@ const Hero = () => {
               <Button 
                 variant="outline" 
                 size="lg"
-                className="bg-gradient-to-r from-white/10 to-white/5 border-3 border-white/60 text-white hover:bg-gradient-to-r hover:from-white/20 hover:to-white/15 backdrop-blur-sm scale-on-hover text-lg px-8 py-7 h-auto font-semibold shadow-lg hover:border-white/80 transition-all duration-300"
+                className="bg-white/90 border-2 border-white text-gray-900 hover:bg-white hover:text-gray-800 backdrop-blur-sm scale-on-hover text-lg px-8 py-7 h-auto font-semibold shadow-lg transition-all duration-300"
               >
                 📸 View Our Work
               </Button>
@@ -120,8 +120,11 @@ const Hero = () => {
 
             {/* Trust Statement */}
             <div className="fade-in-up" style={{animationDelay: '1s'}}>
-              <p className="text-white/90 text-base">
+              <p className="text-white/90 text-base mb-2">
                 ⭐⭐⭐⭐⭐ Rated 5.0/5 stars • 47+ satisfied customers across Georgia
+              </p>
+              <p className="text-white/80 text-sm">
+                🏛️ Georgia Licensed Electrical Contractor #EN217457
               </p>
             </div>
           </div>
