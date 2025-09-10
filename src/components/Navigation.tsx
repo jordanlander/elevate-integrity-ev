@@ -49,11 +49,16 @@ const Navigation = () => {
             <div className="text-right">
               <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
                 <Phone className="w-4 h-4" />
-                (470) 555-2660
+                <a href="tel:4702622660" className="hover:text-primary transition-colors">
+                  (470) 262-2660
+                </a>
               </div>
               <Badge variant="secondary" className="text-xs">24/7 Emergency Service</Badge>
             </div>
-            <Button className="bg-gradient-accent glow-accent hover:scale-105 transition-all duration-300 font-semibold">
+            <Button 
+              className="bg-gradient-accent glow-accent hover:scale-105 transition-all duration-300 font-semibold"
+              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+            >
               Free Estimate
             </Button>
           </div>
@@ -87,9 +92,17 @@ const Navigation = () => {
               <div className="pt-4 border-t border-border space-y-3">
                 <div className="flex items-center gap-2 text-foreground font-semibold">
                   <Phone className="w-4 h-4" />
-                  (470) 555-2660
+                  <a href="tel:4702622660" className="hover:text-primary transition-colors">
+                    (470) 262-2660
+                  </a>
                 </div>
-                <Button className="w-full bg-gradient-accent glow-accent font-semibold">
+                <Button 
+                  className="w-full bg-gradient-accent glow-accent font-semibold"
+                  onClick={() => {
+                    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+                    setIsMenuOpen(false);
+                  }}
+                >
                   Get Free Estimate
                 </Button>
               </div>

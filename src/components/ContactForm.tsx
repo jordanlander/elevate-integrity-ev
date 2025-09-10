@@ -56,7 +56,7 @@ const ContactForm = () => {
     {
       icon: <MapPin className="w-6 h-6" />,
       title: "Service Area",
-      value: "Northern Georgia & Atlanta",
+      value: "All of Northern Georgia",
       description: "Licensed statewide",
       action: "Check Coverage",
       gradient: "bg-gradient-electric"
@@ -103,6 +103,9 @@ const ContactForm = () => {
                             window.location.href = "tel:4702622660";
                           } else if (method.title === "Email") {
                             window.location.href = "mailto:integrityevsolutions@gmail.com";
+                          } else if (method.title === "Service Area") {
+                            // Show coverage info
+                            alert("We proudly serve all of Northern Georgia including Atlanta, Alpharetta, Roswell, Marietta, Decatur, Duluth, Lawrenceville, Johns Creek, Sandy Springs, Brookhaven, and surrounding areas. Licensed for statewide service!");
                           }
                         }}
                       >

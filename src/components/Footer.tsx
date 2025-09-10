@@ -89,8 +89,8 @@ const Footer = () => {
               <div className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-accent flex-shrink-0 mt-1" />
                 <div>
-                  <div>Northern Georgia & Greater Atlanta</div>
-                  <div className="text-sm text-primary-foreground/80">Licensed in Georgia</div>
+                  <div>All of Northern Georgia</div>
+                  <div className="text-sm text-primary-foreground/80">Licensed statewide</div>
                 </div>
               </div>
             </div>
@@ -101,7 +101,7 @@ const Footer = () => {
           <div>
             <h3 className="font-bold text-xl mb-6">Service Areas</h3>
             <p className="text-primary-foreground/80 mb-4">
-              Proudly serving communities across Northern Georgia:
+              Proudly serving all communities across Northern Georgia:
             </p>
             <div className="grid grid-cols-2 gap-2">
               {serviceAreas.map((area, index) => (
@@ -115,6 +115,7 @@ const Footer = () => {
               <Button 
                 variant="outline" 
                 className="w-full bg-white/10 border-white/30 text-primary-foreground hover:bg-white/20"
+                onClick={() => alert("We proudly serve all of Northern Georgia including Atlanta, Alpharetta, Roswell, Marietta, Decatur, Duluth, Lawrenceville, Johns Creek, Sandy Springs, Brookhaven, and surrounding areas. Licensed for statewide service! Call (470) 262-2660 to confirm service in your area.")}
               >
                 Check Service Availability
               </Button>
