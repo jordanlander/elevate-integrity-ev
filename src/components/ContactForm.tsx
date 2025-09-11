@@ -42,12 +42,11 @@ const ContactForm = () => {
     };
 
     try {
-      // Replace with your actual EmailJS credentials
       await emailjs.send(
-        'your_service_id', // Replace with your EmailJS service ID
-        'your_template_id', // Replace with your EmailJS template ID
+        'service_1234567', // You need to get this from your EmailJS dashboard
+        'template_1234567', // You need to get this from your EmailJS dashboard  
         templateParams,
-        'your_public_key' // Replace with your EmailJS public key
+        'dkcwpQGq1WQCj56n6' // Your EmailJS public key
       );
 
       toast({
