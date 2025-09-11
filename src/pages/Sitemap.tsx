@@ -1,11 +1,12 @@
 import Navigation from "@/components/Navigation";
+import MobileCTA from "@/components/MobileCTA";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { Link } from "react-router-dom";
 
 const Sitemap = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-24 md:pb-0">
       <Navigation />
       <main className="container mx-auto px-4 py-12" role="main">
         <SEO
@@ -33,6 +34,7 @@ const Sitemap = () => {
           </ul>
         </nav>
       </main>
+      <MobileCTA />
       <Footer />
     </div>
   );

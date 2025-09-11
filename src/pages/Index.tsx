@@ -4,12 +4,13 @@ import WorkShowcase from "@/components/WorkShowcase";
 import Services from "@/components/Services";
 import Testimonials from "@/components/Testimonials";
 import ContactForm from "@/components/ContactForm";
+import MobileCTA from "@/components/MobileCTA";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-24 md:pb-0">
       <Navigation />
       <main role="main">
         <SEO
@@ -22,6 +23,7 @@ const Index = () => {
         <Testimonials />
         <ContactForm />
       </main>
+      <MobileCTA />
       <Footer />
     </div>
   );
