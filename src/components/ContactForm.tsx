@@ -31,12 +31,18 @@ const ContactForm = () => {
     const formData = new FormData(e.currentTarget);
     formData.append("_captcha", "false");
 
+    const formObject = Object.fromEntries(formData.entries());
+
     try {
       const response = await fetch(
-        "https://formsubmit.co/integrityevsolutions@gmail.com",
+        "https://formsubmit.co/ajax/integrityevsolutions@gmail.com",
         {
           method: "POST",
-          body: formData,
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify(formObject),
         }
       );
 
