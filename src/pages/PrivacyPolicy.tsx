@@ -1,10 +1,11 @@
 import Navigation from "@/components/Navigation";
+import MobileCTA from "@/components/MobileCTA";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 
 const PrivacyPolicy = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-24 md:pb-0">
       <Navigation />
       <main className="container mx-auto px-4 py-12" role="main">
         <SEO
@@ -21,6 +22,7 @@ const PrivacyPolicy = () => {
           information without consent. For questions about this policy, please contact us.
         </p>
       </main>
+      <MobileCTA />
       <Footer />
     </div>
   );
