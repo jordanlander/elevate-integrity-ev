@@ -114,7 +114,7 @@ const Hero = () => {
                 variant="outline" 
                 size="lg"
                 className="bg-white/90 border-2 border-white text-gray-900 hover:bg-white hover:text-gray-800 backdrop-blur-sm scale-on-hover text-lg px-8 py-7 h-auto font-semibold shadow-lg transition-all duration-300"
-                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 📸 View Our Work
               </Button>
