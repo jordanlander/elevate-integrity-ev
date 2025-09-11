@@ -1,5 +1,4 @@
 import { useState } from "react";
-import emailjs from '@emailjs/browser';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -30,36 +29,33 @@ const ContactForm = () => {
     setIsSubmitting(true);
 
     const formData = new FormData(e.currentTarget);
-    const templateParams = {
-      from_name: `${formData.get("firstName")} ${formData.get("lastName")}`,
-      from_email: formData.get("email"),
-      phone: formData.get("phone"),
-      service: formData.get("service"),
-      city: formData.get("city"),
-      timeline: formData.get("timeline"),
-      details: formData.get("details"),
-      to_email: "integrityevsolutions@gmail.com"
-    };
+    formData.append("_captcha", "false");
 
     try {
-      await emailjs.send(
-        'service_1234567', // You need to get this from your EmailJS dashboard
-        'template_1234567', // You need to get this from your EmailJS dashboard  
-        templateParams,
-        'dkcwpQGq1WQCj56n6' // Your EmailJS public key
+      const response = await fetch(
+        "https://formsubmit.co/integrityevsolutions@gmail.com",
+        {
+          method: "POST",
+          body: formData,
+        }
       );
 
-      toast({
-        title: "Request Received!",
-        description: "We'll contact you within 24 hours with your free estimate.",
-      });
-      e.currentTarget.reset();
-      setService("");
-      setTimeline("");
+      if (response.ok) {
+        toast({
+          title: "Request Received!",
+          description: "We'll contact you within 24 hours with your free estimate.",
+        });
+        e.currentTarget.reset();
+        setService("");
+        setTimeline("");
+      } else {
+        throw new Error("Request failed");
+      }
     } catch (error) {
       toast({
         title: "Submission Failed",
-        description: "Please try again later. You can also call us directly at 470-262-2660.",
+        description:
+          "Please try again later. You can also call us directly at 470-262-2660.",
         variant: "destructive",
       });
     } finally {
