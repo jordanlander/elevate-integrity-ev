@@ -1,4 +1,5 @@
 import { useState } from "react";
+import emailjs from "@emailjs/browser";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -19,21 +20,50 @@ import {
 
 const ContactForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [service, setService] = useState("");
+  const [timeline, setTimeline] = useState("");
   const { toast } = useToast();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    toast({
-      title: "Request Received!",
-      description: "We'll contact you within 24 hours with your free estimate.",
-    });
-    
-    setIsSubmitting(false);
+
+    const formData = new FormData(e.currentTarget);
+    const templateParams = {
+      from_name: `${formData.get("firstName")} ${formData.get("lastName")}`,
+      from_email: formData.get("email"),
+      phone: formData.get("phone"),
+      service: formData.get("service"),
+      city: formData.get("city"),
+      timeline: formData.get("timeline"),
+      details: formData.get("details"),
+      to_email: import.meta.env.VITE_EMAILJS_TO_EMAIL,
+    } as Record<string, unknown>;
+
+    try {
+      await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        templateParams,
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+      );
+
+      toast({
+        title: "Request Received!",
+        description: "We'll contact you within 24 hours with your free estimate.",
+      });
+      e.currentTarget.reset();
+      setService("");
+      setTimeline("");
+    } catch (error) {
+      toast({
+        title: "Submission Failed",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactMethods = [
@@ -154,29 +184,29 @@ const ContactForm = () => {
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="firstName">First Name *</Label>
-                      <Input id="firstName" required className="mt-1" />
+                      <Input id="firstName" name="firstName" required className="mt-1" />
                     </div>
                     <div>
                       <Label htmlFor="lastName">Last Name *</Label>
-                      <Input id="lastName" required className="mt-1" />
+                      <Input id="lastName" name="lastName" required className="mt-1" />
                     </div>
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="email">Email Address *</Label>
-                      <Input id="email" type="email" required className="mt-1" />
+                      <Input id="email" name="email" type="email" required className="mt-1" />
                     </div>
                     <div>
                       <Label htmlFor="phone">Phone Number *</Label>
-                      <Input id="phone" type="tel" required className="mt-1" />
+                      <Input id="phone" name="phone" type="tel" required className="mt-1" />
                     </div>
                   </div>
 
                   {/* Service Info */}
                   <div>
                     <Label htmlFor="service">Service Needed *</Label>
-                    <Select required>
+                    <Select required onValueChange={setService}>
                       <SelectTrigger className="mt-1">
                         <SelectValue placeholder="Select the service you need" />
                       </SelectTrigger>
@@ -189,16 +219,17 @@ const ContactForm = () => {
                         <SelectItem value="consultation">Consultation Only</SelectItem>
                       </SelectContent>
                     </Select>
+                    <input type="hidden" name="service" value={service} />
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="city">City *</Label>
-                      <Input id="city" required className="mt-1" />
+                      <Input id="city" name="city" required className="mt-1" />
                     </div>
                     <div>
                       <Label htmlFor="timeline">Preferred Timeline</Label>
-                      <Select>
+                      <Select onValueChange={setTimeline}>
                         <SelectTrigger className="mt-1">
                           <SelectValue placeholder="When do you need this completed?" />
                         </SelectTrigger>
@@ -209,14 +240,16 @@ const ContactForm = () => {
                           <SelectItem value="flexible">I'm flexible</SelectItem>
                         </SelectContent>
                       </Select>
+                      <input type="hidden" name="timeline" value={timeline} />
                     </div>
                   </div>
 
                   {/* Project Details */}
                   <div>
                     <Label htmlFor="details">Project Details</Label>
-                    <Textarea 
+                    <Textarea
                       id="details"
+                      name="details"
                       placeholder="Tell us about your project, any specific requirements, questions, or concerns..."
                       className="mt-1 min-h-[120px]"
                     />
