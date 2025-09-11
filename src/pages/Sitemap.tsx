@@ -8,7 +8,10 @@ const Sitemap = () => {
   return (
     <div className="min-h-screen bg-background pb-24 md:pb-0">
       <Navigation />
-      <main className="container mx-auto px-4 py-12" role="main">
+      <main
+        className="container mx-auto px-4 pt-28 md:pt-32 pb-12"
+        role="main"
+      >
         <SEO
           title="Sitemap | Integrity EV Solutions"
           description="Browse the Integrity EV Solutions sitemap for quick access to all pages."

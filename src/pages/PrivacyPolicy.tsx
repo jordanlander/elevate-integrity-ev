@@ -7,7 +7,10 @@ const PrivacyPolicy = () => {
   return (
     <div className="min-h-screen bg-background pb-24 md:pb-0">
       <Navigation />
-      <main className="container mx-auto px-4 py-12" role="main">
+      <main
+        className="container mx-auto px-4 pt-28 md:pt-32 pb-12"
+        role="main"
+      >
         <SEO
           title="Privacy Policy | Integrity EV Solutions"
           description="Learn how Integrity EV Solutions collects, uses, and protects your information."
