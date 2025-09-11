@@ -155,11 +155,12 @@ const Services = () => {
               <h3 className="text-2xl font-bold">24/7 Emergency Service Available</h3>
             </div>
             <p className="text-lg mb-6">Electrical emergencies don't wait. Neither do we.</p>
-            <Button 
+            <Button
               size="lg"
               className="bg-primary text-primary-foreground hover:bg-primary-glow transition-all duration-300"
+              asChild
             >
-              Call Now: (470) 555-2660
+              <a href="tel:+14705552660">Call Now: (470) 555-2660</a>
             </Button>
           </div>
         </div>
