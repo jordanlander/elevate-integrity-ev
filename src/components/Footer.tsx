@@ -1,15 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Zap, 
-  Phone, 
-  Mail, 
-  MapPin, 
+import {
+  Zap,
+  Phone,
+  Mail,
+  MapPin,
   Clock,
   Facebook,
   Instagram,
   Linkedin
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const serviceAreas = [
@@ -132,9 +133,27 @@ const Footer = () => {
               © 2024 Integrity EV Solutions. All rights reserved. | Licensed Electrical Contractor | Georgia License #EN217457
             </div>
             <div className="flex gap-6">
-              <a href="#privacy" className="hover:text-accent transition-colors">Privacy Policy</a>
-              <a href="#terms" className="hover:text-accent transition-colors">Terms of Service</a>
-              <a href="#sitemap" className="hover:text-accent transition-colors">Sitemap</a>
+              <Link
+                to="/privacy-policy"
+                className="hover:text-accent transition-colors"
+                aria-label="Privacy Policy"
+              >
+                Privacy Policy
+              </Link>
+              <Link
+                to="/terms-of-service"
+                className="hover:text-accent transition-colors"
+                aria-label="Terms of Service"
+              >
+                Terms of Service
+              </Link>
+              <Link
+                to="/sitemap"
+                className="hover:text-accent transition-colors"
+                aria-label="Sitemap"
+              >
+                Sitemap
+              </Link>
             </div>
           </div>
         </div>
