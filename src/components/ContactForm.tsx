@@ -46,7 +46,9 @@ const ContactForm = () => {
         }
       );
 
-      if (response.ok) {
+      const data = await response.json().catch(() => null);
+
+      if (data?.success === "true") {
         toast({
           title: "Request Received!",
           description: "We'll contact you within 24 hours with your free estimate.",
@@ -55,13 +57,15 @@ const ContactForm = () => {
         setService("");
         setTimeline("");
       } else {
-        throw new Error("Request failed");
+        throw new Error(data?.message || "Request failed");
       }
     } catch (error) {
       toast({
         title: "Submission Failed",
         description:
-          "Please try again later. You can also call us directly at 470-262-2660.",
+          error instanceof Error && error.message !== "Request failed"
+            ? error.message
+            : "Please try again later. You can also call us directly at 470-262-2660.",
         variant: "destructive",
       });
     } finally {
