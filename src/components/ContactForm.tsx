@@ -48,7 +48,7 @@ const ContactForm = () => {
 
       const data = await response.json().catch(() => null);
 
-      if (data?.success === "true") {
+      if (response.ok && (data === null || data?.success === "true" || data?.success === true)) {
         toast({
           title: "Request Received!",
           description: "We'll contact you within 24 hours with your free estimate.",
