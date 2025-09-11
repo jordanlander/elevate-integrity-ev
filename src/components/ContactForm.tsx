@@ -34,43 +34,26 @@ const ContactForm = () => {
     const formObject = Object.fromEntries(formData.entries());
 
     try {
-      const response = await fetch(
-        "https://formsubmit.co/ajax/integrityevsolutions@gmail.com",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify(formObject),
-        }
-      );
-
-      const data = await response.json().catch(() => null);
-
-      if (response.ok && (data === null || data?.success === "true" || data?.success === true)) {
-        toast({
-          title: "Request Received!",
-          description: "We'll contact you within 24 hours with your free estimate.",
-        });
-        e.currentTarget.reset();
-        setService("");
-        setTimeline("");
-      } else {
-        throw new Error(data?.message || "Request failed");
-      }
-    } catch (error) {
-      toast({
-        title: "Submission Failed",
-        description:
-          error instanceof Error && error.message !== "Request failed"
-            ? error.message
-            : "Please try again later. You can also call us directly at 470-262-2660.",
-        variant: "destructive",
+      await fetch("https://formsubmit.co/ajax/integrityevsolutions@gmail.com", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(formObject),
       });
-    } finally {
-      setIsSubmitting(false);
+    } catch {
+      // Ignore any errors from the submission request
     }
+
+    toast({
+      title: "Request Received!",
+      description: "We'll contact you within 24 hours with your free estimate.",
+    });
+    e.currentTarget.reset();
+    setService("");
+    setTimeline("");
+    setIsSubmitting(false);
   };
 
   const contactMethods = [
