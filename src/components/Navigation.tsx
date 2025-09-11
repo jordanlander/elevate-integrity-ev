@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Menu, X, Zap, Phone } from "lucide-react";
+import { Menu, X, Phone } from "lucide-react";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -73,42 +73,45 @@ const Navigation = () => {
           </Button>
         </div>
 
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="lg:hidden absolute top-full left-0 right-0 bg-white backdrop-blur-md border-b border-border shadow-lg animate-in fade-in slide-in-from-top duration-300">
-            <div className="p-4 space-y-4">
-              {navItems.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="block py-2 text-foreground hover:text-primary transition-colors font-medium"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.name}
+      </div>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="lg:hidden absolute top-full left-0 right-0 bg-white backdrop-blur-md border-b border-border shadow-lg animate-in fade-in slide-in-from-top duration-300">
+          <div className="container mx-auto px-4 p-4 space-y-4">
+            {navItems.map((item) => (
+              <a
+                key={item.name}
+                href={item.href}
+                className="block py-2 text-foreground hover:text-primary transition-colors font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {item.name}
+              </a>
+            ))}
+
+            <div className="pt-4 border-t border-border space-y-3">
+              <div className="flex items-center gap-2 text-foreground font-semibold">
+                <Phone className="w-4 h-4" />
+                <a href="tel:4702622660" className="hover:text-primary transition-colors">
+                  (470) 262-2660
                 </a>
-              ))}
-              
-              <div className="pt-4 border-t border-border space-y-3">
-                <div className="flex items-center gap-2 text-foreground font-semibold">
-                  <Phone className="w-4 h-4" />
-                  <a href="tel:4702622660" className="hover:text-primary transition-colors">
-                    (470) 262-2660
-                  </a>
-                </div>
-                <Button 
-                  className="w-full bg-gradient-accent glow-accent font-semibold"
-                  onClick={() => {
-                    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-                    setIsMenuOpen(false);
-                  }}
-                >
-                  Get Free Estimate
-                </Button>
               </div>
+              <Button
+                className="w-full bg-gradient-accent glow-accent font-semibold"
+                onClick={() => {
+                  document
+                    .getElementById('contact')
+                    ?.scrollIntoView({ behavior: 'smooth' });
+                  setIsMenuOpen(false);
+                }}
+              >
+                Get Free Estimate
+              </Button>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </nav>
   );
 };
