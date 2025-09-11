@@ -44,6 +44,8 @@ const ContactForm = () => {
       });
     } catch {
       // Ignore any errors from the submission request
+    } finally {
+      setIsSubmitting(false);
     }
 
     toast({
@@ -53,7 +55,6 @@ const ContactForm = () => {
     e.currentTarget.reset();
     setService("");
     setTimeline("");
-    setIsSubmitting(false);
   };
 
   const contactMethods = [
