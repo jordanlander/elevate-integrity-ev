@@ -40,7 +40,7 @@ const WorkShowcase = () => {
   ];
 
   return (
-    <section className="py-20 bg-background">
+    <section id="work" className="py-20 bg-background">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-16">
