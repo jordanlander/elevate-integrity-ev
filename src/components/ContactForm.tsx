@@ -1,4 +1,5 @@
 import { useState } from "react";
+import emailjs from '@emailjs/browser';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -29,7 +30,7 @@ const ContactForm = () => {
     setIsSubmitting(true);
 
     const formData = new FormData(e.currentTarget);
-    const contactData = {
+    const templateParams = {
       from_name: `${formData.get("firstName")} ${formData.get("lastName")}`,
       from_email: formData.get("email"),
       phone: formData.get("phone"),
@@ -37,20 +38,17 @@ const ContactForm = () => {
       city: formData.get("city"),
       timeline: formData.get("timeline"),
       details: formData.get("details"),
+      to_email: "integrityevsolutions@gmail.com"
     };
 
     try {
-      const response = await fetch('/functions/v1/send-contact-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(contactData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to send email');
-      }
+      // Replace with your actual EmailJS credentials
+      await emailjs.send(
+        'your_service_id', // Replace with your EmailJS service ID
+        'your_template_id', // Replace with your EmailJS template ID
+        templateParams,
+        'your_public_key' // Replace with your EmailJS public key
+      );
 
       toast({
         title: "Request Received!",
@@ -62,7 +60,7 @@ const ContactForm = () => {
     } catch (error) {
       toast({
         title: "Submission Failed",
-        description: "Please try again later.",
+        description: "Please try again later. You can also call us directly at 470-262-2660.",
         variant: "destructive",
       });
     } finally {
