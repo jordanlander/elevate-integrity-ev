@@ -71,3 +71,14 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+
+## Link checking
+
+To validate built pages for broken links, run:
+
+```sh
+npm run build
+npx -y linkinator --config linkinator.config.json dist
+```
+
+The configuration skips external analytics domains that can return misleading 403 responses.

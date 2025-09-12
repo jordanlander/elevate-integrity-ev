@@ -160,7 +160,7 @@ const Services = () => {
               className="bg-primary text-primary-foreground hover:bg-primary-glow transition-all duration-300"
               asChild
             >
-              <a href="tel:+14705552660">Call Now: (470) 555-2660</a>
+              <a href="tel:+14702622660">Call Now: (470) 262-2660</a>
             </Button>
           </div>
         </div>
