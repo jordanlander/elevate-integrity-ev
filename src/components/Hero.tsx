@@ -133,6 +133,26 @@ const Hero = () => {
         </div>
       </div>
 
+      {/* Owner Photo */}
+      <div
+        className="absolute bottom-20 right-10 fade-in-up"
+        style={{ animationDelay: "0.8s" }}
+      >
+        <div className="relative w-40 sm:w-56 md:w-64">
+          <div className="absolute -top-4 -left-4 w-full h-full bg-green-400/40 rounded-xl -rotate-6"></div>
+          <div className="absolute -bottom-4 -right-4 w-full h-full bg-emerald-700/40 rounded-xl rotate-6"></div>
+          <img
+            src="/Picsart_25-09-10_22-28-17-009.jpg"
+            alt="Cody Lander"
+            className="relative w-full rounded-xl border-4 border-white shadow-2xl"
+          />
+          <div className="absolute bottom-2 right-2 bg-emerald-700 text-white px-3 py-1 rounded-md shadow-md">
+            <p className="text-sm font-semibold leading-tight">Cody Lander</p>
+            <p className="text-xs">Owner & Founder</p>
+          </div>
+        </div>
+      </div>
+
       {/* Electrical Circuit Pattern - Bottom */}
       <div className="absolute bottom-0 left-0 right-0 h-32 opacity-25">
         <svg className="w-full h-full" viewBox="0 0 1200 120" fill="none" xmlns="http://www.w3.org/2000/svg">
