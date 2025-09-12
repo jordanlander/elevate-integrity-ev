@@ -7,10 +7,10 @@ const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
-    { name: "Services", href: "#services" },
-    { name: "Our Work", href: "#work" },
-    { name: "Testimonials", href: "#testimonials" },
-    { name: "Contact", href: "#contact" }
+    { name: "Services", href: "/#services" },
+    { name: "Our Work", href: "/#work" },
+    { name: "Testimonials", href: "/#testimonials" },
+    { name: "Contact", href: "/#contact" }
   ];
 
   return (
@@ -18,17 +18,17 @@ const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <div className="flex items-center gap-3">
-            <img 
-              src="/lovable-uploads/d923a6a4-f64f-4305-a496-04656c5a6bf2.png" 
-              alt="Integrity EV Solutions Logo" 
+          <a href="/" className="flex items-center gap-3">
+            <img
+              src="/lovable-uploads/d923a6a4-f64f-4305-a496-04656c5a6bf2.png"
+              alt="Integrity EV Solutions Logo"
               className="w-12 h-12"
             />
             <div>
               <div className="font-bold text-xl text-foreground">Integrity EV Solutions</div>
               <div className="text-xs text-muted-foreground">Licensed & Certified</div>
             </div>
-          </div>
+          </a>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-8">
@@ -54,9 +54,17 @@ const Navigation = () => {
               </div>
               <Badge variant="secondary" className="text-xs">24/7 Emergency Service</Badge>
             </div>
-            <Button 
+            <Button
               className="bg-gradient-accent glow-accent hover:scale-105 transition-all duration-300 font-semibold"
-              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => {
+                if (window.location.pathname !== "/") {
+                  window.location.href = "/#contact";
+                } else {
+                  document
+                    .getElementById("contact")
+                    ?.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
             >
               Free Estimate
             </Button>
@@ -100,9 +108,13 @@ const Navigation = () => {
               <Button
                 className="w-full bg-gradient-accent glow-accent font-semibold"
                 onClick={() => {
-                  document
-                    .getElementById('contact')
-                    ?.scrollIntoView({ behavior: 'smooth' });
+                  if (window.location.pathname !== "/") {
+                    window.location.href = "/#contact";
+                  } else {
+                    document
+                      .getElementById('contact')
+                      ?.scrollIntoView({ behavior: 'smooth' });
+                  }
                   setIsMenuOpen(false);
                 }}
               >
