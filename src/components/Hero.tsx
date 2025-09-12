@@ -135,10 +135,10 @@ const Hero = () => {
 
       {/* Owner Photo */}
       <div
-        className="absolute bottom-20 right-10 fade-in-up"
+        className="z-20 fade-in-up absolute md:bottom-20 md:right-10 bottom-5 left-1/2 transform -translate-x-1/2 md:left-auto md:translate-x-0"
         style={{ animationDelay: "0.8s" }}
       >
-        <div className="relative w-40 sm:w-56 md:w-64">
+        <div className="relative w-32 sm:w-48 md:w-64">
           <div className="absolute -top-4 -left-4 w-full h-full bg-green-400/40 rounded-xl -rotate-6"></div>
           <div className="absolute -bottom-4 -right-4 w-full h-full bg-emerald-700/40 rounded-xl rotate-6"></div>
           <img
