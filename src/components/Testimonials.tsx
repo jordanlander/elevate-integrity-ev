@@ -132,10 +132,6 @@ const Testimonials = () => {
               <div className="text-3xl font-bold">5+ Years</div>
               <div className="text-white/90 text-sm">In Business</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold">A+</div>
-              <div className="text-white/90 text-sm">BBB Rating</div>
-            </div>
           </div>
           
           <p className="text-white/90 mb-8 text-lg">
