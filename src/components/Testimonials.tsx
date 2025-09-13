@@ -147,8 +147,8 @@ const Testimonials = () => {
               className="scale-on-hover"
             >
               <Badge className="bg-white text-emerald-700 px-6 py-3 cursor-pointer hover:bg-white/90 transition-colors text-base font-semibold">
-                ⭐⭐⭐⭐⭐ 5.0 Nextdoor Rating
-              </Badge>  
+                ⭐⭐⭐⭐⭐ 5.0 Google Rating
+              </Badge>
             </a>
             <span className="text-white/80">•</span>
             <Badge className="bg-white text-emerald-700 px-6 py-3 text-base font-semibold">
