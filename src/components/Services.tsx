@@ -59,8 +59,7 @@ const Services = () => {
   ];
 
   const certifications = [
-    { name: "DC Certified", icon: "⚡" },
-    { name: "AC Certified", icon: "🔌" },
+    { name: "ChargePoint Certified", icon: "🔋" },
     { name: "Eaton Surge Certified", icon: "🛡️" },
     { name: "Licensed Electrician", icon: "📜" },
     { name: "Insured & Bonded", icon: "✅" }
