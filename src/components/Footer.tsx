@@ -45,10 +45,7 @@ const Footer = () => {
             {/* Certifications */}
             <div className="flex flex-wrap gap-2 mb-6">
               <Badge className="bg-white/10 text-primary-foreground border-white/20">
-                DC Certified
-              </Badge>
-              <Badge className="bg-white/10 text-primary-foreground border-white/20">
-                AC Certified
+                🔋 ChargePoint Certified
               </Badge>
               <Badge className="bg-white/10 text-primary-foreground border-white/20">
                 Licensed & Insured
