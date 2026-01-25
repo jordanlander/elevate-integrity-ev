@@ -1,13 +1,22 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Menu, X, Phone } from "lucide-react";
+import { Menu, X, Phone, ChevronDown } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isServicesOpen, setIsServicesOpen] = useState(false);
+
+  const serviceItems = [
+    { name: "Residential EV Charging", href: "/services/residential-ev-charging" },
+    { name: "Commercial EV Charging", href: "/services/commercial-ev-charging" },
+    { name: "Tesla Powerwall", href: "/services/tesla-powerwall" },
+    { name: "Panel Upgrades", href: "/services/electrical-panel-upgrades" },
+    { name: "General Electrical", href: "/services/general-electrical" },
+  ];
 
   const navItems = [
-    { name: "Services", href: "/#services" },
     { name: "Our Work", href: "/#work" },
     { name: "Testimonials", href: "/#testimonials" },
     { name: "Contact", href: "/#contact" }
@@ -18,7 +27,7 @@ const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-3">
+          <Link to="/" className="flex items-center gap-3">
             <img
               src="/lovable-uploads/d923a6a4-f64f-4305-a496-04656c5a6bf2.png"
               alt="Integrity EV Solutions Logo"
@@ -28,10 +37,36 @@ const Navigation = () => {
               <div className="font-bold text-xl text-foreground">Integrity EV Solutions</div>
               <div className="text-xs text-muted-foreground">Licensed & Certified</div>
             </div>
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-8">
+            {/* Services Dropdown */}
+            <div 
+              className="relative"
+              onMouseEnter={() => setIsServicesOpen(true)}
+              onMouseLeave={() => setIsServicesOpen(false)}
+            >
+              <button className="flex items-center gap-1 text-foreground hover:text-primary transition-colors font-medium">
+                Services
+                <ChevronDown className={`w-4 h-4 transition-transform ${isServicesOpen ? 'rotate-180' : ''}`} />
+              </button>
+              
+              {isServicesOpen && (
+                <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-border py-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                  {serviceItems.map((item) => (
+                    <Link
+                      key={item.name}
+                      to={item.href}
+                      className="block px-4 py-2 text-foreground hover:bg-muted hover:text-primary transition-colors"
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
             {navItems.map((item) => (
               <a
                 key={item.name}
@@ -87,6 +122,21 @@ const Navigation = () => {
       {isMenuOpen && (
         <div className="lg:hidden absolute top-full left-0 right-0 bg-white backdrop-blur-md border-b border-border shadow-lg animate-in fade-in slide-in-from-top duration-300">
           <div className="container mx-auto px-4 p-4 space-y-4">
+            {/* Services Section */}
+            <div className="border-b border-border pb-4">
+              <p className="text-sm font-semibold text-muted-foreground mb-2">Services</p>
+              {serviceItems.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className="block py-2 text-foreground hover:text-primary transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </div>
+
             {navItems.map((item) => (
               <a
                 key={item.name}

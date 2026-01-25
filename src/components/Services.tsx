@@ -59,6 +59,8 @@ const Services = () => {
   ];
 
   const certifications = [
+    { name: "Tesla Certified Installer", icon: "🔴" },
+    { name: "Tesla Wall Connector Certified", icon: "⚡" },
     { name: "ChargePoint Certified", icon: "🔋" },
     { name: "Eaton Surge Certified", icon: "🛡️" },
     { name: "Licensed Electrician", icon: "📜" },
