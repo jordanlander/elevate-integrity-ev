@@ -1,148 +1,96 @@
 
-# Add AI-Generated Professional Images to Service Pages
+# Fix 404 on Page Refresh (SPA Routing for GitHub Pages)
 
-## Overview
+## Problem
 
-Add professional, AI-generated images to each of the 5 service pages to make them more visually appealing and engaging. The images will be displayed prominently in the hero section of each page.
+When you refresh any service page (like `/services/general-electrical`), you get a 404 error. This happens because:
 
----
+1. Your app uses client-side routing with React Router
+2. Your site is deployed to GitHub Pages
+3. When you refresh, the browser requests `/services/general-electrical` from the server
+4. GitHub Pages looks for an actual file at that path, doesn't find one, and returns 404
+5. The SPA's JavaScript (which handles routing) never gets a chance to load
 
-## Approach
+## Solution
 
-Since the project doesn't have Supabase/Lovable Cloud connected, I'll use the Nano banana model (google/gemini-2.5-flash-image-preview) through an edge function approach. However, since you prefer not to use Supabase, I'll take an alternative approach:
-
-**Recommended Approach**: Generate static images upfront and save them to the project. This avoids the need for runtime image generation and keeps the site fast.
-
----
-
-## Implementation Plan
-
-### Step 1: Update ServicePageLayout to Display Hero Image
-
-Modify the hero section to show an image alongside the text content when a `heroImage` prop is provided.
-
-**File**: `src/components/ServicePageLayout.tsx`
-
-**Changes**:
-- Restructure the hero section to a 2-column layout on desktop
-- Left column: existing text content (title, subtitle, badges, buttons)
-- Right column: professional service image with styling
-- Add smooth fade-in animation and shadow effects
-- Make the image responsive (stacked on mobile, side-by-side on desktop)
-
-### Step 2: Add heroImage Prop to Each Service Page
-
-Add the `heroImage` prop to all 5 service pages with appropriate image paths:
-
-| Service Page | Image Description |
-|--------------|------------------|
-| Tesla Powerwall | Tesla Powerwall battery unit installed on a home exterior wall |
-| Residential EV Charging | Modern home garage with Tesla Wall Connector and electric car |
-| Commercial EV Charging | Commercial parking lot with multiple EV charging stations |
-| Electrical Panel Upgrades | Modern 200A electrical panel with clean wiring |
-| General Electrical | Professional electrician working with modern electrical equipment |
-
-**Files to update**:
-- `src/pages/services/TeslaPowerwall.tsx`
-- `src/pages/services/ResidentialEvCharging.tsx`
-- `src/pages/services/CommercialEvCharging.tsx`
-- `src/pages/services/ElectricalPanelUpgrades.tsx`
-- `src/pages/services/GeneralElectrical.tsx`
+Add a `404.html` fallback that redirects all requests back to the main app. This is a standard workaround for SPAs on GitHub Pages.
 
 ---
 
-## Visual Layout
+## How It Works
 
-```
-DESKTOP VIEW:
-+--------------------------------------------------+
-| HERO SECTION (gradient background)               |
-| +----------------------+ +---------------------+ |
-| | Badge                | |                     | |
-| | Hero Title           | |   [Professional     | |
-| | Hero Subtitle        | |    Service Image]   | |
-| | Trust Badges         | |                     | |
-| | [CTA Buttons]        | |                     | |
-| +----------------------+ +---------------------+ |
-+--------------------------------------------------+
+GitHub Pages serves `404.html` for any path it can't find. We'll create a `404.html` that:
+1. Captures the current URL path
+2. Redirects to the home page with the path stored in session storage
+3. The main app then reads this stored path and navigates to it using React Router
 
-MOBILE VIEW:
-+------------------------+
-| Badge                  |
-| Hero Title             |
-| Hero Subtitle          |
-| [Service Image]        |
-| Trust Badges           |
-| [CTA Buttons]          |
-+------------------------+
+---
+
+## Implementation
+
+### Step 1: Create `public/404.html`
+
+This file captures the URL and redirects to the index page with the path preserved:
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Redirecting...</title>
+    <script>
+      // Single Page App redirect for GitHub Pages
+      // Stores the path in sessionStorage and redirects to index
+      var pathSegmentsToKeep = 0;
+      var l = window.location;
+      sessionStorage.redirect = l.pathname.slice(1) + l.search + l.hash;
+      l.replace(
+        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/'
+      );
+    </script>
+  </head>
+  <body>
+    Redirecting...
+  </body>
+</html>
 ```
 
----
+### Step 2: Update `index.html`
 
-## Image Generation
+Add a script in the `<head>` section (before the React app loads) to check for a stored redirect path:
 
-I will generate 5 professional images using AI (Gemini image generation) with prompts tailored to each service:
-
-1. **Tesla Powerwall**: "Professional photo of Tesla Powerwall 3 battery unit installed on a clean white garage wall, modern home setting, high quality, realistic"
-
-2. **Residential EV Charging**: "Professional photo of a Tesla Wall Connector EV charger installed in a modern home garage, electric car plugged in charging, clean installation, high quality"
-
-3. **Commercial EV Charging**: "Professional photo of commercial EV charging stations in a modern parking lot, multiple ChargePoint or Tesla Supercharger units, business setting, high quality"
-
-4. **Electrical Panel Upgrades**: "Professional photo of a modern 200-amp electrical panel with clean organized wiring, circuit breakers labeled, electrical work, high quality"
-
-5. **General Electrical**: "Professional photo of a licensed electrician in safety gear working on electrical installation, modern equipment, clean work environment, high quality"
-
----
-
-## Technical Details
-
-### ServicePageLayout Changes
-
-```tsx
-// In hero section, add grid layout:
-<div className="container mx-auto px-4 pt-12 relative z-10">
-  <div className="grid lg:grid-cols-2 gap-8 items-center">
-    {/* Left column: existing content */}
-    <div className="max-w-xl">
-      {/* breadcrumb, badge, title, subtitle, trust badges, buttons */}
-    </div>
-    
-    {/* Right column: image */}
-    {heroImage && (
-      <div className="hidden lg:block">
-        <img 
-          src={heroImage} 
-          alt={title}
-          className="rounded-2xl shadow-2xl"
-        />
-      </div>
-    )}
-  </div>
-</div>
+```html
+<!-- SPA redirect handler for GitHub Pages -->
+<script>
+  (function() {
+    var redirect = sessionStorage.redirect;
+    delete sessionStorage.redirect;
+    if (redirect && redirect !== '/') {
+      window.history.replaceState(null, null, '/' + redirect);
+    }
+  })();
+</script>
 ```
+
+This script runs before React mounts and restores the original URL, so React Router sees the correct path.
 
 ---
 
 ## Files to Change
 
-| File | Changes |
-|------|---------|
-| `src/components/ServicePageLayout.tsx` | Add 2-column hero layout with image display |
-| `src/pages/services/TeslaPowerwall.tsx` | Add `heroImage` prop |
-| `src/pages/services/ResidentialEvCharging.tsx` | Add `heroImage` prop |
-| `src/pages/services/CommercialEvCharging.tsx` | Add `heroImage` prop |
-| `src/pages/services/ElectricalPanelUpgrades.tsx` | Add `heroImage` prop |
-| `src/pages/services/GeneralElectrical.tsx` | Add `heroImage` prop |
-| `public/images/services/` | Add 5 AI-generated images (new directory) |
+| File | Change |
+|------|--------|
+| `public/404.html` | Create new file - captures path and redirects to index |
+| `index.html` | Add redirect handler script in `<head>` section |
 
 ---
 
 ## Result
 
-After implementation:
-- Each service page will have a professional, relevant image in the hero section
-- Images will be displayed on desktop screens alongside the hero text
-- On mobile, the layout stacks naturally for good user experience
-- The visual appeal of service pages will be significantly improved
-- Images will load fast since they're static assets
+After this fix:
+- Refreshing any page (like `/services/general-electrical`) will work correctly
+- Direct links to any route will work
+- The redirect happens instantly with no visible flicker
+- No changes needed to React Router or any components
+- Works specifically with GitHub Pages hosting
