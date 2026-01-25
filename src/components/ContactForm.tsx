@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -38,7 +38,31 @@ const ContactForm = () => {
   const [service, setService] = useState("");
   const [timeline, setTimeline] = useState("");
   const [errors, setErrors] = useState<Partial<Record<keyof ContactFormData, string>>>({});
+  const [utmParams, setUtmParams] = useState({
+    utm_source: '',
+    utm_medium: '',
+    utm_campaign: ''
+  });
   const { toast } = useToast();
+
+  // Capture UTM parameters for lead attribution
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const captured = {
+      utm_source: params.get('utm_source') || localStorage.getItem('utm_source') || '',
+      utm_medium: params.get('utm_medium') || localStorage.getItem('utm_medium') || '',
+      utm_campaign: params.get('utm_campaign') || localStorage.getItem('utm_campaign') || ''
+    };
+    
+    // Store in localStorage so they persist across page navigations
+    if (params.get('utm_source')) {
+      localStorage.setItem('utm_source', params.get('utm_source')!);
+      localStorage.setItem('utm_medium', params.get('utm_medium') || '');
+      localStorage.setItem('utm_campaign', params.get('utm_campaign') || '');
+    }
+    
+    setUtmParams(captured);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -85,6 +109,9 @@ const ContactForm = () => {
         },
         body: JSON.stringify({
           ...result.data,
+          lead_source: utmParams.utm_source,
+          lead_medium: utmParams.utm_medium,
+          lead_campaign: utmParams.utm_campaign,
           _captcha: "false",
         }),
       });
@@ -264,6 +291,7 @@ const ContactForm = () => {
                       <SelectContent>
                         <SelectItem value="residential-ev">Residential EV Charger Installation</SelectItem>
                         <SelectItem value="commercial-ev">Commercial EV Charging</SelectItem>
+                        <SelectItem value="tesla-powerwall">Tesla Powerwall Installation</SelectItem>
                         <SelectItem value="panel-upgrade">Electrical Panel Upgrade</SelectItem>
                         <SelectItem value="general-electrical">General Electrical Work</SelectItem>
                         <SelectItem value="emergency">Emergency Service</SelectItem>

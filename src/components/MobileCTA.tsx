@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Phone, ClipboardList } from "lucide-react";
+import { Link } from "react-router-dom";
 
 /**
  * MobileCTA renders persistent call-to-action buttons on mobile devices.
@@ -15,12 +16,12 @@ const MobileCTA = () => {
           Text/Call
         </Button>
       </a>
-      <a href="#contact" className="flex-1">
+      <Link to="/#contact" className="flex-1">
         <Button variant="accent" className="w-full h-12 text-base">
           <ClipboardList className="w-5 h-5" />
           Free Estimate
         </Button>
-      </a>
+      </Link>
     </div>
   );
 };
