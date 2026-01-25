@@ -97,21 +97,19 @@ const TeslaPowerwall = () => {
         },
       ]}
     >
-      {/* Video Section - Ready for YouTube embed */}
+      {/* Video Section */}
       <section className="max-w-4xl mx-auto mb-16">
         <h2 className="text-3xl font-bold mb-8 text-foreground text-center">
           See Powerwall in Action
         </h2>
-        <div className="aspect-video bg-muted rounded-xl flex items-center justify-center border-2 border-dashed border-primary/30">
-          <div className="text-center p-8">
-            <Battery className="w-16 h-16 text-primary mx-auto mb-4" />
-            <p className="text-lg text-muted-foreground mb-2">
-              Powerwall Video Coming Soon
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Check back for our Tesla Powerwall showcase video
-            </p>
-          </div>
+        <div className="aspect-video rounded-xl overflow-hidden shadow-2xl">
+          <iframe
+            src="https://www.youtube.com/embed/39HMleV8h-8"
+            title="Tesla Powerwall Overview"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="w-full h-full"
+          />
         </div>
       </section>
 
