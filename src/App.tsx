@@ -16,6 +16,7 @@ import CommercialEvCharging from "./pages/services/CommercialEvCharging";
 import TeslaPowerwall from "./pages/services/TeslaPowerwall";
 import ElectricalPanelUpgrades from "./pages/services/ElectricalPanelUpgrades";
 import GeneralElectrical from "./pages/services/GeneralElectrical";
+import GeneratorInstallation from "./pages/services/GeneratorInstallation";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/services/tesla-powerwall" element={<TeslaPowerwall />} />
           <Route path="/services/electrical-panel-upgrades" element={<ElectricalPanelUpgrades />} />
           <Route path="/services/general-electrical" element={<GeneralElectrical />} />
+          <Route path="/services/generator-installation" element={<GeneratorInstallation />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

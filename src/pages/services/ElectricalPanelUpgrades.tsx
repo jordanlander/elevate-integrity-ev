@@ -39,7 +39,7 @@ const ElectricalPanelUpgrades = () => {
           step: "2",
           title: "Permitting & Utility Coordination",
           description:
-            "We handle permits and coordinate with Georgia Power for any required service upgrades or meter changes.",
+            "We handle permits and coordinate with your local EMC for any required service upgrades or meter changes.",
         },
         {
           step: "3",
@@ -57,7 +57,7 @@ const ElectricalPanelUpgrades = () => {
         {
           question: "How long does a panel upgrade take?",
           answer:
-            "Most panel upgrades are completed in 4-8 hours. If a service upgrade from Georgia Power is required, there may be additional coordination time, but we handle all of that for you.",
+            "Most panel upgrades are completed in 4-8 hours. If a service upgrade from your local EMC is required, there may be additional coordination time, but we handle all of that for you.",
         },
         {
           question: "Will I lose power during the upgrade?",

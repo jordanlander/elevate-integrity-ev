@@ -68,7 +68,7 @@ const CommercialEvCharging = () => {
         {
           question: "What about commercial rebates and incentives?",
           answer:
-            "Georgia Power and federal programs offer significant incentives for commercial EV charging. We help identify and apply for all available rebates to reduce your investment.",
+            "Your local EMC and federal programs offer significant incentives for commercial EV charging. We help identify and apply for all available rebates to reduce your investment.",
         },
         {
           question: "Do you offer maintenance contracts?",

@@ -52,6 +52,11 @@ const Sitemap = () => {
                     General Electrical Services
                   </Link>
                 </li>
+                <li>
+                  <Link className="underline hover:text-accent" to="/services/generator-installation">
+                    Generator Installation
+                  </Link>
+                </li>
               </ul>
             </li>
             <li>
