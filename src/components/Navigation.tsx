@@ -9,9 +9,9 @@ const Navigation = () => {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
 
   const serviceItems = [
+    { name: "Tesla Powerwall", href: "/services/tesla-powerwall" },
     { name: "Residential EV Charging", href: "/services/residential-ev-charging" },
     { name: "Commercial EV Charging", href: "/services/commercial-ev-charging" },
-    { name: "Tesla Powerwall", href: "/services/tesla-powerwall" },
     { name: "Panel Upgrades", href: "/services/electrical-panel-upgrades" },
     { name: "General Electrical", href: "/services/general-electrical" },
   ];

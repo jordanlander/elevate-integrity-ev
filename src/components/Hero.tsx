@@ -124,35 +124,33 @@ const Hero = () => {
               </Button>
             </div>
 
-            {/* Trust Statement */}
-            <div className="fade-in-up" style={{animationDelay: '1s'}}>
-              <p className="text-white/90 text-base mb-2">
-                ⭐⭐⭐⭐⭐ Rated 5.0/5 stars • 47+ satisfied customers across Georgia
-              </p>
-              <p className="text-white/80 text-sm">
-                🏛️ Georgia Licensed Electrical Contractor #EN217457
-              </p>
+            {/* Trust Statement with Owner Photo */}
+            <div className="fade-in-up flex flex-col md:flex-row items-center justify-center gap-6" style={{animationDelay: '1s'}}>
+              {/* Owner Photo */}
+              <div className="relative w-24 sm:w-28">
+                <div className="absolute -top-2 -left-2 w-full h-full bg-green-400/40 rounded-xl -rotate-6"></div>
+                <div className="absolute -bottom-2 -right-2 w-full h-full bg-emerald-700/40 rounded-xl rotate-6"></div>
+                <img
+                  src="/Picsart_25-09-10_22-28-17-009.jpg"
+                  alt="Cody Lander"
+                  className="relative w-full rounded-xl border-4 border-white shadow-2xl"
+                />
+                <div className="absolute bottom-1 right-1 bg-emerald-700 text-white px-2 py-0.5 rounded-md shadow-md">
+                  <p className="text-xs font-semibold leading-tight">Cody Lander</p>
+                  <p className="text-[10px]">Owner</p>
+                </div>
+              </div>
+              
+              {/* Trust Text */}
+              <div className="text-center md:text-left">
+                <p className="text-white/90 text-base mb-2">
+                  ⭐⭐⭐⭐⭐ Rated 5.0/5 stars • 47+ satisfied customers across Georgia
+                </p>
+                <p className="text-white/80 text-sm">
+                  🏛️ Georgia Licensed Electrical Contractor #EN217457
+                </p>
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Owner Photo */}
-      <div
-        className="z-20 fade-in-up relative mx-auto mt-10 md:absolute md:bottom-20 md:right-10 md:mt-0"
-        style={{ animationDelay: "0.8s" }}
-      >
-        <div className="relative w-32 sm:w-48 md:w-64">
-          <div className="absolute -top-4 -left-4 w-full h-full bg-green-400/40 rounded-xl -rotate-6"></div>
-          <div className="absolute -bottom-4 -right-4 w-full h-full bg-emerald-700/40 rounded-xl rotate-6"></div>
-          <img
-            src="/Picsart_25-09-10_22-28-17-009.jpg"
-            alt="Cody Lander"
-            className="relative w-full rounded-xl border-4 border-white shadow-2xl"
-          />
-          <div className="absolute bottom-2 right-2 bg-emerald-700 text-white px-3 py-1 rounded-md shadow-md">
-            <p className="text-sm font-semibold leading-tight">Cody Lander</p>
-            <p className="text-xs">Owner & Founder</p>
           </div>
         </div>
       </div>
