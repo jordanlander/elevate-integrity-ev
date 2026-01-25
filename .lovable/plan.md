@@ -1,89 +1,148 @@
 
+# Add AI-Generated Professional Images to Service Pages
 
-# Fix Services Dropdown Menu Disappearing
+## Overview
 
-## Problem
-
-The services dropdown menu disappears when you try to move your mouse from "Services" down to select an item. This happens because there's a gap (`mt-2` margin) between the trigger button and the dropdown menu. When your mouse crosses this gap, the `onMouseLeave` event fires and closes the menu.
-
-## Solution
-
-Remove the gap between the trigger and dropdown by using padding inside the dropdown instead of margin, and extend the hover area to create a seamless connection between the button and the menu.
+Add professional, AI-generated images to each of the 5 service pages to make them more visually appealing and engaging. The images will be displayed prominently in the hero section of each page.
 
 ---
 
-## Technical Changes
+## Approach
 
-### File: `src/components/Navigation.tsx`
+Since the project doesn't have Supabase/Lovable Cloud connected, I'll use the Nano banana model (google/gemini-2.5-flash-image-preview) through an edge function approach. However, since you prefer not to use Supabase, I'll take an alternative approach:
 
-**Change 1: Add padding-top to the dropdown wrapper instead of margin-top on the dropdown**
+**Recommended Approach**: Generate static images upfront and save them to the project. This avoids the need for runtime image generation and keeps the site fast.
 
-This creates an invisible hover bridge between the button and the visible menu.
+---
+
+## Implementation Plan
+
+### Step 1: Update ServicePageLayout to Display Hero Image
+
+Modify the hero section to show an image alongside the text content when a `heroImage` prop is provided.
+
+**File**: `src/components/ServicePageLayout.tsx`
+
+**Changes**:
+- Restructure the hero section to a 2-column layout on desktop
+- Left column: existing text content (title, subtitle, badges, buttons)
+- Right column: professional service image with styling
+- Add smooth fade-in animation and shadow effects
+- Make the image responsive (stacked on mobile, side-by-side on desktop)
+
+### Step 2: Add heroImage Prop to Each Service Page
+
+Add the `heroImage` prop to all 5 service pages with appropriate image paths:
+
+| Service Page | Image Description |
+|--------------|------------------|
+| Tesla Powerwall | Tesla Powerwall battery unit installed on a home exterior wall |
+| Residential EV Charging | Modern home garage with Tesla Wall Connector and electric car |
+| Commercial EV Charging | Commercial parking lot with multiple EV charging stations |
+| Electrical Panel Upgrades | Modern 200A electrical panel with clean wiring |
+| General Electrical | Professional electrician working with modern electrical equipment |
+
+**Files to update**:
+- `src/pages/services/TeslaPowerwall.tsx`
+- `src/pages/services/ResidentialEvCharging.tsx`
+- `src/pages/services/CommercialEvCharging.tsx`
+- `src/pages/services/ElectricalPanelUpgrades.tsx`
+- `src/pages/services/GeneralElectrical.tsx`
+
+---
+
+## Visual Layout
+
+```
+DESKTOP VIEW:
++--------------------------------------------------+
+| HERO SECTION (gradient background)               |
+| +----------------------+ +---------------------+ |
+| | Badge                | |                     | |
+| | Hero Title           | |   [Professional     | |
+| | Hero Subtitle        | |    Service Image]   | |
+| | Trust Badges         | |                     | |
+| | [CTA Buttons]        | |                     | |
+| +----------------------+ +---------------------+ |
++--------------------------------------------------+
+
+MOBILE VIEW:
++------------------------+
+| Badge                  |
+| Hero Title             |
+| Hero Subtitle          |
+| [Service Image]        |
+| Trust Badges           |
+| [CTA Buttons]          |
++------------------------+
+```
+
+---
+
+## Image Generation
+
+I will generate 5 professional images using AI (Gemini image generation) with prompts tailored to each service:
+
+1. **Tesla Powerwall**: "Professional photo of Tesla Powerwall 3 battery unit installed on a clean white garage wall, modern home setting, high quality, realistic"
+
+2. **Residential EV Charging**: "Professional photo of a Tesla Wall Connector EV charger installed in a modern home garage, electric car plugged in charging, clean installation, high quality"
+
+3. **Commercial EV Charging**: "Professional photo of commercial EV charging stations in a modern parking lot, multiple ChargePoint or Tesla Supercharger units, business setting, high quality"
+
+4. **Electrical Panel Upgrades**: "Professional photo of a modern 200-amp electrical panel with clean organized wiring, circuit breakers labeled, electrical work, high quality"
+
+5. **General Electrical**: "Professional photo of a licensed electrician in safety gear working on electrical installation, modern equipment, clean work environment, high quality"
+
+---
+
+## Technical Details
+
+### ServicePageLayout Changes
 
 ```tsx
-// Before (line 56):
-<div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-border py-2 animate-in fade-in slide-in-from-top-2 duration-200">
-
-// After - wrap in a hover bridge container:
-<div className="absolute top-full left-0 pt-2 w-64">
-  <div className="bg-white rounded-lg shadow-xl border border-border py-2 animate-in fade-in slide-in-from-top-2 duration-200">
-    {serviceItems.map((item) => (
-      <Link
-        key={item.name}
-        to={item.href}
-        className="block px-4 py-2 text-foreground hover:bg-muted hover:text-primary transition-colors"
-      >
-        {item.name}
-      </Link>
-    ))}
+// In hero section, add grid layout:
+<div className="container mx-auto px-4 pt-12 relative z-10">
+  <div className="grid lg:grid-cols-2 gap-8 items-center">
+    {/* Left column: existing content */}
+    <div className="max-w-xl">
+      {/* breadcrumb, badge, title, subtitle, trust badges, buttons */}
+    </div>
+    
+    {/* Right column: image */}
+    {heroImage && (
+      <div className="hidden lg:block">
+        <img 
+          src={heroImage} 
+          alt={title}
+          className="rounded-2xl shadow-2xl"
+        />
+      </div>
+    )}
   </div>
 </div>
 ```
 
-The outer `<div>` with `pt-2` creates an invisible padding area that's still part of the parent's hover zone, so the mouse doesn't leave the hoverable area when moving from the button to the menu.
-
 ---
 
-## How It Works
+## Files to Change
 
-```text
-Before (broken):
-+------------------+
-|    Services ▼    |  <-- onMouseLeave triggers here
-+------------------+
-        ↓ gap (mt-2) = hover dead zone!
-+------------------+
-|  Tesla Powerwall |
-|  Residential EV  |
-+------------------+
-
-After (fixed):
-+------------------+
-|    Services ▼    |
-+------------------+
-|   (invisible     |  <-- pt-2 padding is INSIDE the parent div
-|    padding)      |      so hover is maintained
-+------------------+
-|  Tesla Powerwall |
-|  Residential EV  |
-+------------------+
-```
-
----
-
-## Summary
-
-| File | Change |
-|------|--------|
-| `src/components/Navigation.tsx` | Wrap dropdown content in a container with `pt-2` padding instead of `mt-2` margin to create a seamless hover zone |
+| File | Changes |
+|------|---------|
+| `src/components/ServicePageLayout.tsx` | Add 2-column hero layout with image display |
+| `src/pages/services/TeslaPowerwall.tsx` | Add `heroImage` prop |
+| `src/pages/services/ResidentialEvCharging.tsx` | Add `heroImage` prop |
+| `src/pages/services/CommercialEvCharging.tsx` | Add `heroImage` prop |
+| `src/pages/services/ElectricalPanelUpgrades.tsx` | Add `heroImage` prop |
+| `src/pages/services/GeneralElectrical.tsx` | Add `heroImage` prop |
+| `public/images/services/` | Add 5 AI-generated images (new directory) |
 
 ---
 
 ## Result
 
-After this fix:
-- The dropdown stays open when moving your mouse from "Services" to the menu items
-- You can click on any service without the menu disappearing
-- The visual appearance remains identical (same spacing)
-- The fix also works if users move their mouse slowly or at an angle
-
+After implementation:
+- Each service page will have a professional, relevant image in the hero section
+- Images will be displayed on desktop screens alongside the hero text
+- On mobile, the layout stacks naturally for good user experience
+- The visual appeal of service pages will be significantly improved
+- Images will load fast since they're static assets
