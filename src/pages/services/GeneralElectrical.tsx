@@ -1,8 +1,10 @@
 import ServicePageLayout from "@/components/ServicePageLayout";
+import generalElectricalImage from "@/assets/services/general-electrical.jpg";
 
 const GeneralElectrical = () => {
   return (
     <ServicePageLayout
+      heroImage={generalElectricalImage}
       title="General Electrical Services"
       metaTitle="Electrical Services Atlanta | Licensed Electrician | Integrity EV Solutions"
       metaDescription="Licensed electrical services in Atlanta and Georgia. Outlets, lighting, repairs, surge protection, and safety inspections. 24/7 emergency service available."

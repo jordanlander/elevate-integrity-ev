@@ -1,8 +1,10 @@
 import ServicePageLayout from "@/components/ServicePageLayout";
+import panelUpgradeImage from "@/assets/services/electrical-panel-upgrades.jpg";
 
 const ElectricalPanelUpgrades = () => {
   return (
     <ServicePageLayout
+      heroImage={panelUpgradeImage}
       title="Electrical Panel Upgrades"
       metaTitle="Electrical Panel Upgrade Atlanta | EV Ready Panels | Integrity EV"
       metaDescription="Professional electrical panel upgrades in Atlanta and Georgia. EV-ready panels, 200A upgrades, smart breakers. Licensed electricians. Free estimates!"

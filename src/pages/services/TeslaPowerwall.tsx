@@ -2,10 +2,12 @@ import ServicePageLayout from "@/components/ServicePageLayout";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Battery, Sun, Zap, Home, Shield, Clock } from "lucide-react";
+import teslaPowerwallImage from "@/assets/services/tesla-powerwall.jpg";
 
 const TeslaPowerwall = () => {
   return (
     <ServicePageLayout
+      heroImage={teslaPowerwallImage}
       title="Tesla Powerwall"
       metaTitle="Tesla Powerwall Installation Georgia | Battery Storage | Integrity EV"
       metaDescription="Certified Tesla Powerwall installer in Georgia. Home battery backup, solar integration, and energy independence. Professional installation with warranty."
