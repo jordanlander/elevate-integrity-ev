@@ -112,7 +112,7 @@ const ContactForm = () => {
           lead_source: utmParams.utm_source,
           lead_medium: utmParams.utm_medium,
           lead_campaign: utmParams.utm_campaign,
-          _captcha: "false",
+          _captcha: "true",
         }),
       });
 
