@@ -1,79 +1,58 @@
 
-# Fix 404 on Page Refresh (SPA Routing for GitHub Pages)
+# Fix Blank Page on Refresh for All Pages
 
 ## Problem
 
-When you refresh any service page (like `/services/general-electrical`), you get a 404 error. This happens because:
+When refreshing any page on the production site (especially nested routes like `/services/general-electrical`), the page goes blank. This affects:
 
-1. Your app uses client-side routing with React Router
-2. Your site is deployed to GitHub Pages
-3. When you refresh, the browser requests `/services/general-electrical` from the server
-4. GitHub Pages looks for an actual file at that path, doesn't find one, and returns 404
-5. The SPA's JavaScript (which handles routing) never gets a chance to load
+- All 5 service pages (`/services/*`)
+- Privacy Policy (`/privacy-policy`)
+- Terms of Service (`/terms-of-service`)
+- Sitemap (`/sitemap`)
+
+## Root Cause
+
+The `vite.config.ts` currently has `base: "./"` which generates **relative paths** for assets:
+
+```html
+<script type="module" src="./assets/index-abc123.js"></script>
+```
+
+When you're on a nested route like `/services/general-electrical` and refresh:
+1. The browser requests `/services/general-electrical`
+2. GitHub Pages serves the `404.html` which redirects to `/`
+3. The `index.html` loads with relative paths
+4. The browser tries to load `./assets/index.js` relative to the **current URL**
+5. This resolves to `/services/assets/index.js` which doesn't exist
+6. The JavaScript never loads, leaving a blank page
 
 ## Solution
 
-Add a `404.html` fallback that redirects all requests back to the main app. This is a standard workaround for SPAs on GitHub Pages.
+Change `base` from `"./"` to `"/"` to use **absolute paths**:
 
----
+```html
+<script type="module" src="/assets/index-abc123.js"></script>
+```
 
-## How It Works
-
-GitHub Pages serves `404.html` for any path it can't find. We'll create a `404.html` that:
-1. Captures the current URL path
-2. Redirects to the home page with the path stored in session storage
-3. The main app then reads this stored path and navigates to it using React Router
+This ensures assets are always loaded from the root, regardless of the current URL path.
 
 ---
 
 ## Implementation
 
-### Step 1: Create `public/404.html`
+### Step 1: Update Vite Configuration
 
-This file captures the URL and redirects to the index page with the path preserved:
+**File**: `vite.config.ts`
 
-```html
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Redirecting...</title>
-    <script>
-      // Single Page App redirect for GitHub Pages
-      // Stores the path in sessionStorage and redirects to index
-      var pathSegmentsToKeep = 0;
-      var l = window.location;
-      sessionStorage.redirect = l.pathname.slice(1) + l.search + l.hash;
-      l.replace(
-        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/'
-      );
-    </script>
-  </head>
-  <body>
-    Redirecting...
-  </body>
-</html>
+Change line 8 from:
+```typescript
+base: "./",
 ```
 
-### Step 2: Update `index.html`
-
-Add a script in the `<head>` section (before the React app loads) to check for a stored redirect path:
-
-```html
-<!-- SPA redirect handler for GitHub Pages -->
-<script>
-  (function() {
-    var redirect = sessionStorage.redirect;
-    delete sessionStorage.redirect;
-    if (redirect && redirect !== '/') {
-      window.history.replaceState(null, null, '/' + redirect);
-    }
-  })();
-</script>
+To:
+```typescript
+base: "/",
 ```
-
-This script runs before React mounts and restores the original URL, so React Router sees the correct path.
 
 ---
 
@@ -81,16 +60,32 @@ This script runs before React mounts and restores the original URL, so React Rou
 
 | File | Change |
 |------|--------|
-| `public/404.html` | Create new file - captures path and redirects to index |
-| `index.html` | Add redirect handler script in `<head>` section |
+| `vite.config.ts` | Change `base` from `"./"` to `"/"` |
 
 ---
 
-## Result
+## Pages This Fixes
 
-After this fix:
-- Refreshing any page (like `/services/general-electrical`) will work correctly
-- Direct links to any route will work
-- The redirect happens instantly with no visible flicker
-- No changes needed to React Router or any components
-- Works specifically with GitHub Pages hosting
+After this single change, all pages will work correctly on refresh:
+
+| Route | Status |
+|-------|--------|
+| `/` | Will work |
+| `/privacy-policy` | Will work |
+| `/terms-of-service` | Will work |
+| `/sitemap` | Will work |
+| `/services/residential-ev-charging` | Will work |
+| `/services/commercial-ev-charging` | Will work |
+| `/services/tesla-powerwall` | Will work |
+| `/services/electrical-panel-upgrades` | Will work |
+| `/services/general-electrical` | Will work |
+
+---
+
+## After Deployment
+
+Once this change is pushed:
+1. GitHub Actions will automatically build and deploy
+2. The new build will use absolute paths for all assets
+3. Combined with the existing `404.html` SPA redirect, all pages will load correctly on refresh
+4. Direct links to any page will work properly
