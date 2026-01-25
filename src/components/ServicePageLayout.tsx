@@ -53,9 +53,28 @@ const ServicePageLayout = ({
   certifications = [],
   children,
 }: ServicePageLayoutProps) => {
+  // Create FAQ structured data for rich search results
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  };
+
   return (
     <div className="min-h-screen bg-background pb-24 md:pb-0">
-      <SEO title={metaTitle} description={metaDescription} />
+      <SEO 
+        title={metaTitle} 
+        description={metaDescription}
+        canonicalUrl={`https://www.integrityevsolutions.com${typeof window !== 'undefined' ? window.location.pathname : ''}`}
+        structuredData={faqSchema}
+      />
       <Navigation />
 
       {/* Hero Section */}
