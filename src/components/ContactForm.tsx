@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,43 +19,98 @@ import {
   CheckCircle
 } from "lucide-react";
 
+// Validation schema
+const contactFormSchema = z.object({
+  firstName: z.string().trim().min(1, "First name is required").max(50, "First name must be less than 50 characters"),
+  lastName: z.string().trim().min(1, "Last name is required").max(50, "Last name must be less than 50 characters"),
+  email: z.string().trim().email("Invalid email address").max(255, "Email must be less than 255 characters"),
+  phone: z.string().trim().min(10, "Phone number must be at least 10 digits").max(20, "Phone number too long").regex(/^[\d\s\-\(\)\+]+$/, "Invalid phone number format"),
+  service: z.string().min(1, "Please select a service"),
+  city: z.string().trim().min(1, "City is required").max(100, "City name too long"),
+  timeline: z.string().optional(),
+  details: z.string().max(2000, "Details must be less than 2000 characters").optional(),
+});
+
+type ContactFormData = z.infer<typeof contactFormSchema>;
+
 const ContactForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [service, setService] = useState("");
   const [timeline, setTimeline] = useState("");
+  const [errors, setErrors] = useState<Partial<Record<keyof ContactFormData, string>>>({});
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    setErrors({});
 
     const formData = new FormData(e.currentTarget);
-    formData.append("_captcha", "false");
+    const formObject = {
+      firstName: formData.get("firstName") as string,
+      lastName: formData.get("lastName") as string,
+      email: formData.get("email") as string,
+      phone: formData.get("phone") as string,
+      service: service,
+      city: formData.get("city") as string,
+      timeline: timeline || undefined,
+      details: formData.get("details") as string || undefined,
+    };
 
-    const formObject = Object.fromEntries(formData.entries());
+    // Validate form data
+    const result = contactFormSchema.safeParse(formObject);
+    if (!result.success) {
+      const fieldErrors: Partial<Record<keyof ContactFormData, string>> = {};
+      result.error.errors.forEach((err) => {
+        if (err.path[0]) {
+          fieldErrors[err.path[0] as keyof ContactFormData] = err.message;
+        }
+      });
+      setErrors(fieldErrors);
+      toast({
+        title: "Please fix the errors",
+        description: "Some fields have invalid values.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
 
     try {
-      await fetch("https://formsubmit.co/ajax/integrityevsolutions@gmail.com", {
+      const response = await fetch("https://formsubmit.co/ajax/integrityevsolutions@gmail.com", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify(formObject),
+        body: JSON.stringify({
+          ...result.data,
+          _captcha: "false",
+        }),
       });
-    } catch {
-      // Ignore any errors from the submission request
+
+      if (!response.ok) {
+        throw new Error("Form submission failed");
+      }
+
+      toast({
+        title: "Request Received!",
+        description: "We'll contact you within 24 hours with your free estimate.",
+      });
+      e.currentTarget.reset();
+      setService("");
+      setTimeline("");
+      setErrors({});
+    } catch (error) {
+      console.error("Form submission error:", error);
+      toast({
+        title: "Submission Failed",
+        description: "Please try again or contact us directly by phone.",
+        variant: "destructive",
+      });
     } finally {
       setIsSubmitting(false);
     }
-
-    toast({
-      title: "Request Received!",
-      description: "We'll contact you within 24 hours with your free estimate.",
-    });
-    e.currentTarget.reset();
-    setService("");
-    setTimeline("");
   };
 
   const contactMethods = [
@@ -176,10 +232,12 @@ const ContactForm = () => {
                     <div>
                       <Label htmlFor="firstName">First Name *</Label>
                       <Input id="firstName" name="firstName" required className="mt-1" />
+                      {errors.firstName && <p className="text-sm text-destructive mt-1">{errors.firstName}</p>}
                     </div>
                     <div>
                       <Label htmlFor="lastName">Last Name *</Label>
                       <Input id="lastName" name="lastName" required className="mt-1" />
+                      {errors.lastName && <p className="text-sm text-destructive mt-1">{errors.lastName}</p>}
                     </div>
                   </div>
 
@@ -187,10 +245,12 @@ const ContactForm = () => {
                     <div>
                       <Label htmlFor="email">Email Address *</Label>
                       <Input id="email" name="email" type="email" required className="mt-1" />
+                      {errors.email && <p className="text-sm text-destructive mt-1">{errors.email}</p>}
                     </div>
                     <div>
                       <Label htmlFor="phone">Phone Number *</Label>
                       <Input id="phone" name="phone" type="tel" required className="mt-1" />
+                      {errors.phone && <p className="text-sm text-destructive mt-1">{errors.phone}</p>}
                     </div>
                   </div>
 
@@ -211,12 +271,14 @@ const ContactForm = () => {
                       </SelectContent>
                     </Select>
                     <input type="hidden" name="service" value={service} />
+                    {errors.service && <p className="text-sm text-destructive mt-1">{errors.service}</p>}
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="city">City *</Label>
                       <Input id="city" name="city" required className="mt-1" />
+                      {errors.city && <p className="text-sm text-destructive mt-1">{errors.city}</p>}
                     </div>
                     <div>
                       <Label htmlFor="timeline">Preferred Timeline</Label>
@@ -243,7 +305,9 @@ const ContactForm = () => {
                       name="details"
                       placeholder="Tell us about your project, any specific requirements, questions, or concerns..."
                       className="mt-1 min-h-[120px]"
+                      maxLength={2000}
                     />
+                    {errors.details && <p className="text-sm text-destructive mt-1">{errors.details}</p>}
                   </div>
 
                   {/* Submit Button */}
