@@ -1,272 +1,196 @@
 
-# Comprehensive SEO Enhancement Plan
+
+# Add Generator Install Page and Update Content
 
 ## Overview
 
-This plan adds proper XML sitemap support, enhances structured data, and improves meta tags across all pages for better search engine visibility.
+This plan addresses three requests from the owner:
+1. Add a new Generator Installation service page
+2. Update residential EV charger install time to 1-3 hours
+3. Replace all "Georgia Power" references with "local EMC"
 
 ---
 
-## 1. Create XML Sitemap
+## 1. Replace "Georgia Power" with "Local EMC"
 
-**File**: `public/sitemap.xml`
+Found 4 occurrences across 3 files:
 
-Create a proper XML sitemap that Google Search Console can read:
+### File: `src/pages/services/ResidentialEvCharging.tsx`
+**Line 66** - FAQ answer about rebates:
+- Change: "Georgia Power offers rebates..." 
+- To: "Your local EMC offers rebates..."
+
+### File: `src/pages/services/ElectricalPanelUpgrades.tsx`
+**Line 42** - Process step description:
+- Change: "...coordinate with Georgia Power for any required..."
+- To: "...coordinate with your local EMC for any required..."
+
+**Line 60** - FAQ answer about panel upgrade time:
+- Change: "...service upgrade from Georgia Power is required..."
+- To: "...service upgrade from your local EMC is required..."
+
+### File: `src/pages/services/CommercialEvCharging.tsx`
+**Line 71** - FAQ answer about commercial rebates:
+- Change: "Georgia Power and federal programs..."
+- To: "Your local EMC and federal programs..."
+
+---
+
+## 2. Update Residential EV Charger Install Time
+
+### File: `src/pages/services/ResidentialEvCharging.tsx`
+**Line 56** - FAQ answer about installation time:
+- Change: "Most residential installations are completed in 2-4 hours."
+- To: "Most residential installations are completed in 1-3 hours."
+
+---
+
+## 3. Create Generator Installation Service Page
+
+### New File: `src/pages/services/GeneratorInstallation.tsx`
+
+Create a new service page following the existing pattern with:
+
+**Page Content:**
+- **Title**: Generator Installation
+- **Meta Title**: Generator Installation Atlanta | Whole-Home Backup Power | Integrity EV
+- **Meta Description**: Professional generator installation in Atlanta and Georgia. Whole-home backup power, automatic transfer switches, and maintenance. Licensed electricians. Free estimates!
+- **Hero Title**: Generator Installation
+- **Hero Subtitle**: Keep your home powered during outages with professional whole-home generator installation.
+- **Badge**: Backup Power Experts
+
+**Benefits:**
+- Whole-home standby generators
+- Portable generator hookups
+- Automatic transfer switches
+- Load management for critical circuits
+- Propane and natural gas options
+- Permit handling and inspections
+- Maintenance and service plans
+- 24/7 emergency repairs
+
+**Certifications:**
+- Licensed Georgia Electrician
+- Generac Authorized Dealer (or similar - to confirm with owner)
+- Insured and Bonded
+- Georgia License #EN217457
+
+**Process:**
+1. Free Consultation - Assess power needs, fuel options, and placement
+2. Professional Installation - Install generator, transfer switch, and fuel connections
+3. Testing and Training - Test full system and walk through operation
+
+**FAQs:**
+- How long does generator installation take?
+- What size generator do I need?
+- Do I need a permit?
+- How does an automatic transfer switch work?
+- What fuel type should I choose?
+
+**Related Services:**
+- Panel Upgrades
+- General Electrical
+- Tesla Powerwall
+
+**Note:** A hero image will be needed. Options:
+- Use a placeholder initially
+- Owner can provide a generator installation photo
+- Use the general-electrical.jpg as temporary fallback
+
+---
+
+## 4. Add Route to App.tsx
+
+Add new route for the generator installation page:
+
+```tsx
+import GeneratorInstallation from "./pages/services/GeneratorInstallation";
+
+// Add route:
+<Route path="/services/generator-installation" element={<GeneratorInstallation />} />
+```
+
+---
+
+## 5. Update Navigation Menu
+
+### File: `src/components/Navigation.tsx`
+
+Add Generator Installation to the serviceItems array:
+
+```tsx
+const serviceItems = [
+  { name: "Tesla Powerwall", href: "/services/tesla-powerwall" },
+  { name: "Residential EV Charging", href: "/services/residential-ev-charging" },
+  { name: "Commercial EV Charging", href: "/services/commercial-ev-charging" },
+  { name: "Generator Installation", href: "/services/generator-installation" }, // NEW
+  { name: "Panel Upgrades", href: "/services/electrical-panel-upgrades" },
+  { name: "General Electrical", href: "/services/general-electrical" },
+];
+```
+
+---
+
+## 6. Update XML Sitemap
+
+### File: `public/sitemap.xml`
+
+Add new URL entry:
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://www.integrityevsolutions.com/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://www.integrityevsolutions.com/services/residential-ev-charging</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.integrityevsolutions.com/services/commercial-ev-charging</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.integrityevsolutions.com/services/tesla-powerwall</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.integrityevsolutions.com/services/electrical-panel-upgrades</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.integrityevsolutions.com/services/general-electrical</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.integrityevsolutions.com/privacy-policy</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://www.integrityevsolutions.com/terms-of-service</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-</urlset>
+<url>
+  <loc>https://www.integrityevsolutions.com/services/generator-installation</loc>
+  <changefreq>monthly</changefreq>
+  <priority>0.9</priority>
+</url>
 ```
 
 ---
 
-## 2. Update robots.txt with Sitemap Reference
+## 7. Update HTML Sitemap Page
 
-**File**: `public/robots.txt`
+### File: `src/pages/Sitemap.tsx`
 
-Add sitemap location so crawlers can find it:
-
-```txt
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
-User-agent: *
-Allow: /
-
-Sitemap: https://www.integrityevsolutions.com/sitemap.xml
-```
-
----
-
-## 3. Enhance SEO Component with Full Meta Support
-
-**File**: `src/components/SEO.tsx`
-
-Upgrade to support canonical URLs, Open Graph, and structured data per page:
+Add Generator Installation to the services list:
 
 ```tsx
-import { useEffect } from "react";
-
-interface SEOProps {
-  title: string;
-  description: string;
-  canonicalUrl?: string;
-  ogImage?: string;
-  structuredData?: object;
-}
-
-const SEO = ({ 
-  title, 
-  description, 
-  canonicalUrl,
-  ogImage = "https://storage.googleapis.com/gpt-engineer-file-uploads/gtGoGfp5TFdeN5Cd8MngjemUqJU2/social-images/social-1757547517521-logo.png",
-  structuredData
-}: SEOProps) => {
-  useEffect(() => {
-    // Update title
-    document.title = title;
-    
-    // Update meta description
-    updateMeta("description", description);
-    
-    // Update Open Graph tags
-    updateMeta("og:title", title, "property");
-    updateMeta("og:description", description, "property");
-    updateMeta("og:image", ogImage, "property");
-    
-    // Update Twitter tags
-    updateMeta("twitter:title", title, "property");
-    updateMeta("twitter:description", description, "property");
-    
-    // Update canonical URL
-    if (canonicalUrl) {
-      let canonical = document.querySelector('link[rel="canonical"]');
-      if (canonical) {
-        canonical.setAttribute("href", canonicalUrl);
-      } else {
-        canonical = document.createElement("link");
-        canonical.setAttribute("rel", "canonical");
-        canonical.setAttribute("href", canonicalUrl);
-        document.head.appendChild(canonical);
-      }
-    }
-    
-    // Add page-specific structured data
-    if (structuredData) {
-      // Remove any existing page-specific structured data
-      const existingScript = document.getElementById("page-structured-data");
-      if (existingScript) {
-        existingScript.remove();
-      }
-      
-      const script = document.createElement("script");
-      script.id = "page-structured-data";
-      script.type = "application/ld+json";
-      script.text = JSON.stringify(structuredData);
-      document.head.appendChild(script);
-    }
-  }, [title, description, canonicalUrl, ogImage, structuredData]);
-
-  return null;
-};
-
-function updateMeta(name: string, content: string, attr: string = "name") {
-  let meta = document.querySelector(`meta[${attr}="${name}"]`);
-  if (meta) {
-    meta.setAttribute("content", content);
-  } else {
-    meta = document.createElement("meta");
-    meta.setAttribute(attr, name);
-    meta.setAttribute("content", content);
-    document.head.appendChild(meta);
-  }
-}
-
-export default SEO;
+<li>
+  <Link className="underline hover:text-accent" to="/services/generator-installation">
+    Generator Installation
+  </Link>
+</li>
 ```
 
 ---
 
-## 4. Add FAQ Structured Data to Service Pages
+## Files to Modify
 
-**File**: `src/components/ServicePageLayout.tsx`
-
-Pass FAQ structured data to the SEO component for rich search results:
-
-```tsx
-// Inside ServicePageLayout component, create FAQ schema:
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": faqs.map(faq => ({
-    "@type": "Question",
-    "name": faq.question,
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": faq.answer
-    }
-  }))
-};
-
-// Update SEO component usage:
-<SEO 
-  title={metaTitle} 
-  description={metaDescription}
-  canonicalUrl={`https://www.integrityevsolutions.com${window.location.pathname}`}
-  structuredData={faqSchema}
-/>
-```
+| File | Changes |
+|------|---------|
+| `src/pages/services/ResidentialEvCharging.tsx` | Change "Georgia Power" to "Your local EMC", update install time to "1-3 hours" |
+| `src/pages/services/ElectricalPanelUpgrades.tsx` | Change "Georgia Power" to "your local EMC" (2 places) |
+| `src/pages/services/CommercialEvCharging.tsx` | Change "Georgia Power" to "Your local EMC" |
+| `src/pages/services/GeneratorInstallation.tsx` | Create new file |
+| `src/App.tsx` | Add route for generator installation |
+| `src/components/Navigation.tsx` | Add generator to services dropdown |
+| `public/sitemap.xml` | Add generator installation URL |
+| `src/pages/Sitemap.tsx` | Add generator installation link |
 
 ---
 
-## 5. Fix Canonical URL in index.html
+## Question for Owner
 
-**File**: `index.html`
-
-Update the canonical link from relative to absolute:
-
-```html
-<!-- Change this line -->
-<link rel="canonical" href="/" />
-
-<!-- To this -->
-<link rel="canonical" href="https://www.integrityevsolutions.com/" />
-```
-
-Also update Open Graph URLs:
-
-```html
-<meta property="og:url" content="https://www.integrityevsolutions.com/" />
-```
+For the Generator Installation page hero image:
+- Do you have a photo of a generator installation you'd like to use?
+- If not, I can use a placeholder or the general electrical image temporarily
 
 ---
 
-## Files to Change
+## After Deployment
 
-| File | Change |
-|------|--------|
-| `public/sitemap.xml` | Create new XML sitemap |
-| `public/robots.txt` | Add sitemap reference |
-| `src/components/SEO.tsx` | Enhance with canonical, OG, and structured data support |
-| `src/components/ServicePageLayout.tsx` | Add FAQ schema and canonical URLs |
-| `index.html` | Fix canonical and OG URLs to be absolute |
+Once these changes are pushed:
+1. The new Generator Installation page will be live
+2. All "Georgia Power" references will be updated to "local EMC"
+3. Residential EV install time will show 1-3 hours
+4. Submit the updated sitemap.xml to Google Search Console for re-indexing
 
----
-
-## After Implementation: Google Search Console Steps
-
-Once deployed, here's what to do in Google Search Console:
-
-1. **Go to** [Google Search Console](https://search.google.com/search-console)
-2. **Select your property** (`www.integrityevsolutions.com`)
-3. **Submit sitemap**:
-   - Navigate to "Sitemaps" in the left menu
-   - Enter `sitemap.xml` in the field
-   - Click "Submit"
-4. **Request re-indexing** for any pages that were showing 404:
-   - Go to "URL Inspection"
-   - Enter each service page URL
-   - Click "Request Indexing"
-
----
-
-## SEO Benefits
-
-| Enhancement | Benefit |
-|-------------|---------|
-| XML Sitemap | Google discovers all pages automatically |
-| Sitemap in robots.txt | Crawlers find sitemap without Search Console |
-| Canonical URLs | Prevents duplicate content issues |
-| FAQ Schema | Enables rich FAQ snippets in search results |
-| Dynamic OG tags | Better social media previews when sharing |
-| Absolute URLs | Ensures proper indexing of all pages |
