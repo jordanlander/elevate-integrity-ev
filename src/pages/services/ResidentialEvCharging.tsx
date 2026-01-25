@@ -53,7 +53,7 @@ const ResidentialEvCharging = () => {
         {
           question: "How long does a home EV charger installation take?",
           answer:
-            "Most residential installations are completed in 2-4 hours. If a panel upgrade is needed, it may take an additional 2-3 hours.",
+            "Most residential installations are completed in 1-3 hours. If a panel upgrade is needed, it may take an additional 2-3 hours.",
         },
         {
           question: "Do I need to upgrade my electrical panel?",
@@ -63,7 +63,7 @@ const ResidentialEvCharging = () => {
         {
           question: "What rebates are available for EV charger installation?",
           answer:
-            "Georgia Power offers rebates for qualified installations, and there are federal tax credits available. We help you identify and apply for all applicable incentives.",
+            "Your local EMC offers rebates for qualified installations, and there are federal tax credits available. We help you identify and apply for all applicable incentives.",
         },
         {
           question: "Can you install a Tesla Wall Connector?",

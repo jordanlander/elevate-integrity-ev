@@ -12,6 +12,7 @@ const Navigation = () => {
     { name: "Tesla Powerwall", href: "/services/tesla-powerwall" },
     { name: "Residential EV Charging", href: "/services/residential-ev-charging" },
     { name: "Commercial EV Charging", href: "/services/commercial-ev-charging" },
+    { name: "Generator Installation", href: "/services/generator-installation" },
     { name: "Panel Upgrades", href: "/services/electrical-panel-upgrades" },
     { name: "General Electrical", href: "/services/general-electrical" },
   ];
