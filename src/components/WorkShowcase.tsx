@@ -14,12 +14,12 @@ const WorkShowcase = () => {
       features: ["Level 2 Charging", "Panel Upgrade", "Code Compliant"]
     },
     {
-      title: "Tesla Charger with Smart Features",
-      description: "Tesla Wall Connector installation with smart connectivity. LED status indicators and mobile app integration for optimal charging control.",
+      title: "Tesla Wall Connector Installation",
+      description: "Tesla Wall Connector installed by Tesla Certified Installers. Smart connectivity, LED status indicators, and mobile app integration for optimal charging control.",
       image: "/lovable-uploads/4becbc1f-423c-40ba-b00d-848a5e28a7f8.png",
-      category: "Smart EV Charging",
+      category: "Tesla Certified",
       icon: <Zap className="w-5 h-5" />,
-      features: ["Smart Controls", "LED Status", "App Integration"]
+      features: ["Tesla Certified", "Smart Controls", "App Integration"]
     },
     {
       title: "Pathway Lighting Installation",

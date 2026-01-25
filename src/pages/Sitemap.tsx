@@ -25,6 +25,36 @@ const Sitemap = () => {
               </Link>
             </li>
             <li>
+              <span className="font-semibold">Services</span>
+              <ul className="list-disc list-inside ml-6 mt-2 space-y-1">
+                <li>
+                  <Link className="underline hover:text-accent" to="/services/residential-ev-charging">
+                    Residential EV Charging
+                  </Link>
+                </li>
+                <li>
+                  <Link className="underline hover:text-accent" to="/services/commercial-ev-charging">
+                    Commercial EV Charging
+                  </Link>
+                </li>
+                <li>
+                  <Link className="underline hover:text-accent" to="/services/tesla-powerwall">
+                    Tesla Powerwall
+                  </Link>
+                </li>
+                <li>
+                  <Link className="underline hover:text-accent" to="/services/electrical-panel-upgrades">
+                    Electrical Panel Upgrades
+                  </Link>
+                </li>
+                <li>
+                  <Link className="underline hover:text-accent" to="/services/general-electrical">
+                    General Electrical Services
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            <li>
               <Link className="underline hover:text-accent" to="/privacy-policy">
                 Privacy Policy
               </Link>
