@@ -1,8 +1,10 @@
 import ServicePageLayout from "@/components/ServicePageLayout";
+import residentialEvImage from "@/assets/services/residential-ev-charging.jpg";
 
 const ResidentialEvCharging = () => {
   return (
     <ServicePageLayout
+      heroImage={residentialEvImage}
       title="Residential EV Charging"
       metaTitle="Residential EV Charger Installation Atlanta | Home Charging | Integrity EV"
       metaDescription="Professional Level 2 EV charger installation for homes in Atlanta and Georgia. Tesla Wall Connector certified. Rebate assistance included. Free estimates!"

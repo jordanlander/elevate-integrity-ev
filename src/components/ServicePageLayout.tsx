@@ -79,56 +79,70 @@ const ServicePageLayout = ({
             <span className="text-white">{title}</span>
           </nav>
 
-          <div className="max-w-4xl">
-            <Badge className="mb-4 bg-gradient-to-r from-yellow-400/90 to-orange-500/90 text-gray-900 border-0">
-              {badge}
-            </Badge>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-              {heroTitle}
-            </h1>
-            <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl">
-              {heroSubtitle}
-            </p>
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            {/* Left column: Text content */}
+            <div className="max-w-xl">
+              <Badge className="mb-4 bg-gradient-to-r from-yellow-400/90 to-orange-500/90 text-gray-900 border-0">
+                {badge}
+              </Badge>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+                {heroTitle}
+              </h1>
+              <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl">
+                {heroSubtitle}
+              </p>
 
-            {/* Trust Badges */}
-            <div className="flex flex-wrap gap-3 mb-8">
-              <Badge className="bg-white/20 text-white border border-white/30 px-3 py-1.5">
-                <Shield className="w-4 h-4 mr-2" />
-                Licensed & Insured
-              </Badge>
-              <Badge className="bg-white/20 text-white border border-white/30 px-3 py-1.5">
-                <Award className="w-4 h-4 mr-2" />
-                Tesla Certified
-              </Badge>
-              <Badge className="bg-white/20 text-white border border-white/30 px-3 py-1.5">
-                <Clock className="w-4 h-4 mr-2" />
-                Same-Day Service
-              </Badge>
+              {/* Trust Badges */}
+              <div className="flex flex-wrap gap-3 mb-8">
+                <Badge className="bg-white/20 text-white border border-white/30 px-3 py-1.5">
+                  <Shield className="w-4 h-4 mr-2" />
+                  Licensed & Insured
+                </Badge>
+                <Badge className="bg-white/20 text-white border border-white/30 px-3 py-1.5">
+                  <Award className="w-4 h-4 mr-2" />
+                  Tesla Certified
+                </Badge>
+                <Badge className="bg-white/20 text-white border border-white/30 px-3 py-1.5">
+                  <Clock className="w-4 h-4 mr-2" />
+                  Same-Day Service
+                </Badge>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button
+                  size="lg"
+                  className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-gray-900 hover:from-yellow-300 hover:via-orange-400 hover:to-red-400 text-lg px-8 py-6 h-auto font-bold shadow-2xl"
+                  asChild
+                >
+                  <Link to="/#contact">
+                    Get Free Estimate
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </Link>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="bg-white/90 border-2 border-white text-gray-900 hover:bg-white text-lg px-8 py-6 h-auto font-semibold"
+                  asChild
+                >
+                  <a href="tel:4702622660">
+                    <Phone className="w-5 h-5 mr-2" />
+                    (470) 262-2660
+                  </a>
+                </Button>
+              </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-gray-900 hover:from-yellow-300 hover:via-orange-400 hover:to-red-400 text-lg px-8 py-6 h-auto font-bold shadow-2xl"
-                asChild
-              >
-                <Link to="/#contact">
-                  Get Free Estimate
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Link>
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="bg-white/90 border-2 border-white text-gray-900 hover:bg-white text-lg px-8 py-6 h-auto font-semibold"
-                asChild
-              >
-                <a href="tel:4702622660">
-                  <Phone className="w-5 h-5 mr-2" />
-                  (470) 262-2660
-                </a>
-              </Button>
-            </div>
+            {/* Right column: Hero image */}
+            {heroImage && (
+              <div className="hidden lg:block">
+                <img 
+                  src={heroImage} 
+                  alt={title}
+                  className="rounded-2xl shadow-2xl w-full h-auto object-cover"
+                />
+              </div>
+            )}
           </div>
         </div>
       </section>

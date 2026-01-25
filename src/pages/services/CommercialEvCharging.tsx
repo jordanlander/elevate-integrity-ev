@@ -1,8 +1,10 @@
 import ServicePageLayout from "@/components/ServicePageLayout";
+import commercialEvImage from "@/assets/services/commercial-ev-charging.jpg";
 
 const CommercialEvCharging = () => {
   return (
     <ServicePageLayout
+      heroImage={commercialEvImage}
       title="Commercial EV Charging"
       metaTitle="Commercial EV Charging Installation Georgia | Business Charging | Integrity EV"
       metaDescription="Professional commercial EV charging installation for businesses, apartments, and fleets in Georgia. DC fast chargers, load management, and scalable solutions."
