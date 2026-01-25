@@ -1,166 +1,102 @@
 
 
-# CTA Fixes and Lead Tracking for JCLander LLC
+# Fix Hash Navigation to Contact Form
 
-## Overview
+## Problem
 
-This plan will:
-1. Fix all service page CTAs to link directly to the main contact form
-2. Add lead tracking so you can prove which leads came from your referrals and get your 15%
+When clicking CTA buttons (like "Get Free Estimate"), the page navigates to the home page (`/`) but doesn't scroll down to the contact form section. This happens because React Router's `Link` component with hash (`/#contact`) navigates to the route but doesn't automatically handle scrolling to anchor elements.
 
 ---
 
-## Your Referral Links
+## Solution
 
-Once implemented, share these links when promoting the business:
-
-**Main Link:**
-```
-https://www.integrityevsolutions.com/?utm_source=JCLander_LLC&utm_medium=referral&utm_campaign=promo
-```
-
-**For specific channels, use different campaigns:**
-- **Facebook:** `?utm_source=JCLander_LLC&utm_medium=social&utm_campaign=facebook`
-- **Instagram:** `?utm_source=JCLander_LLC&utm_medium=social&utm_campaign=instagram`
-- **Business Card:** `?utm_source=JCLander_LLC&utm_medium=print&utm_campaign=business_card`
-- **Word of Mouth:** `?utm_source=JCLander_LLC&utm_medium=referral&utm_campaign=word_of_mouth`
-
-Every form submission from these links will include "JCLander_LLC" as the source, so the business owner can see exactly which leads you brought in.
+Add a custom scroll-to-hash handler that runs when the page loads or when the URL hash changes. This will ensure that whenever someone navigates to `/#contact`, the page automatically scrolls to the contact form.
 
 ---
 
-## Part 1: Fix CTA Buttons
+## Implementation
 
-### Issue 1: Hero "Get Free Estimate" Button (Service Pages)
-**Current:** Scrolls to a banner at the bottom of the same service page
-**Fix:** Navigate directly to `/#contact` on the main page
+### Option: Create a ScrollToHash Component
 
-### Issue 2: Mobile "Free Estimate" Button
-**Current:** Uses `#contact` which only works on the home page
-**Fix:** Change to `/#contact` so it works from any page
+Create a reusable component that handles hash-based scrolling and add it to the App.
 
----
+**New file: `src/components/ScrollToHash.tsx`**
 
-## Part 2: Lead Source Tracking
-
-### How It Works
-1. Visitor clicks your referral link
-2. The contact form captures the UTM parameters from the URL
-3. Parameters are stored in browser storage (persist even if user navigates around)
-4. When they submit the form, the lead source is included in the email notification
-5. Business owner sees "Lead Source: JCLander_LLC" and knows you get 15%
-
----
-
-## Technical Implementation
-
-### File 1: `src/components/ServicePageLayout.tsx`
-
-**Change (lines 110-121):** Replace the onClick scroll behavior with a Link to the main contact form
+This component will:
+1. Listen for location changes (including hash changes)
+2. When a hash is present in the URL (like `#contact`), find that element and scroll to it
+3. Handle a small delay to ensure the page has rendered before scrolling
 
 ```tsx
-// Before: onClick scrolls to #contact-cta on same page
-<Button
-  size="lg"
-  className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500..."
-  onClick={() =>
-    document.getElementById("contact-cta")?.scrollIntoView({ behavior: "smooth" })
-  }
->
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
-// After: Link navigates to main page contact form
-<Button
-  size="lg"
-  className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500..."
-  asChild
->
-  <Link to="/#contact">
-    Get Free Estimate
-    <ArrowRight className="w-5 h-5 ml-2" />
-  </Link>
-</Button>
+const ScrollToHash = () => {
+  const { hash, pathname } = useLocation();
+
+  useEffect(() => {
+    if (hash) {
+      // Small delay to ensure page has rendered
+      setTimeout(() => {
+        const element = document.getElementById(hash.slice(1)); // Remove # from hash
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      // Scroll to top when navigating to a page without hash
+      window.scrollTo(0, 0);
+    }
+  }, [hash, pathname]);
+
+  return null;
+};
+
+export default ScrollToHash;
 ```
 
-### File 2: `src/components/MobileCTA.tsx`
+**Update: `src/App.tsx`**
 
-**Change (line 18):** Replace `#contact` with `/#contact` using Link component
-
-```tsx
-// Before
-<a href="#contact" className="flex-1">
-
-// After
-<Link to="/#contact" className="flex-1">
-```
-
-### File 3: `src/components/ContactForm.tsx`
-
-**Add UTM capture logic:**
-
-1. Import `useEffect` and `Link` from react-router-dom
-2. Add state for UTM parameters
-3. Add useEffect to capture UTM params on page load and store in localStorage
-4. Include UTM values in form submission
+Add the ScrollToHash component inside BrowserRouter so it can access the location:
 
 ```tsx
-// New state
-const [utmParams, setUtmParams] = useState({
-  utm_source: '',
-  utm_medium: '',
-  utm_campaign: ''
-});
+import ScrollToHash from "@/components/ScrollToHash";
 
-// Capture UTM params on mount
-useEffect(() => {
-  const params = new URLSearchParams(window.location.search);
-  const captured = {
-    utm_source: params.get('utm_source') || localStorage.getItem('utm_source') || '',
-    utm_medium: params.get('utm_medium') || localStorage.getItem('utm_medium') || '',
-    utm_campaign: params.get('utm_campaign') || localStorage.getItem('utm_campaign') || ''
-  };
-  
-  // Store in localStorage so they persist across page navigations
-  if (params.get('utm_source')) {
-    localStorage.setItem('utm_source', params.get('utm_source')!);
-    localStorage.setItem('utm_medium', params.get('utm_medium') || '');
-    localStorage.setItem('utm_campaign', params.get('utm_campaign') || '');
-  }
-  
-  setUtmParams(captured);
-}, []);
-
-// Include in form submission
-body: JSON.stringify({
-  ...result.data,
-  lead_source: utmParams.utm_source,
-  lead_medium: utmParams.utm_medium,
-  lead_campaign: utmParams.utm_campaign,
-  _captcha: "false",
-}),
-```
-
-Also add Tesla Powerwall to the service dropdown since it's a primary offering:
-```tsx
-<SelectItem value="tesla-powerwall">Tesla Powerwall Installation</SelectItem>
+// Inside the BrowserRouter, add:
+<BrowserRouter>
+  <ScrollToHash />
+  <Routes>
+    ...
+  </Routes>
+</BrowserRouter>
 ```
 
 ---
 
-## Summary of Changes
+## Files to Change
 
 | File | Change |
 |------|--------|
-| `ServicePageLayout.tsx` | Hero CTA uses `Link` to `/#contact` instead of scrolling |
-| `MobileCTA.tsx` | Uses `Link` to `/#contact` (works on all pages) |
-| `ContactForm.tsx` | Captures UTM params, stores in localStorage, includes in submissions; adds Tesla Powerwall option |
+| `src/components/ScrollToHash.tsx` | **NEW** - Create component to handle hash scrolling |
+| `src/App.tsx` | Add `ScrollToHash` component inside `BrowserRouter` |
+
+---
+
+## How It Works
+
+1. User clicks "Get Free Estimate" button on a service page
+2. React Router navigates to `/#contact`
+3. The `ScrollToHash` component detects the hash change
+4. After a brief delay (100ms) to let the page render, it finds the element with `id="contact"` and smoothly scrolls to it
+5. The contact form is now visible and ready for the user to fill out
 
 ---
 
 ## Result
 
-After implementation:
-- All CTAs on all pages take users directly to the contact form
-- Your referral links track leads back to **JCLander LLC**
-- The business owner's email notifications will include the lead source
-- You have proof of which leads you generated for your 15% commission
+After this fix:
+- All CTA buttons on service pages will navigate to the home page AND scroll to the contact form
+- The mobile "Free Estimate" button will work from any page
+- UTM tracking for JCLander LLC will continue to work as implemented
+- Smooth scrolling animation provides a polished user experience
 
