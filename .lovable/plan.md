@@ -1,32 +1,87 @@
 
-# Update Favicon to Integrity EV Solutions Logo
+# Fix Hero Layout and Prioritize Tesla Services
 
 ## Overview
-Replace all default Lovable favicon files with your Integrity EV Solutions logo (the green plug with leaf design) so that Google and browsers display your brand correctly.
+Address two issues: (1) Cody's photo overlapping the "Rebate Assistance" card in the hero section, and (2) reorder services to prioritize Tesla offerings.
 
-## What Will Be Done
+## Issue 1: Hero Photo Overlapping Content
 
-### Step 1: Copy Logo to Public Directory
-Copy your uploaded logo (`android-chrome-512x512.png`) to the public folder for use as the primary favicon and app icon.
+### Problem
+Cody's photo is positioned with `md:absolute md:bottom-20 md:right-10` which places it directly over the third value proposition card, cutting off "Rebate Assistance" text.
 
-### Step 2: Update index.html Favicon References
-Update all favicon `<link>` tags to point to your new logo:
-- Apple Touch Icon (180x180)
-- Favicon 96x96
-- Web App Manifest icons (192x192 and 512x512)
-- Default favicon.ico reference
-- SVG favicon reference
+### Solution
+Reposition the owner photo to avoid overlap with the value proposition cards. Two options:
 
-### Step 3: Update Web Manifest
-Update `site.webmanifest` to reference your logo for the Progressive Web App icons.
+**Option A (Recommended)**: Move photo below the CTA buttons in a dedicated row
+- Remove absolute positioning
+- Place photo in a flex container alongside trust statement
+- Creates cleaner visual hierarchy
 
-## Files to Modify
-1. **Copy**: `user-uploads://android-chrome-512x512.png` to `public/integrity-logo.png`
-2. **Edit**: `index.html` - Update all favicon link references
-3. **Edit**: `site.webmanifest` - Update icon paths
+**Option B**: Adjust absolute positioning to bottom-left or reduce photo size
+- Keep absolute positioning but move to a less intrusive location
+- May still cause issues on different screen sizes
 
-## Technical Notes
-- Your uploaded image is 512x512 which is perfect for high-resolution displays
-- The same image will be used for all favicon sizes (browsers will scale appropriately)
-- Google may take some time to re-crawl and update the favicon in search results after deployment
-- To speed up Google's update, you can request re-indexing via Google Search Console after publishing
+### Files to Modify
+- `src/components/Hero.tsx` - Restructure the owner photo positioning
+
+## Issue 2: Prioritize Tesla Services
+
+### Current Order (Navigation and Services)
+1. Residential EV Charging
+2. Commercial EV Charging
+3. Tesla Powerwall
+4. Panel Upgrades
+5. General Electrical
+
+### New Order (Tesla First)
+1. Tesla Powerwall
+2. Residential EV Charging (includes Tesla Wall Connector)
+3. Commercial EV Charging
+4. Panel Upgrades
+5. General Electrical
+
+### Files to Modify
+- `src/components/Navigation.tsx` - Reorder `serviceItems` array
+- `src/components/Services.tsx` - Reorder services array (optional - currently doesn't show Tesla Powerwall as separate card)
+
+## Implementation Details
+
+### Hero.tsx Changes
+Remove the absolute positioning from the owner photo section and integrate it into the main content flow:
+
+```text
+Current structure:
+- Content Container (centered)
+  - Trust badges
+  - Headline
+  - Value propositions (3 cards)
+  - CTA buttons
+  - Trust statement
+- Owner Photo (absolute positioned, overlapping)
+
+New structure:
+- Content Container (centered)
+  - Trust badges
+  - Headline
+  - Value propositions (3 cards)
+  - CTA buttons  
+  - Trust statement + Owner Photo (side by side or below)
+```
+
+### Navigation.tsx Changes
+Reorder the `serviceItems` array:
+
+```javascript
+const serviceItems = [
+  { name: "Tesla Powerwall", href: "/services/tesla-powerwall" },
+  { name: "Residential EV Charging", href: "/services/residential-ev-charging" },
+  { name: "Commercial EV Charging", href: "/services/commercial-ev-charging" },
+  { name: "Panel Upgrades", href: "/services/electrical-panel-upgrades" },
+  { name: "General Electrical", href: "/services/general-electrical" },
+];
+```
+
+## Summary
+- Fix the hero layout so Cody's photo doesn't cover content
+- Prioritize Tesla Powerwall as the first service in navigation
+- Both changes are straightforward CSS/order adjustments
