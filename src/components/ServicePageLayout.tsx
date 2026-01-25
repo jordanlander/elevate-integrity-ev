@@ -110,14 +110,12 @@ const ServicePageLayout = ({
               <Button
                 size="lg"
                 className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-gray-900 hover:from-yellow-300 hover:via-orange-400 hover:to-red-400 text-lg px-8 py-6 h-auto font-bold shadow-2xl"
-                onClick={() =>
-                  document
-                    .getElementById("contact-cta")
-                    ?.scrollIntoView({ behavior: "smooth" })
-                }
+                asChild
               >
-                Get Free Estimate
-                <ArrowRight className="w-5 h-5 ml-2" />
+                <Link to="/#contact">
+                  Get Free Estimate
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Link>
               </Button>
               <Button
                 variant="outline"
