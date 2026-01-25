@@ -152,7 +152,7 @@ const ServicePageLayout = ({
               </div>
             </div>
 
-            {/* Right column: Hero image */}
+            {/* Right column: Hero image (desktop) */}
             {heroImage && (
               <div className="hidden lg:block">
                 <img 
@@ -163,6 +163,17 @@ const ServicePageLayout = ({
               </div>
             )}
           </div>
+
+          {/* Mobile hero image - below content for clean layout */}
+          {heroImage && (
+            <div className="lg:hidden mt-8">
+              <img 
+                src={heroImage} 
+                alt={title}
+                className="rounded-xl shadow-xl w-full h-48 sm:h-56 object-cover"
+              />
+            </div>
+          )}
         </div>
       </section>
 
