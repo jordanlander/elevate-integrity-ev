@@ -1,87 +1,166 @@
 
-# Fix Hero Layout and Prioritize Tesla Services
+
+# CTA Fixes and Lead Tracking for JCLander LLC
 
 ## Overview
-Address two issues: (1) Cody's photo overlapping the "Rebate Assistance" card in the hero section, and (2) reorder services to prioritize Tesla offerings.
 
-## Issue 1: Hero Photo Overlapping Content
+This plan will:
+1. Fix all service page CTAs to link directly to the main contact form
+2. Add lead tracking so you can prove which leads came from your referrals and get your 15%
 
-### Problem
-Cody's photo is positioned with `md:absolute md:bottom-20 md:right-10` which places it directly over the third value proposition card, cutting off "Rebate Assistance" text.
+---
 
-### Solution
-Reposition the owner photo to avoid overlap with the value proposition cards. Two options:
+## Your Referral Links
 
-**Option A (Recommended)**: Move photo below the CTA buttons in a dedicated row
-- Remove absolute positioning
-- Place photo in a flex container alongside trust statement
-- Creates cleaner visual hierarchy
+Once implemented, share these links when promoting the business:
 
-**Option B**: Adjust absolute positioning to bottom-left or reduce photo size
-- Keep absolute positioning but move to a less intrusive location
-- May still cause issues on different screen sizes
-
-### Files to Modify
-- `src/components/Hero.tsx` - Restructure the owner photo positioning
-
-## Issue 2: Prioritize Tesla Services
-
-### Current Order (Navigation and Services)
-1. Residential EV Charging
-2. Commercial EV Charging
-3. Tesla Powerwall
-4. Panel Upgrades
-5. General Electrical
-
-### New Order (Tesla First)
-1. Tesla Powerwall
-2. Residential EV Charging (includes Tesla Wall Connector)
-3. Commercial EV Charging
-4. Panel Upgrades
-5. General Electrical
-
-### Files to Modify
-- `src/components/Navigation.tsx` - Reorder `serviceItems` array
-- `src/components/Services.tsx` - Reorder services array (optional - currently doesn't show Tesla Powerwall as separate card)
-
-## Implementation Details
-
-### Hero.tsx Changes
-Remove the absolute positioning from the owner photo section and integrate it into the main content flow:
-
-```text
-Current structure:
-- Content Container (centered)
-  - Trust badges
-  - Headline
-  - Value propositions (3 cards)
-  - CTA buttons
-  - Trust statement
-- Owner Photo (absolute positioned, overlapping)
-
-New structure:
-- Content Container (centered)
-  - Trust badges
-  - Headline
-  - Value propositions (3 cards)
-  - CTA buttons  
-  - Trust statement + Owner Photo (side by side or below)
+**Main Link:**
+```
+https://www.integrityevsolutions.com/?utm_source=JCLander_LLC&utm_medium=referral&utm_campaign=promo
 ```
 
-### Navigation.tsx Changes
-Reorder the `serviceItems` array:
+**For specific channels, use different campaigns:**
+- **Facebook:** `?utm_source=JCLander_LLC&utm_medium=social&utm_campaign=facebook`
+- **Instagram:** `?utm_source=JCLander_LLC&utm_medium=social&utm_campaign=instagram`
+- **Business Card:** `?utm_source=JCLander_LLC&utm_medium=print&utm_campaign=business_card`
+- **Word of Mouth:** `?utm_source=JCLander_LLC&utm_medium=referral&utm_campaign=word_of_mouth`
 
-```javascript
-const serviceItems = [
-  { name: "Tesla Powerwall", href: "/services/tesla-powerwall" },
-  { name: "Residential EV Charging", href: "/services/residential-ev-charging" },
-  { name: "Commercial EV Charging", href: "/services/commercial-ev-charging" },
-  { name: "Panel Upgrades", href: "/services/electrical-panel-upgrades" },
-  { name: "General Electrical", href: "/services/general-electrical" },
-];
+Every form submission from these links will include "JCLander_LLC" as the source, so the business owner can see exactly which leads you brought in.
+
+---
+
+## Part 1: Fix CTA Buttons
+
+### Issue 1: Hero "Get Free Estimate" Button (Service Pages)
+**Current:** Scrolls to a banner at the bottom of the same service page
+**Fix:** Navigate directly to `/#contact` on the main page
+
+### Issue 2: Mobile "Free Estimate" Button
+**Current:** Uses `#contact` which only works on the home page
+**Fix:** Change to `/#contact` so it works from any page
+
+---
+
+## Part 2: Lead Source Tracking
+
+### How It Works
+1. Visitor clicks your referral link
+2. The contact form captures the UTM parameters from the URL
+3. Parameters are stored in browser storage (persist even if user navigates around)
+4. When they submit the form, the lead source is included in the email notification
+5. Business owner sees "Lead Source: JCLander_LLC" and knows you get 15%
+
+---
+
+## Technical Implementation
+
+### File 1: `src/components/ServicePageLayout.tsx`
+
+**Change (lines 110-121):** Replace the onClick scroll behavior with a Link to the main contact form
+
+```tsx
+// Before: onClick scrolls to #contact-cta on same page
+<Button
+  size="lg"
+  className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500..."
+  onClick={() =>
+    document.getElementById("contact-cta")?.scrollIntoView({ behavior: "smooth" })
+  }
+>
+
+// After: Link navigates to main page contact form
+<Button
+  size="lg"
+  className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500..."
+  asChild
+>
+  <Link to="/#contact">
+    Get Free Estimate
+    <ArrowRight className="w-5 h-5 ml-2" />
+  </Link>
+</Button>
 ```
 
-## Summary
-- Fix the hero layout so Cody's photo doesn't cover content
-- Prioritize Tesla Powerwall as the first service in navigation
-- Both changes are straightforward CSS/order adjustments
+### File 2: `src/components/MobileCTA.tsx`
+
+**Change (line 18):** Replace `#contact` with `/#contact` using Link component
+
+```tsx
+// Before
+<a href="#contact" className="flex-1">
+
+// After
+<Link to="/#contact" className="flex-1">
+```
+
+### File 3: `src/components/ContactForm.tsx`
+
+**Add UTM capture logic:**
+
+1. Import `useEffect` and `Link` from react-router-dom
+2. Add state for UTM parameters
+3. Add useEffect to capture UTM params on page load and store in localStorage
+4. Include UTM values in form submission
+
+```tsx
+// New state
+const [utmParams, setUtmParams] = useState({
+  utm_source: '',
+  utm_medium: '',
+  utm_campaign: ''
+});
+
+// Capture UTM params on mount
+useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+  const captured = {
+    utm_source: params.get('utm_source') || localStorage.getItem('utm_source') || '',
+    utm_medium: params.get('utm_medium') || localStorage.getItem('utm_medium') || '',
+    utm_campaign: params.get('utm_campaign') || localStorage.getItem('utm_campaign') || ''
+  };
+  
+  // Store in localStorage so they persist across page navigations
+  if (params.get('utm_source')) {
+    localStorage.setItem('utm_source', params.get('utm_source')!);
+    localStorage.setItem('utm_medium', params.get('utm_medium') || '');
+    localStorage.setItem('utm_campaign', params.get('utm_campaign') || '');
+  }
+  
+  setUtmParams(captured);
+}, []);
+
+// Include in form submission
+body: JSON.stringify({
+  ...result.data,
+  lead_source: utmParams.utm_source,
+  lead_medium: utmParams.utm_medium,
+  lead_campaign: utmParams.utm_campaign,
+  _captcha: "false",
+}),
+```
+
+Also add Tesla Powerwall to the service dropdown since it's a primary offering:
+```tsx
+<SelectItem value="tesla-powerwall">Tesla Powerwall Installation</SelectItem>
+```
+
+---
+
+## Summary of Changes
+
+| File | Change |
+|------|--------|
+| `ServicePageLayout.tsx` | Hero CTA uses `Link` to `/#contact` instead of scrolling |
+| `MobileCTA.tsx` | Uses `Link` to `/#contact` (works on all pages) |
+| `ContactForm.tsx` | Captures UTM params, stores in localStorage, includes in submissions; adds Tesla Powerwall option |
+
+---
+
+## Result
+
+After implementation:
+- All CTAs on all pages take users directly to the contact form
+- Your referral links track leads back to **JCLander LLC**
+- The business owner's email notifications will include the lead source
+- You have proof of which leads you generated for your 15% commission
+
