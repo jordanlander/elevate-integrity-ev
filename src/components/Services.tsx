@@ -16,14 +16,14 @@ const Services = () => {
   const services = [
     {
       icon: <Home className="w-8 h-8" />,
-      title: "Residential EV Charging",
-      description: "Complete home EV charger installation with Level 2 charging capabilities. We handle everything from permits to final inspection.",
+      title: "Residential Solutions",
+      description: "Complete home EV charger installation, Tesla Powerwall battery backup, and generator systems. We handle everything from permits to final inspection.",
       features: [
-        "Level 2 home charger installation",
-        "Electrical panel upgrades when needed",
+        "Level 2 EV charger installation",
+        "Tesla Powerwall & battery backup",
+        "Whole-home generator installation",
         "Smart charger setup & WiFi configuration",
-        "Rebate & incentive assistance",
-        "Code-compliant installation"
+        "Rebate & incentive assistance"
       ],
       badge: "Most Popular",
       gradient: "bg-gradient-primary"
@@ -44,12 +44,12 @@ const Services = () => {
     },
     {
       icon: <Wrench className="w-8 h-8" />,
-      title: "General Electrical Services",
-      description: "Full-service electrical work to support your EV installation and enhance your home's electrical infrastructure.",
+      title: "Electrical Services",
+      description: "Full-service electrical work including panel upgrades, generator hookups, surge protection, and infrastructure modernization.",
       features: [
+        "Electrical panel upgrades (200A+)",
+        "Generator transfer switches",
         "Whole-house surge protection",
-        "Outlet & lighting installation", 
-        "Electrical panel modernization",
         "Circuit troubleshooting & repairs",
         "Safety inspections & upgrades"
       ],
