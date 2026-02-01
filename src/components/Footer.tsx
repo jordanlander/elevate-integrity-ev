@@ -127,7 +127,7 @@ const Footer = () => {
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-primary-foreground/80">
             <div>
-              © 2024 Integrity EV Solutions. All rights reserved. | Licensed Electrical Contractor | Georgia License #EN217457
+              © 2025 Integrity EV Solutions. All rights reserved. | Licensed Electrical Contractor | Georgia License #EN217457
             </div>
             <div className="flex gap-6">
               <Link

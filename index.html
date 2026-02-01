@@ -47,41 +47,93 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "ElectricalContractor",
-      "name": "Integrity EV Solutions",
-      "description": "Professional EV charger installation and electrical services in Georgia. Tesla Certified Installer.",
-      "url": "https://integrityevsolutions.com",
-      "telephone": "+1-470-262-2660",
-      "areaServed": {
-        "@type": "State",
-        "name": "Georgia"
-      },
-      "address": {
-        "@type": "PostalAddress",
-        "addressRegion": "Georgia",
-        "addressCountry": "US"
-      },
-      "priceRange": "$$",
-      "serviceType": [
-        "EV Charger Installation",
-        "Tesla Wall Connector Installation", 
-        "Tesla Powerwall Installation",
-        "Electrical Panel Upgrades",
-        "Commercial EV Charging",
-        "General Electrical Work"
-      ],
-      "hasCredential": [
-        "Tesla Certified Installer",
-        "Tesla Certified Wall Connector Installer",
-        "ChargePoint Certified",
-        "Eaton Surge Certified",
-        "Georgia Licensed Electrician"
-      ],
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "5.0",
-        "reviewCount": "47"
-      }
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://www.integrityevsolutions.com/#org",
+          "name": "Integrity EV Solutions",
+          "url": "https://www.integrityevsolutions.com/",
+          "logo": "https://www.integrityevsolutions.com/integrity-logo.png",
+          "foundingDate": "2022",
+          "founder": { "@id": "https://www.integrityevsolutions.com/#cody" },
+          "sameAs": [
+            "https://www.facebook.com/IntegrityEVSolutions",
+            "https://www.instagram.com/integrityevsolutions"
+          ]
+        },
+        {
+          "@type": ["Electrician", "ElectricalContractor"],
+          "@id": "https://www.integrityevsolutions.com/#business",
+          "name": "Integrity EV Solutions",
+          "description": "Professional EV charger installation and electrical services in Georgia. Tesla Certified Installer.",
+          "url": "https://www.integrityevsolutions.com/",
+          "telephone": "+1-470-262-2660",
+          "email": "integrityevsolutions@gmail.com",
+          "priceRange": "$$",
+          "areaServed": [
+            { "@type": "State", "name": "Georgia" },
+            { "@type": "City", "name": "Atlanta" },
+            { "@type": "City", "name": "Alpharetta" },
+            { "@type": "City", "name": "Roswell" },
+            { "@type": "City", "name": "Marietta" },
+            { "@type": "City", "name": "Flowery Branch" }
+          ],
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Flowery Branch",
+            "addressRegion": "GA",
+            "addressCountry": "US"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 34.17846,
+            "longitude": -83.90915
+          },
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "5.0",
+            "bestRating": "5",
+            "worstRating": "1",
+            "reviewCount": "28"
+          },
+          "serviceType": [
+            "EV Charger Installation",
+            "Tesla Wall Connector Installation",
+            "Tesla Powerwall Installation",
+            "Electrical Panel Upgrades",
+            "Commercial EV Charging",
+            "Generator Installation",
+            "General Electrical Work"
+          ],
+          "hasCredential": [
+            {
+              "@type": "EducationalOccupationalCredential",
+              "credentialCategory": "license",
+              "name": "Georgia Licensed Electrician",
+              "recognizedBy": { "@type": "Organization", "name": "State of Georgia" },
+              "identifier": "EN217457"
+            },
+            { "@type": "EducationalOccupationalCredential", "name": "Tesla Certified Installer" },
+            { "@type": "EducationalOccupationalCredential", "name": "Tesla Certified Wall Connector Installer" },
+            { "@type": "EducationalOccupationalCredential", "name": "ChargePoint Certified" },
+            { "@type": "EducationalOccupationalCredential", "name": "Eaton Surge Certified" }
+          ],
+          "parentOrganization": { "@id": "https://www.integrityevsolutions.com/#org" }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://www.integrityevsolutions.com/#cody",
+          "name": "Cody Lander",
+          "jobTitle": "Owner & Licensed Electrician",
+          "worksFor": { "@id": "https://www.integrityevsolutions.com/#business" },
+          "hasCredential": {
+            "@type": "EducationalOccupationalCredential",
+            "credentialCategory": "license",
+            "name": "Georgia Electrical License",
+            "identifier": "EN217457"
+          }
+        }
+      ]
     }
     </script>
 
