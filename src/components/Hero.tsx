@@ -28,7 +28,7 @@ const Hero = () => {
           <div className="max-w-5xl mx-auto text-center text-white">
             
             {/* Trust Indicators */}
-            <div className="flex justify-center gap-3 mb-8 flex-wrap fade-in-up">
+            <div className="flex justify-center gap-3 mb-6 flex-wrap fade-in-up">
               <Badge className="bg-gradient-to-r from-yellow-400/90 to-orange-500/90 text-gray-900 border-2 border-yellow-300/50 hover:from-yellow-300 hover:to-orange-400 transition-all backdrop-blur-sm px-4 py-2 font-semibold shadow-lg">
                 <Shield className="w-4 h-4 mr-2" />
                 Licensed & Insured
@@ -47,8 +47,39 @@ const Hero = () => {
               </Badge>
             </div>
 
+            {/* Owner Photo + Trust Signal - Primary Element */}
+            <div className="fade-in-up flex flex-col md:flex-row items-center justify-center gap-6 mb-8" style={{animationDelay: '0.2s'}}>
+              {/* Owner Photo */}
+              <div className="relative w-28 sm:w-32 md:w-36">
+                <div className="absolute -top-2 -left-2 w-full h-full bg-green-400/40 rounded-xl -rotate-6"></div>
+                <div className="absolute -bottom-2 -right-2 w-full h-full bg-emerald-700/40 rounded-xl rotate-6"></div>
+                <img
+                  src="/Picsart_25-09-10_22-28-17-009.jpg"
+                  alt="Cody Lander"
+                  className="relative w-full rounded-xl border-4 border-white shadow-2xl"
+                />
+                <div className="absolute bottom-1 right-1 bg-emerald-700 text-white px-2 py-0.5 rounded-md shadow-md">
+                  <p className="text-xs font-semibold leading-tight">Cody Lander</p>
+                  <p className="text-[10px]">Owner</p>
+                </div>
+              </div>
+              
+              {/* Trust Text */}
+              <div className="text-center md:text-left">
+                <p className="text-white text-lg md:text-xl font-semibold mb-1">
+                  ⭐⭐⭐⭐⭐ Rated 5.0/5 stars
+                </p>
+                <p className="text-white/90 text-base mb-2">
+                  47+ satisfied customers across Georgia
+                </p>
+                <p className="text-white/80 text-sm">
+                  🏛️ Georgia Licensed Electrical Contractor #EN217457
+                </p>
+              </div>
+            </div>
+
             {/* Main Headline */}
-            <div className="fade-in-up" style={{animationDelay: '0.2s'}}>
+            <div className="fade-in-up" style={{animationDelay: '0.4s'}}>
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight text-white">
                 Professional EV Charger
                 <span className="block bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
@@ -58,7 +89,7 @@ const Hero = () => {
             </div>
             
             {/* Subheading */}
-            <div className="fade-in-up" style={{animationDelay: '0.4s'}}>
+            <div className="fade-in-up" style={{animationDelay: '0.5s'}}>
               <p className="text-xl md:text-2xl mb-10 text-white max-w-4xl mx-auto leading-relaxed">
                 Georgia homeowners trust us for{" "}
                 <span className="inline-flex items-center font-semibold text-gray-900 bg-gradient-to-r from-yellow-300 to-orange-400 px-2 py-1 rounded-lg text-base border border-yellow-200/50 shadow-md">
@@ -68,43 +99,8 @@ const Hero = () => {
               </p>
             </div>
 
-            {/* Value Propositions */}
-            <div className="fade-in-up mb-12" style={{animationDelay: '0.6s'}}>
-              <div className="grid md:grid-cols-3 gap-6 mb-10 max-w-4xl mx-auto">
-                <div className="bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm rounded-xl p-6 border-2 border-yellow-300/30 hover:border-yellow-300/60 hover:from-white/30 hover:to-white/20 transition-all group shadow-xl">
-                  <div className="flex flex-col items-center text-center">
-                    <div className="bg-gradient-to-r from-yellow-400 to-orange-500 p-4 rounded-full mb-4 group-hover:scale-110 transition-transform shadow-lg">
-                      <Zap className="w-8 h-8 text-gray-900" />
-                    </div>
-                    <h3 className="font-bold text-xl text-white mb-2">⚡ Fast Installation</h3>
-                    <p className="text-white/90 text-base">Most installs completed in 2-4 hours</p>
-                  </div>
-                </div>
-
-                <div className="bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm rounded-xl p-6 border-2 border-cyan-300/30 hover:border-cyan-300/60 hover:from-white/30 hover:to-white/20 transition-all group shadow-xl">
-                  <div className="flex flex-col items-center text-center">
-                    <div className="bg-gradient-to-r from-cyan-400 to-blue-500 p-4 rounded-full mb-4 group-hover:scale-110 transition-transform shadow-lg">
-                      <Shield className="w-8 h-8 text-white" />
-                    </div>
-                    <h3 className="font-bold text-xl text-white mb-2">🛡️ Certified & Safe</h3>
-                    <p className="text-white/90 text-base">Licensed electricians, code compliant</p>
-                  </div>
-                </div>
-
-                <div className="bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm rounded-xl p-6 border-2 border-green-300/30 hover:border-green-300/60 hover:from-white/30 hover:to-white/20 transition-all group shadow-xl">
-                  <div className="flex flex-col items-center text-center">
-                    <div className="bg-gradient-to-r from-green-400 to-emerald-500 p-4 rounded-full mb-4 group-hover:scale-110 transition-transform shadow-lg">
-                      <Award className="w-8 h-8 text-white" />
-                    </div>
-                    <h3 className="font-bold text-xl text-white mb-2">💰 Rebate Assistance</h3>
-                    <p className="text-white/90 text-base">We handle paperwork and incentives</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
             {/* CTA Buttons */}
-            <div className="fade-in-up flex flex-col sm:flex-row gap-4 justify-center items-center mb-8" style={{animationDelay: '0.8s'}}>
+            <div className="fade-in-up flex flex-col sm:flex-row gap-4 justify-center items-center" style={{animationDelay: '0.6s'}}>
               <Button 
                 size="lg" 
                 className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-gray-900 hover:from-yellow-300 hover:via-orange-400 hover:to-red-400 cta-super text-xl px-12 py-7 h-auto font-bold shadow-2xl hover:shadow-3xl hover:scale-110 transition-all duration-300 border-2 border-yellow-300/50"
@@ -122,34 +118,6 @@ const Hero = () => {
               >
                 📸 View Our Work
               </Button>
-            </div>
-
-            {/* Trust Statement with Owner Photo */}
-            <div className="fade-in-up flex flex-col md:flex-row items-center justify-center gap-6" style={{animationDelay: '1s'}}>
-              {/* Owner Photo */}
-              <div className="relative w-24 sm:w-28">
-                <div className="absolute -top-2 -left-2 w-full h-full bg-green-400/40 rounded-xl -rotate-6"></div>
-                <div className="absolute -bottom-2 -right-2 w-full h-full bg-emerald-700/40 rounded-xl rotate-6"></div>
-                <img
-                  src="/Picsart_25-09-10_22-28-17-009.jpg"
-                  alt="Cody Lander"
-                  className="relative w-full rounded-xl border-4 border-white shadow-2xl"
-                />
-                <div className="absolute bottom-1 right-1 bg-emerald-700 text-white px-2 py-0.5 rounded-md shadow-md">
-                  <p className="text-xs font-semibold leading-tight">Cody Lander</p>
-                  <p className="text-[10px]">Owner</p>
-                </div>
-              </div>
-              
-              {/* Trust Text */}
-              <div className="text-center md:text-left">
-                <p className="text-white/90 text-base mb-2">
-                  ⭐⭐⭐⭐⭐ Rated 5.0/5 stars • 47+ satisfied customers across Georgia
-                </p>
-                <p className="text-white/80 text-sm">
-                  🏛️ Georgia Licensed Electrical Contractor #EN217457
-                </p>
-              </div>
             </div>
           </div>
         </div>
