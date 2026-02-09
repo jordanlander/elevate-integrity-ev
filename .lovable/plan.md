@@ -1,36 +1,46 @@
 
 
-# Add Missing Page to sitemap.xml
+# Optimize Tab Titles to Reflect Full Service Range
 
-## Issue Found
-The `/sitemap` page exists as a route and is pre-rendered, but it's **missing from `public/sitemap.xml`**.
+## Problem
+The homepage title ("Professional EV Charger Installation | Integrity EV Solutions | Georgia") focuses exclusively on EV chargers, but the business provides a full range of electrical services including generators, panel upgrades, Tesla Powerwall, and general electrical work.
 
----
+All titles also exceed Google's 55-60 character display limit.
 
-## Change
+## Changes
 
-**File: `public/sitemap.xml`**
+### 1. Homepage (index.html + src/pages/Index.tsx)
 
-Add the `/sitemap` page entry:
+**Before:** `Professional EV Charger Installation | Integrity EV Solutions | Georgia` (70 chars)
+**After:** `Electrician & EV Solutions Georgia | Integrity EV Solutions` (58 chars)
 
-```xml
-<url>
-  <loc>https://www.integrityevsolutions.com/sitemap</loc>
-  <changefreq>monthly</changefreq>
-  <priority>0.3</priority>
-</url>
-```
+- Leads with "Electrician" to capture the broader service identity
+- "EV Solutions" matches the brand name and covers charging
+- Stays under 60 characters
+- Updates in both `index.html` (`<title>`, `og:title`, `twitter:title`) and the SEO component in `Index.tsx`
 
-This will be inserted after the terms-of-service entry (line 47), keeping the legal/utility pages grouped together.
+### 2. Service Pages -- Consistent Pattern: `[Service] Georgia | Integrity EV Solutions`
 
----
+| Page | New Title | Chars |
+|------|-----------|-------|
+| Residential EV | `Home EV Charger Installation | Integrity EV Solutions` | 54 |
+| Commercial EV | `Commercial EV Charging | Integrity EV Solutions` | 48 |
+| General Electrical | `Electrical Services Georgia | Integrity EV Solutions` | 53 |
+| Panel Upgrades | `Electrical Panel Upgrades | Integrity EV Solutions` | 51 |
+| Tesla Powerwall | `Tesla Powerwall Installation | Integrity EV Solutions` | 54 |
+| Generator | `Generator Installation Georgia | Integrity EV Solutions` | 55 |
 
-## About the Second Page
+### 3. Legal/Utility Pages (no changes needed)
+`Privacy Policy | Integrity EV Solutions` and `Terms of Service | Integrity EV Solutions` are already clean and short.
 
-If you're seeing two pages not crawled, the second might be:
-- The **404 page** (`/404`) - This should NOT be in the sitemap (it's an error page)
-- An **external link** that's broken
-- A **hash route** like `/#contact` which crawlers sometimes flag
+## Technical Details
 
-Could you share which specific URLs weren't crawled? That would help identify if there's another issue.
-
+Files to update:
+- **`index.html`** -- `<title>`, `og:title`, and `twitter:title` meta tags
+- **`src/pages/Index.tsx`** -- SEO component `title` prop
+- **`src/pages/services/ResidentialEvCharging.tsx`** -- `metaTitle` prop
+- **`src/pages/services/CommercialEvCharging.tsx`** -- `metaTitle` prop
+- **`src/pages/services/GeneralElectrical.tsx`** -- `metaTitle` prop
+- **`src/pages/services/ElectricalPanelUpgrades.tsx`** -- `metaTitle` prop
+- **`src/pages/services/TeslaPowerwall.tsx`** -- `metaTitle` prop
+- **`src/pages/services/GeneratorInstallation.tsx`** -- `metaTitle` prop
