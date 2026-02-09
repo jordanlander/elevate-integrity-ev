@@ -15,7 +15,7 @@ const Index = () => {
       <main role="main">
         <SEO
           title="Electrician & EV Solutions Georgia | Integrity EV Solutions"
-          description="Professional EV charger installation in Georgia. Fast, certified, rebate-ready installations by licensed electricians. Serving Atlanta & Northern Georgia. Get your free estimate today!"
+          description="Licensed electrician in Georgia offering EV charger installation, generators, panel upgrades, Tesla Powerwall, and full electrical services. Free estimates!"
         />
         <Hero />
         <WorkShowcase />
