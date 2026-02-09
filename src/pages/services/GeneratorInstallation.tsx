@@ -6,7 +6,7 @@ const GeneratorInstallation = () => {
     <ServicePageLayout
       heroImage={generalElectricalImage}
       title="Generator Installation"
-      metaTitle="Generator Installation Atlanta | Whole-Home Backup Power | Integrity EV"
+      metaTitle="Generator Installation Georgia | Integrity EV Solutions"
       metaDescription="Professional generator installation in Atlanta and Georgia. Whole-home backup power, automatic transfer switches, and maintenance. Licensed electricians. Free estimates!"
       heroTitle="Generator Installation"
       heroSubtitle="Keep your home powered during outages with professional whole-home generator installation."
