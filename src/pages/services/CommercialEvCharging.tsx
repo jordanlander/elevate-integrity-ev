@@ -6,7 +6,7 @@ const CommercialEvCharging = () => {
     <ServicePageLayout
       heroImage={commercialEvImage}
       title="Commercial EV Charging"
-      metaTitle="Commercial EV Charging Installation Georgia | Business Charging | Integrity EV"
+      metaTitle="Commercial EV Charging | Integrity EV Solutions"
       metaDescription="Professional commercial EV charging installation for businesses, apartments, and fleets in Georgia. DC fast chargers, load management, and scalable solutions."
       heroTitle="Commercial EV Charging Solutions"
       heroSubtitle="Scalable charging infrastructure for businesses, apartments, hotels, and fleet operations across Georgia."

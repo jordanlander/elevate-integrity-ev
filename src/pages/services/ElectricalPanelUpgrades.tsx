@@ -6,7 +6,7 @@ const ElectricalPanelUpgrades = () => {
     <ServicePageLayout
       heroImage={panelUpgradeImage}
       title="Electrical Panel Upgrades"
-      metaTitle="Electrical Panel Upgrade Atlanta | EV Ready Panels | Integrity EV"
+      metaTitle="Electrical Panel Upgrades | Integrity EV Solutions"
       metaDescription="Professional electrical panel upgrades in Atlanta and Georgia. EV-ready panels, 200A upgrades, smart breakers. Licensed electricians. Free estimates!"
       heroTitle="Electrical Panel Upgrades"
       heroSubtitle="Modernize your electrical system for EV charging, home additions, and future-ready capacity."

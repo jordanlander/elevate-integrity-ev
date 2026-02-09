@@ -9,7 +9,7 @@ const TeslaPowerwall = () => {
     <ServicePageLayout
       heroImage={teslaPowerwallImage}
       title="Tesla Powerwall"
-      metaTitle="Tesla Powerwall Installation Georgia | Battery Storage | Integrity EV"
+      metaTitle="Tesla Powerwall Installation | Integrity EV Solutions"
       metaDescription="Certified Tesla Powerwall installer in Georgia. Home battery backup, solar integration, and energy independence. Professional installation with warranty."
       heroTitle="Tesla Powerwall Installation"
       heroSubtitle="Energy independence and backup power with Tesla's revolutionary home battery system. Certified installers serving Georgia."

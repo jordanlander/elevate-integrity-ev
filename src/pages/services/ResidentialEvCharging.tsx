@@ -6,7 +6,7 @@ const ResidentialEvCharging = () => {
     <ServicePageLayout
       heroImage={residentialEvImage}
       title="Residential EV Charging"
-      metaTitle="Residential EV Charger Installation Atlanta | Home Charging | Integrity EV"
+      metaTitle="Home EV Charger Installation | Integrity EV Solutions"
       metaDescription="Professional Level 2 EV charger installation for homes in Atlanta and Georgia. Tesla Wall Connector certified. Rebate assistance included. Free estimates!"
       heroTitle="Home EV Charger Installation"
       heroSubtitle="Fast, safe Level 2 charging installed by certified electricians. Wake up to a full charge every morning."

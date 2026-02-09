@@ -6,7 +6,7 @@ const GeneralElectrical = () => {
     <ServicePageLayout
       heroImage={generalElectricalImage}
       title="General Electrical Services"
-      metaTitle="Electrical Services Atlanta | Licensed Electrician | Integrity EV Solutions"
+      metaTitle="Electrical Services Georgia | Integrity EV Solutions"
       metaDescription="Licensed electrical services in Atlanta and Georgia. Outlets, lighting, repairs, surge protection, and safety inspections. 24/7 emergency service available."
       heroTitle="General Electrical Services"
       heroSubtitle="Full-service electrical work by licensed professionals. From outlets to lighting to safety upgrades, we do it all."
