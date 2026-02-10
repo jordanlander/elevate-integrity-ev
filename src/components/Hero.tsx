@@ -55,8 +55,11 @@ const Hero = () => {
                 <div className="absolute -bottom-2 -right-2 w-full h-full bg-emerald-700/40 rounded-xl rotate-6"></div>
                 <img
                   src="/Picsart_25-09-10_22-28-17-009.jpg"
-                  alt="Cody Lander"
+                  alt="Cody Lander, Owner of Integrity EV Solutions - Licensed Electrician in Georgia"
+                  width={144}
+                  height={144}
                   className="relative w-full rounded-xl border-4 border-white shadow-2xl"
+                  fetchPriority="high"
                 />
                 <div className="absolute bottom-1 right-1 bg-emerald-700 text-white px-2 py-0.5 rounded-md shadow-md">
                   <p className="text-xs font-semibold leading-tight">Cody Lander</p>
