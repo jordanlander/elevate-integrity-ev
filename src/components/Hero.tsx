@@ -54,7 +54,7 @@ const Hero = () => {
                 <div className="absolute -top-2 -left-2 w-full h-full bg-green-400/40 rounded-xl -rotate-6"></div>
                 <div className="absolute -bottom-2 -right-2 w-full h-full bg-emerald-700/40 rounded-xl rotate-6"></div>
                 <img
-                  src="/Picsart_25-09-10_22-28-17-009.jpg"
+                  src="/cody-lander.jpg"
                   alt="Cody Lander, Owner of Integrity EV Solutions - Licensed Electrician in Georgia"
                   width={144}
                   height={144}
