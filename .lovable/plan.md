@@ -1,83 +1,43 @@
 
 
-# Update Meta Descriptions to Reflect Full Service Range
+# Dynamic Number Insertion (DNI) — React-Native Implementation
 
-## Problem
-Similar to the titles, several meta descriptions focus too heavily on EV charging and don't mention the broader electrical services. Google displays roughly 150-160 characters for meta descriptions, so each should be concise, keyword-rich, and reflect the full scope of services where appropriate.
+## What This Does
+Swaps the visible phone number across the entire site based on a `?src=` URL parameter, so each ad channel gets its own trackable number for attribution.
 
-## Current vs. Proposed Descriptions
+| `?src=` param | Number shown | Channel |
+|---|---|---|
+| *(none/default)* | 470-262-2660 | Organic / Google Ads |
+| `fbj` | 470-688-3436 | Facebook Ads |
+| `igj` | 470-634-1457 | Instagram Ads |
+| `radioj` | 470-613-9714 | Radio |
+| `printj` | 470-256-6974 | Print |
+| `jordan` | 470-517-6159 | Website / Jordan |
 
-### 1. Homepage (index.html + src/pages/Index.tsx)
+## Implementation Steps
 
-**index.html `<meta name="description">`:**
-Current: "Professional EV charger installation in Georgia. Fast, certified, rebate-ready installations by licensed electricians. Serving Atlanta & Northern Georgia. Get your free estimate today!" (183 chars -- too long, EV-only focus)
+### 1. Create `useTrackingPhone` hook
+New file: `src/hooks/use-tracking-phone.ts`
 
-Proposed: "Licensed electrician in Georgia offering EV charger installation, generators, panel upgrades, Tesla Powerwall, and full electrical services. Free estimates!" (155 chars)
+- Reads `?src=` from the URL on mount
+- If found, saves the source to `localStorage` so the number persists across SPA navigations and return visits
+- Returns `{ display, href }` — e.g. `{ display: "(470) 688-3436", href: "tel:4706883436" }`
+- Falls back to the default number if no source is found
 
-**index.html `og:description`:**
-Current: "Licensed electricians providing fast, certified EV charger installations across Georgia. Rebate assistance included. Get your free estimate!"
+### 2. Update 6 components to use the hook
 
-Proposed: "Licensed electricians in Georgia. EV chargers, generators, Tesla Powerwall, panel upgrades, and full electrical services. Free estimates!" (136 chars)
+Replace every hardcoded phone number with the hook's return values:
 
-**index.html `twitter:description`:**
-Current: "Licensed electricians providing fast, certified EV charger installations across Georgia. Rebate assistance included."
+- **Navigation.tsx** — 2 spots (desktop header + mobile menu)
+- **Footer.tsx** — 1 spot (contact section)
+- **MobileCTA.tsx** — 1 spot (sticky bottom bar)
+- **ContactForm.tsx** — 3 spots (call/text card value, call action, emergency line button)
+- **Services.tsx** — 1 spot (emergency CTA button)
+- **ServicePageLayout.tsx** — 2 spots (sidebar + bottom CTA)
 
-Proposed: Same as the new og:description above.
+### 3. Leave structured data alone
+The JSON-LD schema in `index.html` keeps the canonical business number (`+1-470-262-2660`) for SEO — only visible/clickable elements swap.
 
-**src/pages/Index.tsx SEO component:**
-Current: "Professional EV charger installation in Georgia. Fast, certified, rebate-ready installations by licensed electricians. Serving Atlanta & Northern Georgia. Get your free estimate today!"
-
-Proposed: "Licensed electrician in Georgia offering EV charger installation, generators, panel upgrades, Tesla Powerwall, and full electrical services. Free estimates!"
-
-### 2. Residential EV Charging
-
-Current: "Professional Level 2 EV charger installation for homes in Atlanta and Georgia. Tesla Wall Connector certified. Rebate assistance included. Free estimates!" (155 chars)
-
-Proposed: No change needed -- already well-scoped for its service page and under the limit.
-
-### 3. Commercial EV Charging
-
-Current: "Professional commercial EV charging installation for businesses, apartments, and fleets in Georgia. DC fast chargers, load management, and scalable solutions." (158 chars)
-
-Proposed: No change needed -- already well-scoped and near the limit.
-
-### 4. General Electrical
-
-Current: "Licensed electrical services in Atlanta and Georgia. Outlets, lighting, repairs, surge protection, and safety inspections. 24/7 emergency service available." (155 chars)
-
-Proposed: No change needed -- already well-scoped and under the limit.
-
-### 5. Electrical Panel Upgrades
-
-Current: "Professional electrical panel upgrades in Atlanta and Georgia. EV-ready panels, 200A upgrades, smart breakers. Licensed electricians. Free estimates!" (148 chars)
-
-Proposed: No change needed -- already well-scoped.
-
-### 6. Tesla Powerwall
-
-Current: "Certified Tesla Powerwall installer in Georgia. Home battery backup, solar integration, and energy independence. Professional installation with warranty." (153 chars)
-
-Proposed: No change needed -- already well-scoped.
-
-### 7. Generator Installation
-
-Current: "Professional generator installation in Atlanta and Georgia. Whole-home backup power, automatic transfer switches, and maintenance. Licensed electricians. Free estimates!" (169 chars -- slightly over limit)
-
-Proposed: "Generator installation in Georgia. Whole-home backup power, automatic transfer switches, and maintenance by licensed electricians. Free estimates!" (145 chars)
-
-### 8. index.html `<meta name="keywords">`
-
-Current: "EV charger installation, electric vehicle charging, Tesla charger, Level 2 charger, Atlanta electrician, Georgia EV installation, residential charging, commercial charging"
-
-Proposed: "electrician Georgia, EV charger installation, generator installation, Tesla Powerwall, electrical panel upgrade, Atlanta electrician, licensed electrician, electrical services Georgia"
-
-## Summary of Files to Update
-
-| File | What Changes |
-|------|-------------|
-| `index.html` | `description`, `og:description`, `twitter:description`, `keywords` meta tags |
-| `src/pages/Index.tsx` | SEO component `description` prop |
-| `src/pages/services/GeneratorInstallation.tsx` | `metaDescription` prop (trim length) |
-
-The remaining service pages, legal pages, and sitemap page already have well-scoped descriptions that don't need changes.
+## Why This Approach Over Vanilla JS
+React owns the DOM. A vanilla `querySelectorAll` swap runs once on load but gets overwritten whenever React re-renders (page navigation, state changes, etc.). The hook integrates directly into React's lifecycle so the correct number is always rendered.
 
