@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/accordion";
 import { CheckCircle, Phone, ArrowRight, Shield, Award, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTrackingPhone } from "@/hooks/use-tracking-phone";
 
 interface FAQ {
   question: string;
@@ -53,6 +54,7 @@ const ServicePageLayout = ({
   certifications = [],
   children,
 }: ServicePageLayoutProps) => {
+  const phone = useTrackingPhone();
   // Create FAQ structured data for rich search results
   const faqSchema = {
     "@context": "https://schema.org",
@@ -144,9 +146,9 @@ const ServicePageLayout = ({
                   className="bg-white/90 border-2 border-white text-gray-900 hover:bg-white text-lg px-8 py-6 h-auto font-semibold"
                   asChild
                 >
-                  <a href="tel:4702622660">
+                  <a href={phone.href}>
                     <Phone className="w-5 h-5 mr-2" />
-                    (470) 262-2660
+                    {phone.display}
                   </a>
                 </Button>
               </div>
@@ -316,7 +318,7 @@ const ServicePageLayout = ({
                 className="bg-white/10 border-2 border-white text-white hover:bg-white/20 text-lg px-8 py-6 h-auto font-semibold"
                 asChild
               >
-                <a href="tel:4702622660">
+                <a href={phone.href}>
                   <Phone className="w-5 h-5 mr-2" />
                   Call Now
                 </a>

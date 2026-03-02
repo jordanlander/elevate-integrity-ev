@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Phone, ClipboardList } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTrackingPhone } from "@/hooks/use-tracking-phone";
 
 /**
  * MobileCTA renders persistent call-to-action buttons on mobile devices.
@@ -8,9 +9,10 @@ import { Link } from "react-router-dom";
  * to call/text and request a free estimate without covering the footer.
  */
 const MobileCTA = () => {
+  const phone = useTrackingPhone();
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 p-4 md:hidden flex gap-4 bg-background/80 backdrop-blur-sm border-t border-border">
-      <a href="tel:4702622660" className="flex-1">
+      <a href={phone.href} className="flex-1">
         <Button variant="electric" className="w-full h-12 text-base">
           <Phone className="w-5 h-5" />
           Text/Call

@@ -11,8 +11,10 @@ import {
   CheckCircle,
   ArrowRight 
 } from "lucide-react";
+import { useTrackingPhone } from "@/hooks/use-tracking-phone";
 
 const Services = () => {
+  const phone = useTrackingPhone();
   const services = [
     {
       icon: <Home className="w-8 h-8" />,
@@ -161,7 +163,7 @@ const Services = () => {
               className="bg-primary text-primary-foreground hover:bg-primary-glow transition-all duration-300"
               asChild
             >
-              <a href="tel:+14702622660">Call Now: (470) 262-2660</a>
+              <a href={phone.href}>Call Now: {phone.display}</a>
             </Button>
           </div>
         </div>

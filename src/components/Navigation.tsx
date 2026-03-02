@@ -3,10 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Menu, X, Phone, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTrackingPhone } from "@/hooks/use-tracking-phone";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
+  const phone = useTrackingPhone();
 
   const serviceItems = [
     { name: "Tesla Powerwall", href: "/services/tesla-powerwall" },
@@ -86,8 +88,8 @@ const Navigation = () => {
             <div className="text-right">
               <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
                 <Phone className="w-4 h-4" />
-                <a href="tel:4702622660" className="hover:text-primary transition-colors">
-                  (470) 262-2660
+                <a href={phone.href} className="hover:text-primary transition-colors">
+                  {phone.display}
                 </a>
               </div>
               <Badge variant="secondary" className="text-xs">24/7 Emergency Service</Badge>
@@ -154,8 +156,8 @@ const Navigation = () => {
             <div className="pt-4 border-t border-border space-y-3">
               <div className="flex items-center gap-2 text-foreground font-semibold">
                 <Phone className="w-4 h-4" />
-                <a href="tel:4702622660" className="hover:text-primary transition-colors">
-                  (470) 262-2660
+                <a href={phone.href} className="hover:text-primary transition-colors">
+                  {phone.display}
                 </a>
               </div>
               <Button
