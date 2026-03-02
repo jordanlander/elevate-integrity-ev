@@ -1,43 +1,41 @@
 
 
-# Dynamic Number Insertion (DNI) — React-Native Implementation
+# Fix: DNI Not Working on Live Site
 
-## What This Does
-Swaps the visible phone number across the entire site based on a `?src=` URL parameter, so each ad channel gets its own trackable number for attribution.
+## Problem
+Two issues are preventing the Dynamic Number Insertion from working:
 
-| `?src=` param | Number shown | Channel |
-|---|---|---|
-| *(none/default)* | 470-262-2660 | Organic / Google Ads |
-| `fbj` | 470-688-3436 | Facebook Ads |
-| `igj` | 470-634-1457 | Instagram Ads |
-| `radioj` | 470-613-9714 | Radio |
-| `printj` | 470-256-6974 | Print |
-| `jordan` | 470-517-6159 | Website / Jordan |
+### Issue 1: Changes not published
+The DNI hook code exists in the Lovable preview but hasn't been published to your live domain (`www.integrityevsolutions.com`). You need to hit **Publish** in Lovable for the changes to go live.
 
-## Implementation Steps
+### Issue 2: CallRail `swap.js` conflict
+Line 52 of `index.html` loads CallRail's own number-swapping script:
+```
+<script src="//cdn.callrail.com/companies/880005963/.../swap.js"></script>
+```
+CallRail's swap.js runs after page load and **overwrites** phone numbers in the DOM -- undoing exactly what the React hook sets. These two systems fight each other.
 
-### 1. Create `useTrackingPhone` hook
-New file: `src/hooks/use-tracking-phone.ts`
+## Solution Options
 
-- Reads `?src=` from the URL on mount
-- If found, saves the source to `localStorage` so the number persists across SPA navigations and return visits
-- Returns `{ display, href }` — e.g. `{ display: "(470) 688-3436", href: "tel:4706883436" }`
-- Falls back to the default number if no source is found
+**Option A (Recommended): Remove CallRail swap.js, keep the React hook**
+- Delete the CallRail script from `index.html` (line 52)
+- The React `useTrackingPhone` hook handles all number swapping natively
+- This is cleaner because React controls the DOM -- no conflicts
 
-### 2. Update 6 components to use the hook
+**Option B: Keep CallRail, remove the React hook**
+- Remove the `useTrackingPhone` hook and revert components to hardcoded numbers
+- Let CallRail handle all swapping via its own `swap.js`
+- You'd configure the number mapping in CallRail's dashboard instead of in code
+- Downside: CallRail may flash the default number briefly before swapping
 
-Replace every hardcoded phone number with the hook's return values:
+## Recommended Plan (Option A)
 
-- **Navigation.tsx** — 2 spots (desktop header + mobile menu)
-- **Footer.tsx** — 1 spot (contact section)
-- **MobileCTA.tsx** — 1 spot (sticky bottom bar)
-- **ContactForm.tsx** — 3 spots (call/text card value, call action, emergency line button)
-- **Services.tsx** — 1 spot (emergency CTA button)
-- **ServicePageLayout.tsx** — 2 spots (sidebar + bottom CTA)
+### Step 1: Remove CallRail swap.js from index.html
+Delete line 52 (`<script type="text/javascript" src="//cdn.callrail.com/..."></script>`) since the React hook now handles DNI.
 
-### 3. Leave structured data alone
-The JSON-LD schema in `index.html` keeps the canonical business number (`+1-470-262-2660`) for SEO — only visible/clickable elements swap.
+### Step 2: Publish
+After the change, publish the site so it goes live on `www.integrityevsolutions.com`.
 
-## Why This Approach Over Vanilla JS
-React owns the DOM. A vanilla `querySelectorAll` swap runs once on load but gets overwritten whenever React re-renders (page navigation, state changes, etc.). The hook integrates directly into React's lifecycle so the correct number is always rendered.
+### Step 3: Test
+Visit `https://www.integrityevsolutions.com/?src=fbj` and confirm the number shows `(470) 688-3436` in the nav, footer, mobile bar, contact form, and services section.
 
