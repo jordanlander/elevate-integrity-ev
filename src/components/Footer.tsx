@@ -11,8 +11,10 @@ import {
   Linkedin
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTrackingPhone } from "@/hooks/use-tracking-phone";
 
 const Footer = () => {
+  const phone = useTrackingPhone();
   const serviceAreas = [
     "Atlanta", "Alpharetta", "Roswell", "Marietta", "Decatur", 
     "Duluth", "Lawrenceville", "Johns Creek", "Sandy Springs", "Brookhaven"
@@ -71,7 +73,7 @@ const Footer = () => {
               <div className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-accent flex-shrink-0" />
                 <div>
-                  <a href="tel:4702622660" className="font-semibold hover:text-accent transition-colors">470-262-2660</a>
+                  <a href={phone.href} className="font-semibold hover:text-accent transition-colors">{phone.display}</a>
                   <div className="text-sm text-primary-foreground/80">Mon–Fri: 8 am–6 pm</div>
                 </div>
               </div>

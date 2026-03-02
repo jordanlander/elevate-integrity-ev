@@ -18,6 +18,7 @@ import {
   Zap,
   CheckCircle
 } from "lucide-react";
+import { useTrackingPhone } from "@/hooks/use-tracking-phone";
 
 // Validation schema
 const contactFormSchema = z.object({
@@ -44,6 +45,7 @@ const ContactForm = () => {
     utm_campaign: ''
   });
   const { toast } = useToast();
+  const phone = useTrackingPhone();
 
   // Capture UTM parameters for lead attribution
   useEffect(() => {
@@ -144,7 +146,7 @@ const ContactForm = () => {
     {
       icon: <Phone className="w-6 h-6" />,
       title: "Call or Text",
-      value: "470-262-2660",
+      value: phone.display,
       description: "Mon–Fri: 8 am–6 pm",
       action: "Call Now",
       gradient: "bg-gradient-primary"
@@ -204,7 +206,7 @@ const ContactForm = () => {
                         className="text-xs"
                         onClick={() => {
                           if (method.title === "Call or Text") {
-                            window.location.href = "tel:4702622660";
+                            window.location.href = phone.href;
                           } else if (method.title === "Email") {
                             window.location.href = "mailto:integrityevsolutions@gmail.com";
                           } else if (method.title === "Service Area") {
@@ -232,7 +234,7 @@ const ContactForm = () => {
               </p>
               <Button 
                 className="w-full bg-gradient-accent glow-accent"
-                onClick={() => window.location.href = "tel:4702622660"}
+                onClick={() => window.location.href = phone.href}
               >
                 Call Emergency Line
               </Button>
