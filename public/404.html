@@ -4,14 +4,18 @@
     <meta charset="utf-8">
     <title>Redirecting...</title>
     <script>
-      // Single Page App redirect for GitHub Pages
-      // Stores the path in sessionStorage and redirects to index
-      var pathSegmentsToKeep = 0;
+      // SPA redirect for GitHub Pages — stores path/search/hash as structured JSON
       var l = window.location;
-      sessionStorage.redirect = l.pathname.slice(1) + l.search + l.hash;
+      try {
+        sessionStorage.setItem('spa_redirect_v1', JSON.stringify({
+          path: l.pathname,
+          search: l.search,
+          hash: l.hash,
+          ts: Date.now()
+        }));
+      } catch (e) {}
       l.replace(
-        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/'
+        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + '/'
       );
     </script>
   </head>
