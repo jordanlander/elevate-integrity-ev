@@ -1,41 +1,50 @@
 
 
-# Fix: DNI Not Working on Live Site
+# DNI Fix: Harden SPA Fallback and Query Parameter Handling
 
-## Problem
-Two issues are preventing the Dynamic Number Insertion from working:
+## What's changing (and what's NOT)
 
-### Issue 1: Changes not published
-The DNI hook code exists in the Lovable preview but hasn't been published to your live domain (`www.integrityevsolutions.com`). You need to hit **Publish** in Lovable for the changes to go live.
+**NOT touched:** All SEO elements -- meta tags, structured data/schema, canonical URLs, sitemap, robots.txt, Open Graph, tracking pixels. Zero changes.
 
-### Issue 2: CallRail `swap.js` conflict
-Line 52 of `index.html` loads CallRail's own number-swapping script:
-```
-<script src="//cdn.callrail.com/companies/880005963/.../swap.js"></script>
-```
-CallRail's swap.js runs after page load and **overwrites** phone numbers in the DOM -- undoing exactly what the React hook sets. These two systems fight each other.
+**Changed:** Only the SPA redirect plumbing (3 files) to ensure `?src=fbj` survives the GitHub Pages 404-redirect cycle.
 
-## Solution Options
+---
 
-**Option A (Recommended): Remove CallRail swap.js, keep the React hook**
-- Delete the CallRail script from `index.html` (line 52)
-- The React `useTrackingPhone` hook handles all number swapping natively
-- This is cleaner because React controls the DOM -- no conflicts
+## Root Cause
 
-**Option B: Keep CallRail, remove the React hook**
-- Remove the `useTrackingPhone` hook and revert components to hardcoded numbers
-- Let CallRail handle all swapping via its own `swap.js`
-- You'd configure the number mapping in CallRail's dashboard instead of in code
-- Downside: CallRail may flash the default number briefly before swapping
+When someone visits `integrityevsolutions.com/?src=fbj`, GitHub Pages serves `404.html` which stores the path+query in `sessionStorage` and redirects to `/`. Then `index.html` restores the URL via `history.replaceState`. However, this restore happens *before* React mounts, and the timing/format can cause `useSearchParams()` to miss the `?src=` parameter -- so the hook falls back to the default phone number.
 
-## Recommended Plan (Option A)
+## Changes
 
-### Step 1: Remove CallRail swap.js from index.html
-Delete line 52 (`<script type="text/javascript" src="//cdn.callrail.com/..."></script>`) since the React hook now handles DNI.
+### 1. `public/404.html` -- Store redirect data as structured JSON
 
-### Step 2: Publish
-After the change, publish the site so it goes live on `www.integrityevsolutions.com`.
+Instead of concatenating path+search+hash into one string, store them as a namespaced JSON object with a timestamp. This makes restore logic precise and avoids accidental query loss.
 
-### Step 3: Test
-Visit `https://www.integrityevsolutions.com/?src=fbj` and confirm the number shows `(470) 688-3436` in the nav, footer, mobile bar, contact form, and services section.
+### 2. `index.html` -- Smarter restore logic (lines 6-13 only)
+
+Update the bootstrap script to:
+- Read the new namespaced key (`spa_redirect_v1`)
+- Only restore if fresh (within 30 seconds, prevents stale redirects)
+- Preserve any query params already on the current URL (so direct visits with `?src=` are never overwritten)
+- Clear storage after use
+- Fall back gracefully if old-format `sessionStorage.redirect` is present (backward compat during rollout)
+
+### 3. `src/hooks/use-tracking-phone.ts` -- Add `window.location.search` fallback
+
+Add a secondary parse of `window.location.search` as a safety net in case `useSearchParams()` returns empty (which can happen if `replaceState` fires at an awkward time relative to React Router hydration). Also adds optional debug logging behind `?debug_dni=1`.
+
+## Risk Assessment
+
+- **SEO impact:** None. No HTML structure, meta tags, or schema changes.
+- **404 fallback regression:** None. The redirect-to-root mechanism is preserved; only the storage format is improved.
+- **Backward compatibility:** Old `sessionStorage.redirect` format is handled as a fallback during the transition.
+
+## Verification Steps
+
+After GitHub Pages deploys:
+1. Incognito tab: `integrityevsolutions.com/?src=fbj` -- should show `(470) 688-3436`
+2. Incognito tab: `integrityevsolutions.com/?src=igj` -- should show `(470) 634-1457`
+3. Test deep link: `integrityevsolutions.com/services/tesla-powerwall?src=fbj` -- should route correctly AND show tracking number
+4. Test bare URL: `integrityevsolutions.com` -- should show default `(470) 262-2660`
+5. Debug mode: `integrityevsolutions.com/?src=fbj&debug_dni=1` -- open console to see resolution log
 
