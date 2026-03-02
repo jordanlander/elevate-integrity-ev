@@ -1,50 +1,61 @@
 
+Goal: fix the DNI number swap so `?src=` is reliably captured on GitHub Pages, even when the 404 fallback flow or prerendered HTML timing interferes.
 
-# DNI Fix: Harden SPA Fallback and Query Parameter Handling
+What I found:
+- The current fix correctly hardens `public/404.html`, `index.html`, and `useTrackingPhone`.
+- But the restore logic still depends on an inline script in `index.html`.
+- On GitHub Pages + prerendered output, inline bootstrap timing/presence can be brittle, which can leave the app at `/` without restored query params, causing fallback to default `470-262-2660`.
 
-## What's changing (and what's NOT)
+Proposed implementation (next edit pass):
+1) Move redirect restore into JS runtime before React mounts
+- File: `src/main.tsx`
+- Add a tiny `restoreSpaRedirect()` function that runs before `createRoot(...)`.
+- It will:
+  - read `sessionStorage.spa_redirect_v1`
+  - validate JSON + 30s TTL
+  - merge restored params with current URL params
+  - apply `history.replaceState(...)`
+  - clear consumed storage key
+- Keep backward compatibility for `sessionStorage.redirect`, but only apply it when safe (no existing query params), to avoid stale overwrite.
 
-**NOT touched:** All SEO elements -- meta tags, structured data/schema, canonical URLs, sitemap, robots.txt, Open Graph, tracking pixels. Zero changes.
+2) Keep `index.html` script, but make it defensive/no-op-safe
+- File: `index.html`
+- Keep current logic for non-JS edge cases, but align behavior with `main.tsx` bootstrap so both paths are consistent.
+- Add guard so legacy redirect cannot override an existing `?src=` on direct visits.
 
-**Changed:** Only the SPA redirect plumbing (3 files) to ensure `?src=fbj` survives the GitHub Pages 404-redirect cycle.
+3) Make DNI hook resilient to alternate param locations
+- File: `src/hooks/use-tracking-phone.ts`
+- Expand source extraction priority:
+  1. `useSearchParams().get("src")`
+  2. `window.location.search`
+  3. (safety) parse `window.location.href` once
+  4. localStorage fallback
+- Keep `debug_dni=1` logs.
+- Keep existing map/default behavior unchanged.
 
----
+4) Add a tiny normalization helper for `src`
+- In `use-tracking-phone.ts`, normalize incoming values (trim/lowercase) before lookup.
+- This prevents misses from common ad URL formatting variants.
 
-## Root Cause
+5) Preserve SEO/schema unchanged
+- No changes to meta tags, canonical, JSON-LD schema, sitemap, robots, OG/Twitter cards.
+- Only runtime URL restoration + DNI resolution logic changes.
 
-When someone visits `integrityevsolutions.com/?src=fbj`, GitHub Pages serves `404.html` which stores the path+query in `sessionStorage` and redirects to `/`. Then `index.html` restores the URL via `history.replaceState`. However, this restore happens *before* React mounts, and the timing/format can cause `useSearchParams()` to miss the `?src=` parameter -- so the hook falls back to the default phone number.
+Validation plan after deploy:
+1. Root visit with source:
+- `https://www.integrityevsolutions.com/?src=fbj`
+- Expected: tracking number for `fbj`.
+2. Deep-link 404 flow:
+- `https://www.integrityevsolutions.com/services/tesla-powerwall?src=fbj`
+- Expected: page route restored + tracking number preserved.
+3. Alternate source:
+- `...?src=igj` returns mapped IG number.
+4. No source:
+- bare domain returns default number.
+5. Debug check:
+- `...?src=fbj&debug_dni=1` logs resolved source + selected number in console.
 
-## Changes
-
-### 1. `public/404.html` -- Store redirect data as structured JSON
-
-Instead of concatenating path+search+hash into one string, store them as a namespaced JSON object with a timestamp. This makes restore logic precise and avoids accidental query loss.
-
-### 2. `index.html` -- Smarter restore logic (lines 6-13 only)
-
-Update the bootstrap script to:
-- Read the new namespaced key (`spa_redirect_v1`)
-- Only restore if fresh (within 30 seconds, prevents stale redirects)
-- Preserve any query params already on the current URL (so direct visits with `?src=` are never overwritten)
-- Clear storage after use
-- Fall back gracefully if old-format `sessionStorage.redirect` is present (backward compat during rollout)
-
-### 3. `src/hooks/use-tracking-phone.ts` -- Add `window.location.search` fallback
-
-Add a secondary parse of `window.location.search` as a safety net in case `useSearchParams()` returns empty (which can happen if `replaceState` fires at an awkward time relative to React Router hydration). Also adds optional debug logging behind `?debug_dni=1`.
-
-## Risk Assessment
-
-- **SEO impact:** None. No HTML structure, meta tags, or schema changes.
-- **404 fallback regression:** None. The redirect-to-root mechanism is preserved; only the storage format is improved.
-- **Backward compatibility:** Old `sessionStorage.redirect` format is handled as a fallback during the transition.
-
-## Verification Steps
-
-After GitHub Pages deploys:
-1. Incognito tab: `integrityevsolutions.com/?src=fbj` -- should show `(470) 688-3436`
-2. Incognito tab: `integrityevsolutions.com/?src=igj` -- should show `(470) 634-1457`
-3. Test deep link: `integrityevsolutions.com/services/tesla-powerwall?src=fbj` -- should route correctly AND show tracking number
-4. Test bare URL: `integrityevsolutions.com` -- should show default `(470) 262-2660`
-5. Debug mode: `integrityevsolutions.com/?src=fbj&debug_dni=1` -- open console to see resolution log
-
+Technical notes:
+- This approach removes dependence on head-inline script timing by enforcing restoration in application bootstrap (`main.tsx`), which always runs when React runs.
+- It is backward compatible and safer against stale legacy session keys.
+- It does not affect indexing or Search Console optimization because rendered content metadata/schema is untouched.
