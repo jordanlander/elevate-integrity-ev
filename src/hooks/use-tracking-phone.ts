@@ -29,12 +29,22 @@ export function useTrackingPhone() {
       new URLSearchParams(window.location.search).get("debug_dni") === "1";
 
     // Primary: React Router
-    let srcParam = searchParams.get("src")?.toLowerCase();
+    let srcParam = searchParams.get("src")?.trim().toLowerCase() || undefined;
 
-    // Fallback: window.location.search (covers replaceState race)
+    // Fallback 1: window.location.search (covers replaceState race)
     if (!srcParam) {
       try {
-        srcParam = new URLSearchParams(window.location.search).get("src")?.toLowerCase() || undefined;
+        srcParam = new URLSearchParams(window.location.search).get("src")?.trim().toLowerCase() || undefined;
+      } catch {
+        // noop
+      }
+    }
+
+    // Fallback 2: parse full href (covers edge-case encodings)
+    if (!srcParam) {
+      try {
+        const url = new URL(window.location.href);
+        srcParam = url.searchParams.get("src")?.trim().toLowerCase() || undefined;
       } catch {
         // noop
       }

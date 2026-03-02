@@ -2,18 +2,20 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- SPA redirect handler for GitHub Pages -->
+    <!-- SPA redirect handler for GitHub Pages (defensive; main.tsx also restores) -->
     <script>
       (function() {
+        // Skip if ?src= already present on direct visit
+        if (window.location.search && window.location.search.indexOf('src=') !== -1) return;
+
         // v1: structured JSON redirect
         var raw, data;
         try { raw = sessionStorage.getItem('spa_redirect_v1'); } catch(e){}
         if (raw) {
-          try { sessionStorage.removeItem('spa_redirect_v1'); } catch(e){}
+          // Don't remove — let main.tsx consume it (it will clean up)
           try { data = JSON.parse(raw); } catch(e){}
           if (data && (Date.now() - data.ts) < 30000) {
             var target = data.path || '/';
-            // Merge: keep any params already on current URL, add redirected ones
             var cur = new URLSearchParams(window.location.search);
             var red = new URLSearchParams(data.search || '');
             red.forEach(function(v, k) { if (!cur.has(k)) cur.set(k, v); });
@@ -23,10 +25,10 @@
             window.history.replaceState(null, null, target);
           }
         } else {
-          // Backward compat: old format
+          // Backward compat: old format (only when no existing query)
           var redirect = sessionStorage.redirect;
           delete sessionStorage.redirect;
-          if (redirect && redirect !== '/') {
+          if (redirect && redirect !== '/' && !window.location.search) {
             window.history.replaceState(null, null, '/' + redirect);
           }
         }
