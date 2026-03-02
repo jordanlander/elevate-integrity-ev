@@ -13,27 +13,41 @@ const DEFAULT_RAW = "4702622660";
 const STORAGE_KEY = "dni_src";
 
 function formatPhone(raw: string): string {
-  // "4706883436" → "(470) 688-3436"
   return `(${raw.slice(0, 3)}) ${raw.slice(3, 6)}-${raw.slice(6)}`;
 }
 
 /**
  * Dynamic Number Insertion hook.
- * Reads `?src=` from the URL, persists it in localStorage,
- * and returns the mapped phone number for ad attribution.
+ * Reads `?src=` from the URL (React Router + window.location fallback),
+ * persists it in localStorage, and returns the mapped phone number.
  */
 export function useTrackingPhone() {
   const [searchParams] = useSearchParams();
 
   const { display, href } = useMemo(() => {
-    const srcParam = searchParams.get("src")?.toLowerCase();
+    const debug = searchParams.get("debug_dni") === "1" ||
+      new URLSearchParams(window.location.search).get("debug_dni") === "1";
 
-    // If a new src param is present, persist it
+    // Primary: React Router
+    let srcParam = searchParams.get("src")?.toLowerCase();
+
+    // Fallback: window.location.search (covers replaceState race)
+    if (!srcParam) {
+      try {
+        srcParam = new URLSearchParams(window.location.search).get("src")?.toLowerCase() || undefined;
+      } catch {
+        // noop
+      }
+    }
+
+    if (debug) console.log("[DNI] srcParam from URL:", srcParam);
+
+    // Persist if present
     if (srcParam) {
       try {
         localStorage.setItem(STORAGE_KEY, srcParam);
       } catch {
-        // localStorage unavailable — silent fail
+        // localStorage unavailable
       }
     }
 
@@ -46,6 +60,8 @@ export function useTrackingPhone() {
         // noop
       }
     }
+
+    if (debug) console.log("[DNI] resolved src:", src, "→", src && PHONE_MAP[src] ? PHONE_MAP[src] : DEFAULT_RAW);
 
     const raw = (src && PHONE_MAP[src]) || DEFAULT_RAW;
     return { display: formatPhone(raw), href: `tel:${raw}` };

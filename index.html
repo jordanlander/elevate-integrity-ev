@@ -5,10 +5,30 @@
     <!-- SPA redirect handler for GitHub Pages -->
     <script>
       (function() {
-        var redirect = sessionStorage.redirect;
-        delete sessionStorage.redirect;
-        if (redirect && redirect !== '/') {
-          window.history.replaceState(null, null, '/' + redirect);
+        // v1: structured JSON redirect
+        var raw, data;
+        try { raw = sessionStorage.getItem('spa_redirect_v1'); } catch(e){}
+        if (raw) {
+          try { sessionStorage.removeItem('spa_redirect_v1'); } catch(e){}
+          try { data = JSON.parse(raw); } catch(e){}
+          if (data && (Date.now() - data.ts) < 30000) {
+            var target = data.path || '/';
+            // Merge: keep any params already on current URL, add redirected ones
+            var cur = new URLSearchParams(window.location.search);
+            var red = new URLSearchParams(data.search || '');
+            red.forEach(function(v, k) { if (!cur.has(k)) cur.set(k, v); });
+            var qs = cur.toString();
+            if (qs) target += '?' + qs;
+            if (data.hash) target += data.hash;
+            window.history.replaceState(null, null, target);
+          }
+        } else {
+          // Backward compat: old format
+          var redirect = sessionStorage.redirect;
+          delete sessionStorage.redirect;
+          if (redirect && redirect !== '/') {
+            window.history.replaceState(null, null, '/' + redirect);
+          }
         }
       })();
     </script>
