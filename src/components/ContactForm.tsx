@@ -80,6 +80,7 @@ const submitViaHiddenIframe = (payload: Record<string, string | undefined>) => {
 
 const ContactForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
   const [service, setService] = useState("");
   const [timeline, setTimeline] = useState("");
   const [errors, setErrors] = useState<Partial<Record<keyof ContactFormData, string>>>({});
@@ -113,6 +114,7 @@ const ContactForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors({});
+    setSubmitSuccess(false);
 
     const formData = new FormData(e.currentTarget);
     const formObject = {
@@ -159,6 +161,7 @@ const ContactForm = () => {
       setService("");
       setTimeline("");
       setErrors({});
+      setSubmitSuccess(true);
     } catch (error) {
       console.error("Form submission error:", error);
       toast({
@@ -387,6 +390,13 @@ const ContactForm = () => {
                       </>
                     )}
                   </Button>
+
+                  {submitSuccess && (
+                    <div className="rounded-lg border border-primary/30 bg-primary/10 p-4 text-center" role="status" aria-live="polite">
+                      <p className="font-semibold text-primary">Request Received!</p>
+                      <p className="text-sm text-muted-foreground">We'll contact you within 24 hours with your free estimate.</p>
+                    </div>
+                  )}
 
                   {/* Trust Indicators */}
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-muted-foreground pt-4 border-t border-border">
