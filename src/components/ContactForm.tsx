@@ -345,13 +345,6 @@ const ContactForm = () => {
                     )}
                   </Button>
 
-                  {submitSuccess && (
-                    <div className="rounded-lg border border-primary/30 bg-primary/10 p-4 text-center" role="status" aria-live="polite">
-                      <p className="font-semibold text-primary">Request Received!</p>
-                      <p className="text-sm text-muted-foreground">We'll contact you within 24 hours with your free estimate.</p>
-                    </div>
-                  )}
-
                   {/* Trust Indicators */}
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-muted-foreground pt-4 border-t border-border">
                     <div className="flex items-center gap-2">
