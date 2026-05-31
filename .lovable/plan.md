@@ -1,61 +1,27 @@
+# Fix: Contact Form Shows Error Despite Sending Successfully
 
-Goal: fix the DNI number swap so `?src=` is reliably captured on GitHub Pages, even when the 404 fallback flow or prerendered HTML timing interferes.
+## The problem
 
-What I found:
-- The current fix correctly hardens `public/404.html`, `index.html`, and `useTrackingPhone`.
-- But the restore logic still depends on an inline script in `index.html`.
-- On GitHub Pages + prerendered output, inline bootstrap timing/presence can be brittle, which can leave the app at `/` without restored query params, causing fallback to default `470-262-2660`.
+Customers fill out the estimate form and see a red **"Submission Failed"** error, yet you still receive the lead email. This is a false-negative: the email reaches FormSubmit's servers and gets delivered to you, but the browser interprets the response as a failure and shows the error toast.
 
-Proposed implementation (next edit pass):
-1) Move redirect restore into JS runtime before React mounts
-- File: `src/main.tsx`
-- Add a tiny `restoreSpaRedirect()` function that runs before `createRoot(...)`.
-- It will:
-  - read `sessionStorage.spa_redirect_v1`
-  - validate JSON + 30s TTL
-  - merge restored params with current URL params
-  - apply `history.replaceState(...)`
-  - clear consumed storage key
-- Keep backward compatibility for `sessionStorage.redirect`, but only apply it when safe (no existing query params), to avoid stale overwrite.
+## Root cause
 
-2) Keep `index.html` script, but make it defensive/no-op-safe
-- File: `index.html`
-- Keep current logic for non-JS edge cases, but align behavior with `main.tsx` bootstrap so both paths are consistent.
-- Add guard so legacy redirect cannot override an existing `?src=` on direct visits.
+In `src/components/ContactForm.tsx` the form sends to FormSubmit's AJAX endpoint with `_captcha: "true"`. With AJAX requests, the captcha flag causes FormSubmit to return a response that the current code treats as an error (it only checks `response.ok` and never inspects the actual `{ success: "true" }` payload FormSubmit returns). The result: email delivered, but the customer sees a failure.
 
-3) Make DNI hook resilient to alternate param locations
-- File: `src/hooks/use-tracking-phone.ts`
-- Expand source extraction priority:
-  1. `useSearchParams().get("src")`
-  2. `window.location.search`
-  3. (safety) parse `window.location.href` once
-  4. localStorage fallback
-- Keep `debug_dni=1` logs.
-- Keep existing map/default behavior unchanged.
+## What I'll change (only the submission logic in `ContactForm.tsx`)
 
-4) Add a tiny normalization helper for `src`
-- In `use-tracking-phone.ts`, normalize incoming values (trim/lowercase) before lookup.
-- This prevents misses from common ad URL formatting variants.
+1. **Disable the AJAX captcha** — set `_captcha: "false"` so FormSubmit returns a clean JSON success response for browser-based submissions.
+2. **Read the actual response body** — parse the returned JSON and treat `success === "true"` (or a 200 response) as a confirmed success, instead of relying only on `response.ok`.
+3. **Tighten error handling** — only show the "Submission Failed" toast when the request genuinely fails (network error or an explicit non-success body), so customers stop seeing errors on successful sends.
+4. **Keep everything else identical** — same email recipient (`integrityevsolutions@gmail.com`), same fields, same UTM lead-attribution data, same validation, same success toast and form reset.
 
-5) Preserve SEO/schema unchanged
-- No changes to meta tags, canonical, JSON-LD schema, sitemap, robots, OG/Twitter cards.
-- Only runtime URL restoration + DNI resolution logic changes.
+## Not touched
 
-Validation plan after deploy:
-1. Root visit with source:
-- `https://www.integrityevsolutions.com/?src=fbj`
-- Expected: tracking number for `fbj`.
-2. Deep-link 404 flow:
-- `https://www.integrityevsolutions.com/services/tesla-powerwall?src=fbj`
-- Expected: page route restored + tracking number preserved.
-3. Alternate source:
-- `...?src=igj` returns mapped IG number.
-4. No source:
-- bare domain returns default number.
-5. Debug check:
-- `...?src=fbj&debug_dni=1` logs resolved source + selected number in console.
+- No changes to validation, field layout, styling, or the success message.
+- No changes to UTM/lead tracking, phone tracking (DNI), SEO, or any other component.
 
-Technical notes:
-- This approach removes dependence on head-inline script timing by enforcing restoration in application bootstrap (`main.tsx`), which always runs when React runs.
-- It is backward compatible and safer against stale legacy session keys.
-- It does not affect indexing or Search Console optimization because rendered content metadata/schema is untouched.
+## Validation after the change
+
+1. Submit a test lead from the live form → should show the green **"Request Received!"** confirmation, no error.
+2. Confirm the lead email still arrives at `integrityevsolutions@gmail.com` with all fields and lead-source data.
+3. Submit with a missing required field → should still show the inline validation errors as before.

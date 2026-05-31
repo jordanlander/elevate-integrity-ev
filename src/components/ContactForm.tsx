@@ -114,11 +114,22 @@ const ContactForm = () => {
           lead_source: utmParams.utm_source,
           lead_medium: utmParams.utm_medium,
           lead_campaign: utmParams.utm_campaign,
-          _captcha: "true",
+          _captcha: "false",
         }),
       });
 
-      if (!response.ok) {
+      // FormSubmit's AJAX endpoint returns { success: "true", ... } on success.
+      let succeeded = response.ok;
+      try {
+        const data = await response.json();
+        if (typeof data?.success !== "undefined") {
+          succeeded = String(data.success) === "true";
+        }
+      } catch {
+        // No/invalid JSON body — fall back to the HTTP status.
+      }
+
+      if (!succeeded) {
         throw new Error("Form submission failed");
       }
 
