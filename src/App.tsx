@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import Sitemap from "./pages/Sitemap";
+import ThankYou from "./pages/ThankYou";
 import NotFound from "./pages/NotFound";
 
 // Service Pages
@@ -33,6 +34,7 @@ const App = () => (
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/sitemap" element={<Sitemap />} />
+          <Route path="/thank-you" element={<ThankYou />} />
           
           {/* Service Pages */}
           <Route path="/services/residential-ev-charging" element={<ResidentialEvCharging />} />
