@@ -1,27 +1,12 @@
-# Fix: Contact Form Shows Error Despite Sending Successfully
+Plan to fix the red “Submission Failed” box:
 
-## The problem
+1. Update the contact form submit flow in `src/components/ContactForm.tsx` only.
+2. Keep the same recipient email, fields, validation, lead tracking, and button UI.
+3. Make FormSubmit response handling more tolerant:
+   - Parse FormSubmit’s response body as text first, then JSON when possible.
+   - Treat the submission as successful when FormSubmit returns `success: true`, any normal 2xx response, or a non-error response body.
+   - Only show the red failure toast for real network failures or an explicit FormSubmit error.
+4. Add safe debug logging for status/body metadata only, without logging customer form values.
+5. Verify by submitting a test form in preview and checking the user-facing toast shows “Request Received!” instead of the red error.
 
-Customers fill out the estimate form and see a red **"Submission Failed"** error, yet you still receive the lead email. This is a false-negative: the email reaches FormSubmit's servers and gets delivered to you, but the browser interprets the response as a failure and shows the error toast.
-
-## Root cause
-
-In `src/components/ContactForm.tsx` the form sends to FormSubmit's AJAX endpoint with `_captcha: "true"`. With AJAX requests, the captcha flag causes FormSubmit to return a response that the current code treats as an error (it only checks `response.ok` and never inspects the actual `{ success: "true" }` payload FormSubmit returns). The result: email delivered, but the customer sees a failure.
-
-## What I'll change (only the submission logic in `ContactForm.tsx`)
-
-1. **Disable the AJAX captcha** — set `_captcha: "false"` so FormSubmit returns a clean JSON success response for browser-based submissions.
-2. **Read the actual response body** — parse the returned JSON and treat `success === "true"` (or a 200 response) as a confirmed success, instead of relying only on `response.ok`.
-3. **Tighten error handling** — only show the "Submission Failed" toast when the request genuinely fails (network error or an explicit non-success body), so customers stop seeing errors on successful sends.
-4. **Keep everything else identical** — same email recipient (`integrityevsolutions@gmail.com`), same fields, same UTM lead-attribution data, same validation, same success toast and form reset.
-
-## Not touched
-
-- No changes to validation, field layout, styling, or the success message.
-- No changes to UTM/lead tracking, phone tracking (DNI), SEO, or any other component.
-
-## Validation after the change
-
-1. Submit a test lead from the live form → should show the green **"Request Received!"** confirmation, no error.
-2. Confirm the lead email still arrives at `integrityevsolutions@gmail.com` with all fields and lead-source data.
-3. Submit with a missing required field → should still show the inline validation errors as before.
+Technical note: because the owner is still receiving leads, the likely issue is a false negative from the third-party FormSubmit response, not that the form data is failing to send.

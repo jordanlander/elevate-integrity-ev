@@ -118,19 +118,38 @@ const ContactForm = () => {
         }),
       });
 
-      // FormSubmit's AJAX endpoint returns { success: "true", ... } on success.
-      let succeeded = response.ok;
+      // FormSubmit's AJAX endpoint usually returns { success: "true", ... } on
+      // success, but the body/headers can vary. Parse defensively and only
+      // treat clear errors as failures so customers don't see a false error.
+      const rawBody = await response.text();
+      let parsed: any = null;
       try {
-        const data = await response.json();
-        if (typeof data?.success !== "undefined") {
-          succeeded = String(data.success) === "true";
-        }
+        parsed = rawBody ? JSON.parse(rawBody) : null;
       } catch {
-        // No/invalid JSON body — fall back to the HTTP status.
+        // Non-JSON body — that's fine, we'll rely on the HTTP status.
       }
 
+      const explicitSuccess =
+        parsed && typeof parsed.success !== "undefined"
+          ? String(parsed.success) === "true"
+          : null;
+
+      // Success when FormSubmit says so, OR any 2xx response without an
+      // explicit failure flag. Only fail on a real error signal.
+      const succeeded =
+        explicitSuccess === true ||
+        (explicitSuccess === null && response.ok);
+
+      // Safe debug info only — never log customer field values.
+      console.info("[ContactForm] FormSubmit response", {
+        status: response.status,
+        ok: response.ok,
+        explicitSuccess,
+        succeeded,
+      });
+
       if (!succeeded) {
-        throw new Error("Form submission failed");
+        throw new Error(`Form submission failed (status ${response.status})`);
       }
 
       toast({
