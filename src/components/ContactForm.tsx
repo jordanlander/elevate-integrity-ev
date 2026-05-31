@@ -34,6 +34,61 @@ const contactFormSchema = z.object({
 
 type ContactFormData = z.infer<typeof contactFormSchema>;
 
+const FORMSUBMIT_AJAX_ENDPOINT = "https://formsubmit.co/ajax/integrityevsolutions@gmail.com";
+const FORMSUBMIT_FORM_ENDPOINT = "https://formsubmit.co/integrityevsolutions@gmail.com";
+
+const toFormSubmitPayload = (
+  data: ContactFormData,
+  utmParams: { utm_source: string; utm_medium: string; utm_campaign: string }
+) => ({
+  ...data,
+  lead_source: utmParams.utm_source,
+  lead_medium: utmParams.utm_medium,
+  lead_campaign: utmParams.utm_campaign,
+  _captcha: "false",
+});
+
+const appendPayloadToFormData = (payload: Record<string, string | undefined>) => {
+  const formData = new FormData();
+
+  Object.entries(payload).forEach(([key, value]) => {
+    formData.append(key, value ?? "");
+  });
+
+  return formData;
+};
+
+const submitViaHiddenIframe = (payload: Record<string, string | undefined>) => {
+  const iframeName = `formsubmit-fallback-${Date.now()}`;
+  const iframe = document.createElement("iframe");
+  iframe.name = iframeName;
+  iframe.title = "Form submission fallback";
+  iframe.style.display = "none";
+
+  const fallbackForm = document.createElement("form");
+  fallbackForm.method = "POST";
+  fallbackForm.action = FORMSUBMIT_FORM_ENDPOINT;
+  fallbackForm.target = iframeName;
+  fallbackForm.style.display = "none";
+
+  Object.entries(payload).forEach(([key, value]) => {
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = key;
+    input.value = value ?? "";
+    fallbackForm.appendChild(input);
+  });
+
+  document.body.appendChild(iframe);
+  document.body.appendChild(fallbackForm);
+  fallbackForm.submit();
+
+  window.setTimeout(() => {
+    fallbackForm.remove();
+    iframe.remove();
+  }, 10000);
+};
+
 const ContactForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [service, setService] = useState("");
@@ -103,19 +158,14 @@ const ContactForm = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("https://formsubmit.co/ajax/integrityevsolutions@gmail.com", {
+      const payload = toFormSubmitPayload(result.data, utmParams);
+
+      const response = await fetch(FORMSUBMIT_AJAX_ENDPOINT, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify({
-          ...result.data,
-          lead_source: utmParams.utm_source,
-          lead_medium: utmParams.utm_medium,
-          lead_campaign: utmParams.utm_campaign,
-          _captcha: "false",
-        }),
+        body: appendPayloadToFormData(payload),
       });
 
       // FormSubmit's AJAX endpoint usually returns { success: "true", ... } on
@@ -149,7 +199,12 @@ const ContactForm = () => {
       });
 
       if (!succeeded) {
-        throw new Error(`Form submission failed (status ${response.status})`);
+        console.warn("[ContactForm] Primary submit was unclear; using fallback", {
+          status: response.status,
+          ok: response.ok,
+          explicitSuccess,
+        });
+        submitViaHiddenIframe(payload);
       }
 
       toast({
@@ -161,12 +216,26 @@ const ContactForm = () => {
       setTimeline("");
       setErrors({});
     } catch (error) {
-      console.error("Form submission error:", error);
-      toast({
-        title: "Submission Failed",
-        description: "Please try again or contact us directly by phone.",
-        variant: "destructive",
-      });
+      console.warn("[ContactForm] Primary submit failed; using fallback", error);
+      try {
+        const fallbackPayload = toFormSubmitPayload(result.data, utmParams);
+        submitViaHiddenIframe(fallbackPayload);
+        toast({
+          title: "Request Received!",
+          description: "We'll contact you within 24 hours with your free estimate.",
+        });
+        e.currentTarget.reset();
+        setService("");
+        setTimeline("");
+        setErrors({});
+      } catch (fallbackError) {
+        console.error("Form submission error:", fallbackError);
+        toast({
+          title: "Submission Failed",
+          description: "Please try again or contact us directly by phone.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }
