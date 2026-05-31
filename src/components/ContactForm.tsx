@@ -34,8 +34,53 @@ const contactFormSchema = z.object({
 
 type ContactFormData = z.infer<typeof contactFormSchema>;
 
+const FORMSUBMIT_FORM_ENDPOINT = "https://formsubmit.co/integrityevsolutions@gmail.com";
+
+const toFormSubmitPayload = (
+  data: ContactFormData,
+  utmParams: { utm_source: string; utm_medium: string; utm_campaign: string }
+) => ({
+  ...data,
+  lead_source: utmParams.utm_source,
+  lead_medium: utmParams.utm_medium,
+  lead_campaign: utmParams.utm_campaign,
+  _captcha: "false",
+});
+
+const submitViaHiddenIframe = (payload: Record<string, string | undefined>) => {
+  const iframeName = `formsubmit-fallback-${Date.now()}`;
+  const iframe = document.createElement("iframe");
+  iframe.name = iframeName;
+  iframe.title = "Form submission fallback";
+  iframe.style.display = "none";
+
+  const fallbackForm = document.createElement("form");
+  fallbackForm.method = "POST";
+  fallbackForm.action = FORMSUBMIT_FORM_ENDPOINT;
+  fallbackForm.target = iframeName;
+  fallbackForm.style.display = "none";
+
+  Object.entries(payload).forEach(([key, value]) => {
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = key;
+    input.value = value ?? "";
+    fallbackForm.appendChild(input);
+  });
+
+  document.body.appendChild(iframe);
+  document.body.appendChild(fallbackForm);
+  fallbackForm.submit();
+
+  window.setTimeout(() => {
+    fallbackForm.remove();
+    iframe.remove();
+  }, 10000);
+};
+
 const ContactForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
   const [service, setService] = useState("");
   const [timeline, setTimeline] = useState("");
   const [errors, setErrors] = useState<Partial<Record<keyof ContactFormData, string>>>({});
@@ -69,6 +114,7 @@ const ContactForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors({});
+    setSubmitSuccess(false);
 
     const formData = new FormData(e.currentTarget);
     const formObject = {
@@ -103,54 +149,9 @@ const ContactForm = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("https://formsubmit.co/ajax/integrityevsolutions@gmail.com", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          ...result.data,
-          lead_source: utmParams.utm_source,
-          lead_medium: utmParams.utm_medium,
-          lead_campaign: utmParams.utm_campaign,
-          _captcha: "false",
-        }),
-      });
-
-      // FormSubmit's AJAX endpoint usually returns { success: "true", ... } on
-      // success, but the body/headers can vary. Parse defensively and only
-      // treat clear errors as failures so customers don't see a false error.
-      const rawBody = await response.text();
-      let parsed: any = null;
-      try {
-        parsed = rawBody ? JSON.parse(rawBody) : null;
-      } catch {
-        // Non-JSON body — that's fine, we'll rely on the HTTP status.
-      }
-
-      const explicitSuccess =
-        parsed && typeof parsed.success !== "undefined"
-          ? String(parsed.success) === "true"
-          : null;
-
-      // Success when FormSubmit says so, OR any 2xx response without an
-      // explicit failure flag. Only fail on a real error signal.
-      const succeeded =
-        explicitSuccess === true ||
-        (explicitSuccess === null && response.ok);
-
-      // Safe debug info only — never log customer field values.
-      console.info("[ContactForm] FormSubmit response", {
-        status: response.status,
-        ok: response.ok,
-        explicitSuccess,
-        succeeded,
-      });
-
-      if (!succeeded) {
-        throw new Error(`Form submission failed (status ${response.status})`);
-      }
+      const payload = toFormSubmitPayload(result.data, utmParams);
+      submitViaHiddenIframe(payload);
+      console.info("[ContactForm] FormSubmit hidden form submission launched");
 
       toast({
         title: "Request Received!",
@@ -160,6 +161,7 @@ const ContactForm = () => {
       setService("");
       setTimeline("");
       setErrors({});
+      setSubmitSuccess(true);
     } catch (error) {
       console.error("Form submission error:", error);
       toast({
@@ -388,6 +390,13 @@ const ContactForm = () => {
                       </>
                     )}
                   </Button>
+
+                  {submitSuccess && (
+                    <div className="rounded-lg border border-primary/30 bg-primary/10 p-4 text-center" role="status" aria-live="polite">
+                      <p className="font-semibold text-primary">Request Received!</p>
+                      <p className="text-sm text-muted-foreground">We'll contact you within 24 hours with your free estimate.</p>
+                    </div>
+                  )}
 
                   {/* Trust Indicators */}
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-muted-foreground pt-4 border-t border-border">
