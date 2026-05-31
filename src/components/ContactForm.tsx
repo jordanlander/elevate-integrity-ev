@@ -36,51 +36,8 @@ type ContactFormData = z.infer<typeof contactFormSchema>;
 
 const FORMSUBMIT_FORM_ENDPOINT = "https://formsubmit.co/integrityevsolutions@gmail.com";
 
-const toFormSubmitPayload = (
-  data: ContactFormData,
-  utmParams: { utm_source: string; utm_medium: string; utm_campaign: string }
-) => ({
-  ...data,
-  lead_source: utmParams.utm_source,
-  lead_medium: utmParams.utm_medium,
-  lead_campaign: utmParams.utm_campaign,
-  _captcha: "false",
-});
-
-const submitViaHiddenIframe = (payload: Record<string, string | undefined>) => {
-  const iframeName = `formsubmit-fallback-${Date.now()}`;
-  const iframe = document.createElement("iframe");
-  iframe.name = iframeName;
-  iframe.title = "Form submission fallback";
-  iframe.style.display = "none";
-
-  const fallbackForm = document.createElement("form");
-  fallbackForm.method = "POST";
-  fallbackForm.action = FORMSUBMIT_FORM_ENDPOINT;
-  fallbackForm.target = iframeName;
-  fallbackForm.style.display = "none";
-
-  Object.entries(payload).forEach(([key, value]) => {
-    const input = document.createElement("input");
-    input.type = "hidden";
-    input.name = key;
-    input.value = value ?? "";
-    fallbackForm.appendChild(input);
-  });
-
-  document.body.appendChild(iframe);
-  document.body.appendChild(fallbackForm);
-  fallbackForm.submit();
-
-  window.setTimeout(() => {
-    fallbackForm.remove();
-    iframe.remove();
-  }, 10000);
-};
-
 const ContactForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
   const [service, setService] = useState("");
   const [timeline, setTimeline] = useState("");
   const [errors, setErrors] = useState<Partial<Record<keyof ContactFormData, string>>>({});
@@ -111,10 +68,8 @@ const ContactForm = () => {
     setUtmParams(captured);
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     setErrors({});
-    setSubmitSuccess(false);
 
     const formData = new FormData(e.currentTarget);
     const formObject = {
@@ -131,6 +86,7 @@ const ContactForm = () => {
     // Validate form data
     const result = contactFormSchema.safeParse(formObject);
     if (!result.success) {
+      e.preventDefault();
       const fieldErrors: Partial<Record<keyof ContactFormData, string>> = {};
       result.error.errors.forEach((err) => {
         if (err.path[0]) {
@@ -146,32 +102,9 @@ const ContactForm = () => {
       return;
     }
 
+    // Validation passed — allow the native POST to FormSubmit to proceed.
+    // FormSubmit will redirect the user to the /thank-you page on success.
     setIsSubmitting(true);
-
-    try {
-      const payload = toFormSubmitPayload(result.data, utmParams);
-      submitViaHiddenIframe(payload);
-      console.info("[ContactForm] FormSubmit hidden form submission launched");
-
-      toast({
-        title: "Request Received!",
-        description: "We'll contact you within 24 hours with your free estimate.",
-      });
-      e.currentTarget.reset();
-      setService("");
-      setTimeline("");
-      setErrors({});
-      setSubmitSuccess(true);
-    } catch (error) {
-      console.error("Form submission error:", error);
-      toast({
-        title: "Submission Failed",
-        description: "Please try again or contact us directly by phone.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
   };
 
   const contactMethods = [
