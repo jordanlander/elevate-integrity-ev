@@ -220,7 +220,28 @@ const ContactForm = () => {
               </CardHeader>
               
               <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form
+                  onSubmit={handleSubmit}
+                  action={FORMSUBMIT_FORM_ENDPOINT}
+                  method="POST"
+                  className="space-y-6"
+                >
+                  {/* FormSubmit configuration */}
+                  <input type="hidden" name="_captcha" value="false" />
+                  <input type="hidden" name="_template" value="table" />
+                  <input
+                    type="hidden"
+                    name="_subject"
+                    value="New EV Charger Lead - Integrity EV Solutions"
+                  />
+                  <input
+                    type="hidden"
+                    name="_next"
+                    value={`${typeof window !== "undefined" ? window.location.origin : ""}/thank-you`}
+                  />
+                  <input type="hidden" name="lead_source" value={utmParams.utm_source} />
+                  <input type="hidden" name="lead_medium" value={utmParams.utm_medium} />
+                  <input type="hidden" name="lead_campaign" value={utmParams.utm_campaign} />
                   {/* Personal Info */}
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
