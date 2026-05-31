@@ -7,6 +7,7 @@ import { htmlPrerender } from "vite-plugin-html-prerender";
 // All routes that need to be pre-rendered for SEO
 const routes = [
   "/",
+  "/index",
   "/privacy-policy",
   "/terms-of-service",
   "/sitemap",

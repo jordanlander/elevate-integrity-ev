@@ -29,9 +29,9 @@ function restoreSpaRedirect() {
     }
 
     // Backward compat: legacy format (only if no existing query params)
-    const legacy = (sessionStorage as any).redirect;
+    const legacy = sessionStorage.getItem("redirect");
     if (legacy) {
-      delete (sessionStorage as any).redirect;
+      sessionStorage.removeItem("redirect");
       if (legacy !== "/" && !window.location.search) {
         window.history.replaceState(null, "", "/" + legacy);
       }
