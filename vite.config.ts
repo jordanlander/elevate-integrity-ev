@@ -10,6 +10,7 @@ const routes = [
   "/privacy-policy",
   "/terms-of-service",
   "/sitemap",
+  "/thank-you",
   "/services/residential-ev-charging",
   "/services/commercial-ev-charging",
   "/services/tesla-powerwall",
