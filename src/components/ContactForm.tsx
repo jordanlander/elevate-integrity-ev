@@ -34,7 +34,6 @@ const contactFormSchema = z.object({
 
 type ContactFormData = z.infer<typeof contactFormSchema>;
 
-const FORMSUBMIT_AJAX_ENDPOINT = "https://formsubmit.co/ajax/integrityevsolutions@gmail.com";
 const FORMSUBMIT_FORM_ENDPOINT = "https://formsubmit.co/integrityevsolutions@gmail.com";
 
 const toFormSubmitPayload = (
@@ -47,16 +46,6 @@ const toFormSubmitPayload = (
   lead_campaign: utmParams.utm_campaign,
   _captcha: "false",
 });
-
-const appendPayloadToFormData = (payload: Record<string, string | undefined>) => {
-  const formData = new FormData();
-
-  Object.entries(payload).forEach(([key, value]) => {
-    formData.append(key, value ?? "");
-  });
-
-  return formData;
-};
 
 const submitViaHiddenIframe = (payload: Record<string, string | undefined>) => {
   const iframeName = `formsubmit-fallback-${Date.now()}`;
@@ -159,53 +148,8 @@ const ContactForm = () => {
 
     try {
       const payload = toFormSubmitPayload(result.data, utmParams);
-
-      const response = await fetch(FORMSUBMIT_AJAX_ENDPOINT, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-        },
-        body: appendPayloadToFormData(payload),
-      });
-
-      // FormSubmit's AJAX endpoint usually returns { success: "true", ... } on
-      // success, but the body/headers can vary. Parse defensively and only
-      // treat clear errors as failures so customers don't see a false error.
-      const rawBody = await response.text();
-      let parsed: any = null;
-      try {
-        parsed = rawBody ? JSON.parse(rawBody) : null;
-      } catch {
-        // Non-JSON body — that's fine, we'll rely on the HTTP status.
-      }
-
-      const explicitSuccess =
-        parsed && typeof parsed.success !== "undefined"
-          ? String(parsed.success) === "true"
-          : null;
-
-      // Success when FormSubmit says so, OR any 2xx response without an
-      // explicit failure flag. Only fail on a real error signal.
-      const succeeded =
-        explicitSuccess === true ||
-        (explicitSuccess === null && response.ok);
-
-      // Safe debug info only — never log customer field values.
-      console.info("[ContactForm] FormSubmit response", {
-        status: response.status,
-        ok: response.ok,
-        explicitSuccess,
-        succeeded,
-      });
-
-      if (!succeeded) {
-        console.warn("[ContactForm] Primary submit was unclear; using fallback", {
-          status: response.status,
-          ok: response.ok,
-          explicitSuccess,
-        });
-        submitViaHiddenIframe(payload);
-      }
+      submitViaHiddenIframe(payload);
+      console.info("[ContactForm] FormSubmit hidden form submission launched");
 
       toast({
         title: "Request Received!",
@@ -216,26 +160,12 @@ const ContactForm = () => {
       setTimeline("");
       setErrors({});
     } catch (error) {
-      console.warn("[ContactForm] Primary submit failed; using fallback", error);
-      try {
-        const fallbackPayload = toFormSubmitPayload(result.data, utmParams);
-        submitViaHiddenIframe(fallbackPayload);
-        toast({
-          title: "Request Received!",
-          description: "We'll contact you within 24 hours with your free estimate.",
-        });
-        e.currentTarget.reset();
-        setService("");
-        setTimeline("");
-        setErrors({});
-      } catch (fallbackError) {
-        console.error("Form submission error:", fallbackError);
-        toast({
-          title: "Submission Failed",
-          description: "Please try again or contact us directly by phone.",
-          variant: "destructive",
-        });
-      }
+      console.error("Form submission error:", error);
+      toast({
+        title: "Submission Failed",
+        description: "Please try again or contact us directly by phone.",
+        variant: "destructive",
+      });
     } finally {
       setIsSubmitting(false);
     }
