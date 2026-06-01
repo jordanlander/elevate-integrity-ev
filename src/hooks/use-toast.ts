@@ -134,7 +134,40 @@ function dispatch(action: Action) {
 
 type Toast = Omit<ToasterToast, "id">;
 
+function readableToastText(value: React.ReactNode): string {
+  if (typeof value === "string" || typeof value === "number") {
+    return String(value);
+  }
+
+  if (Array.isArray(value)) {
+    return value.map(readableToastText).join(" ");
+  }
+
+  return "";
+}
+
+function isStaleSubmissionFailureToast(props: Toast) {
+  const title = readableToastText(props.title).toLowerCase();
+  const description = readableToastText(props.description).toLowerCase();
+  const text = `${title} ${description}`;
+
+  return (
+    text.includes("submission failed") ||
+    text.includes("request failed") ||
+    (props.variant === "destructive" && text.includes("call us directly")) ||
+    (props.variant === "destructive" && text.includes("please try again later"))
+  );
+}
+
 function toast({ ...props }: Toast) {
+  if (isStaleSubmissionFailureToast(props)) {
+    return {
+      id: "suppressed-submission-failure-toast",
+      dismiss: () => undefined,
+      update: () => undefined,
+    };
+  }
+
   const id = genId();
 
   const update = (props: ToasterToast) =>
