@@ -14,13 +14,16 @@ import {
   Mail,
   MapPin,
   Phone,
+  Send,
+  ShieldCheck,
   Zap,
 } from "lucide-react";
 import { useTrackingPhone } from "@/hooks/use-tracking-phone";
 
 const CONTACT_EMAIL = "integrityevsolutions@gmail.com";
+const FORMSUBMIT_ACTION = "https://formsubmit.co/integrityevsolutions@gmail.com";
+const THANK_YOU_URL = "https://www.integrityevsolutions.com/thank-you";
 const MAILTO_SUBJECT = "Free estimate request - Integrity EV Solutions";
-const FORM_DELIVERY_MODE = "static-mailto-handoff";
 
 const contactFormSchema = z.object({
   firstName: z.string().trim().min(1, "First name is required").max(50, "First name must be less than 50 characters"),
@@ -84,14 +87,10 @@ function buildEstimateSummary(data: ContactFormData, utmParams: Record<string, s
     `Medium: ${utmParams.utm_medium || "Not provided"}`,
     `Campaign: ${utmParams.utm_campaign || "Not provided"}`,
     "",
-    `Delivery mode: ${FORM_DELIVERY_MODE}`,
+    "Delivery mode: native FormSubmit POST",
   ];
 
   return bodyLines.join("\n");
-}
-
-function buildMailtoLink(data: ContactFormData, utmParams: Record<string, string>) {
-  return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(MAILTO_SUBJECT)}&body=${encodeURIComponent(buildEstimateSummary(data, utmParams))}`;
 }
 
 const ContactForm = () => {
@@ -161,19 +160,16 @@ const ContactForm = () => {
     const summary = buildEstimateSummary(formData, utmParams);
     try {
       await navigator.clipboard.writeText(summary);
-      setCopyMessage("Estimate details copied. Paste them into a text or email to send them manually.");
+      setCopyMessage("Estimate details copied. Paste them into a text or email if you prefer to send manually.");
     } catch {
-      setCopyMessage("Copy did not work in this browser. Select the text below and copy it manually.");
+      setCopyMessage("Copy did not work in this browser. Select the prepared details below and copy them manually.");
     }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
     if (!validateForm()) {
-      return;
+      e.preventDefault();
     }
-
-    window.location.href = buildMailtoLink(formData, utmParams);
   };
 
   const contactMethods = [
@@ -209,6 +205,7 @@ const ContactForm = () => {
       id="contact"
     >
       <div className="pointer-events-none absolute inset-0 opacity-[0.07] [background-image:linear-gradient(hsl(var(--electric-cyan))_1px,transparent_1px),linear-gradient(90deg,hsl(var(--electric-cyan))_1px,transparent_1px)] [background-size:40px_40px]" />
+      <div className="pointer-events-none absolute -top-24 left-1/2 h-72 w-[40rem] -translate-x-1/2 rounded-full bg-primary/20 blur-[120px]" />
       <div className="container relative mx-auto px-4">
         <div className="text-center mb-16">
           <Badge className="mb-4 bg-gradient-primary text-white">Get Your Free Estimate</Badge>
@@ -272,20 +269,41 @@ const ContactForm = () => {
             <Card className="border border-border bg-card overflow-hidden glow-primary">
               <div className="h-1.5 w-full bg-gradient-electric" />
               <CardHeader>
-                <CardTitle className="text-2xl font-bold text-foreground flex items-center gap-3">
-                  <Zap className="w-6 h-6 text-primary" />
-                  Request Your Free Estimate
-                </CardTitle>
-                <p className="text-muted-foreground">
-                  Fill out the form below, then open it in your email app, copy the details, or call/text us directly.
-                </p>
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <CardTitle className="text-2xl font-bold text-foreground flex items-center gap-3">
+                      <Zap className="w-6 h-6 text-primary" />
+                      Request Your Free Estimate
+                    </CardTitle>
+                    <p className="mt-2 text-muted-foreground">
+                      Submit your project details securely. We will contact you within 24 hours with a free, no-obligation estimate.
+                    </p>
+                  </div>
+                  <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                    <ShieldCheck className="h-4 w-4" />
+                    Free secure form
+                  </div>
+                </div>
               </CardHeader>
 
               <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-                  <div className="rounded-lg border border-border bg-muted/30 p-4 text-sm text-muted-foreground">
-                    This static-site form does not claim a server delivery it cannot verify. Your request is prepared for your email app, with copy and call/text fallbacks if email does not open.
-                  </div>
+                <form
+                  action={FORMSUBMIT_ACTION}
+                  method="POST"
+                  encType="multipart/form-data"
+                  onSubmit={handleSubmit}
+                  className="space-y-6"
+                  noValidate
+                >
+                  <input type="hidden" name="_captcha" value="false" />
+                  <input type="hidden" name="_template" value="table" />
+                  <input type="hidden" name="_subject" value={MAILTO_SUBJECT} />
+                  <input type="hidden" name="_next" value={THANK_YOU_URL} />
+                  <input type="hidden" name="_replyto" value={formData.email} />
+                  <input type="hidden" name="lead_source" value={utmParams.utm_source || "Not provided"} />
+                  <input type="hidden" name="lead_medium" value={utmParams.utm_medium || "Not provided"} />
+                  <input type="hidden" name="lead_campaign" value={utmParams.utm_campaign || "Not provided"} />
+                  <input type="text" name="_honey" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
@@ -414,65 +432,40 @@ const ContactForm = () => {
                     {errors.details && <p className="text-sm text-destructive mt-1">{errors.details}</p>}
                   </div>
 
-                  {/*
-                    INTENTIONAL: This form has no backend delivery confirmation.
-                    Keep actions explicit: Open Email / Copy / Call. A generic
-                    Send or Submit button would imply a server submission.
-                  */}
-                  <div className="grid sm:grid-cols-2 gap-3">
-                    <Button
-                      type="submit"
-                      className="w-full bg-gradient-primary glow-primary hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 text-lg py-6 h-auto font-semibold gap-2"
-                    >
-                      <Mail className="w-5 h-5" />
-                      Open Email to Send
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={copyEstimateDetails}
-                      className="w-full text-lg py-6 h-auto font-semibold gap-2"
-                    >
-                      <Copy className="w-5 h-5" />
-                      Copy Request Details
-                    </Button>
-                  </div>
-
                   <Button
-                    asChild
-                    variant="ghost"
-                    className="w-full gap-2 text-base font-medium"
+                    type="submit"
+                    className="w-full bg-gradient-primary glow-primary hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 text-lg py-6 h-auto font-semibold gap-2"
                   >
-                    <a href={phone.href}>
-                      <Phone className="w-4 h-4" />
-                      Call or Text {phone.display}
-                    </a>
+                    <Send className="w-5 h-5" />
+                    Send Secure Estimate Request
                   </Button>
 
-                  {copyMessage && !hasValidated && (
-                    <p className="text-sm text-muted-foreground">{copyMessage}</p>
-                  )}
-
-                  {hasValidated && (
-                    <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-sm text-muted-foreground">
-                      <p className="font-semibold text-foreground">Your estimate request is ready to send.</p>
-                      <p>
-                        If your email app did not open, call or text <a className="font-medium text-primary underline" href={phone.href}>{phone.display}</a> or email <a className="font-medium text-primary underline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
-                      </p>
-                      <div className="mt-3 space-y-2">
-                        <Button type="button" variant="outline" size="sm" onClick={copyEstimateDetails}>
-                          <Copy className="w-4 h-4 mr-2" />
-                          Copy Request Details
-                        </Button>
-                        {copyMessage && <p>{copyMessage}</p>}
-                        <Textarea
-                          readOnly
-                          value={buildEstimateSummary(formData, utmParams)}
-                          className="min-h-[180px] bg-background text-xs"
-                          aria-label="Estimate request details"
-                        />
-                      </div>
+                  <div className="rounded-lg border border-border bg-muted/20 p-4 text-sm text-muted-foreground">
+                    <p>
+                      If the form does not continue, use the backup options below. We keep the phone number dynamic for tracking.
+                    </p>
+                    <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                      <Button type="button" variant="outline" size="sm" onClick={copyEstimateDetails}>
+                        <Copy className="w-4 h-4 mr-2" />
+                        Copy Details
+                      </Button>
+                      <Button asChild type="button" variant="outline" size="sm">
+                        <a href={phone.href}>
+                          <Phone className="w-4 h-4 mr-2" />
+                          Call or Text {phone.display}
+                        </a>
+                      </Button>
                     </div>
+                    {copyMessage && <p className="mt-2">{copyMessage}</p>}
+                  </div>
+
+                  {hasValidated && copyMessage && (
+                    <Textarea
+                      readOnly
+                      value={buildEstimateSummary(formData, utmParams)}
+                      className="min-h-[160px] bg-background text-xs"
+                      aria-label="Estimate request details"
+                    />
                   )}
 
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-muted-foreground pt-4 border-t border-border">
