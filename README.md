@@ -64,6 +64,8 @@ This project is built with:
 
 Simply open [Lovable](https://lovable.dev/projects/c867c9ff-0855-4c02-9fb5-52a46e6c3988) and click on Share -> Publish.
 
+This repo also includes a GitHub Pages workflow. Pushing to `main` builds the Vite app and publishes `dist` to GitHub Pages. The custom domain is configured by `CNAME` and `public/CNAME`.
+
 ## Can I connect a custom domain to my Lovable project?
 
 Yes, you can!
