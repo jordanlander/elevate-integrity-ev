@@ -31,6 +31,7 @@ export default defineConfig(({ mode }) => ({
     react(),
     mode === "development" && componentTagger(),
     mode === "production" &&
+      process.env.SKIP_PRERENDER !== "true" &&
       htmlPrerender({
         staticDir: path.join(__dirname, "dist"),
         routes,
