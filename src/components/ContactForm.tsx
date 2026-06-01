@@ -10,16 +10,17 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   CheckCircle,
   Clock,
+  Copy,
   Mail,
   MapPin,
   Phone,
-  Copy,
   Zap,
 } from "lucide-react";
 import { useTrackingPhone } from "@/hooks/use-tracking-phone";
 
 const CONTACT_EMAIL = "integrityevsolutions@gmail.com";
 const MAILTO_SUBJECT = "Free estimate request - Integrity EV Solutions";
+const FORM_DELIVERY_MODE = "static-mailto-handoff";
 
 const contactFormSchema = z.object({
   firstName: z.string().trim().min(1, "First name is required").max(50, "First name must be less than 50 characters"),
@@ -82,6 +83,8 @@ function buildEstimateSummary(data: ContactFormData, utmParams: Record<string, s
     `Source: ${utmParams.utm_source || "Not provided"}`,
     `Medium: ${utmParams.utm_medium || "Not provided"}`,
     `Campaign: ${utmParams.utm_campaign || "Not provided"}`,
+    "",
+    `Delivery mode: ${FORM_DELIVERY_MODE}`,
   ];
 
   return bodyLines.join("\n");
@@ -94,7 +97,6 @@ function buildMailtoLink(data: ContactFormData, utmParams: Record<string, string
 const ContactForm = () => {
   const [formData, setFormData] = useState<ContactFormData>(initialFormData);
   const [errors, setErrors] = useState<ContactFormErrors>({});
-  const [mailtoLink, setMailtoLink] = useState(`mailto:${CONTACT_EMAIL}`);
   const [hasValidated, setHasValidated] = useState(false);
   const [copyMessage, setCopyMessage] = useState("");
   const [utmParams, setUtmParams] = useState({
@@ -121,28 +123,10 @@ const ContactForm = () => {
     setUtmParams(captured);
   }, []);
 
-  useEffect(() => {
-    setMailtoLink(buildMailtoLink(formData, utmParams));
-  }, [formData, utmParams]);
-
   const updateField = (field: keyof ContactFormData, value: string) => {
     setFormData((current) => ({ ...current, [field]: value }));
     if (errors[field]) {
       setErrors((current) => ({ ...current, [field]: undefined }));
-    }
-  };
-
-  const copyEstimateDetails = async () => {
-    if (!validateForm()) {
-      return;
-    }
-
-    const summary = buildEstimateSummary(formData, utmParams);
-    try {
-      await navigator.clipboard.writeText(summary);
-      setCopyMessage("Estimate details copied. Paste them into a text or email to send them manually.");
-    } catch {
-      setCopyMessage("Copy did not work in this browser. Select the text below and copy it manually.");
     }
   };
 
@@ -169,6 +153,20 @@ const ContactForm = () => {
     return false;
   };
 
+  const copyEstimateDetails = async () => {
+    if (!validateForm()) {
+      return;
+    }
+
+    const summary = buildEstimateSummary(formData, utmParams);
+    try {
+      await navigator.clipboard.writeText(summary);
+      setCopyMessage("Estimate details copied. Paste them into a text or email to send them manually.");
+    } catch {
+      setCopyMessage("Copy did not work in this browser. Select the text below and copy it manually.");
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateForm()) {
@@ -183,7 +181,7 @@ const ContactForm = () => {
       icon: <Phone className="w-6 h-6" />,
       title: "Call or Text",
       value: phone.display,
-      description: "Mon–Fri: 8 am–6 pm",
+      description: "Mon-Fri: 8 am-6 pm",
       action: "Call Now",
       gradient: "bg-gradient-primary",
     },
@@ -210,10 +208,7 @@ const ContactForm = () => {
       className="dark relative overflow-hidden bg-background py-24 text-foreground"
       id="contact"
     >
-      {/* High-tech electric backdrop */}
       <div className="pointer-events-none absolute inset-0 opacity-[0.07] [background-image:linear-gradient(hsl(var(--electric-cyan))_1px,transparent_1px),linear-gradient(90deg,hsl(var(--electric-cyan))_1px,transparent_1px)] [background-size:40px_40px]" />
-      <div className="pointer-events-none absolute -top-24 left-1/2 h-72 w-[40rem] -translate-x-1/2 rounded-full bg-primary/20 blur-[120px]" />
-      <div className="pointer-events-none absolute bottom-0 right-0 h-72 w-72 rounded-full bg-electric-cyan/10 blur-[120px]" />
       <div className="container relative mx-auto px-4">
         <div className="text-center mb-16">
           <Badge className="mb-4 bg-gradient-primary text-white">Get Your Free Estimate</Badge>
@@ -282,16 +277,14 @@ const ContactForm = () => {
                   Request Your Free Estimate
                 </CardTitle>
                 <p className="text-muted-foreground">
-                  Tell us about your project and our Tesla-certified team will get back to you within 24 hours.
+                  Fill out the form below, then open it in your email app, copy the details, or call/text us directly.
                 </p>
               </CardHeader>
 
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-6" noValidate>
                   <div className="rounded-lg border border-border bg-muted/30 p-4 text-sm text-muted-foreground">
-                    This form does not submit to a server. Fill it out, then send your
-                    request the way you prefer: open it in your email app, copy the
-                    details, or call/text us directly.
+                    This static-site form does not claim a server delivery it cannot verify. Your request is prepared for your email app, with copy and call/text fallbacks if email does not open.
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-4">
@@ -422,11 +415,9 @@ const ContactForm = () => {
                   </div>
 
                   {/*
-                    INTENTIONAL: This form has NO backend submit. Actions must stay
-                    explicit (Open Email / Copy / Call) and clearly labeled. Do NOT
-                    relabel these as a generic "Send"/"Submit" button that implies a
-                    server submission — that misleads visitors. If a real backend is
-                    added, wire it up explicitly first.
+                    INTENTIONAL: This form has no backend delivery confirmation.
+                    Keep actions explicit: Open Email / Copy / Call. A generic
+                    Send or Submit button would imply a server submission.
                   */}
                   <div className="grid sm:grid-cols-2 gap-3">
                     <Button
@@ -466,10 +457,11 @@ const ContactForm = () => {
                     <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-sm text-muted-foreground">
                       <p className="font-semibold text-foreground">Your estimate request is ready to send.</p>
                       <p>
-                        Prefer to reach us directly? Call or text <a className="font-medium text-primary underline" href={phone.href}>{phone.display}</a> or email <a className="font-medium text-primary underline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+                        If your email app did not open, call or text <a className="font-medium text-primary underline" href={phone.href}>{phone.display}</a> or email <a className="font-medium text-primary underline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
                       </p>
                       <div className="mt-3 space-y-2">
                         <Button type="button" variant="outline" size="sm" onClick={copyEstimateDetails}>
+                          <Copy className="w-4 h-4 mr-2" />
                           Copy Request Details
                         </Button>
                         {copyMessage && <p>{copyMessage}</p>}
