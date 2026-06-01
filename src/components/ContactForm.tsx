@@ -84,8 +84,6 @@ function buildEstimateSummary(data: ContactFormData, utmParams: Record<string, s
     `Source: ${utmParams.utm_source || "Not provided"}`,
     `Medium: ${utmParams.utm_medium || "Not provided"}`,
     `Campaign: ${utmParams.utm_campaign || "Not provided"}`,
-    "",
-    "Delivery mode: customer email handoff",
   ];
 
   return bodyLines.join("\n");
@@ -162,7 +160,7 @@ const ContactForm = () => {
     const summary = buildEstimateSummary(formData, utmParams);
     try {
       await navigator.clipboard.writeText(summary);
-      setCopyMessage("Estimate details copied. Paste them into a text or email if you prefer to send manually.");
+      setCopyMessage("Estimate details copied. Paste them into a text or email whenever you are ready.");
     } catch {
       setCopyMessage("Copy did not work in this browser. Select the prepared details below and copy them manually.");
     }
@@ -278,25 +276,21 @@ const ContactForm = () => {
                   <div>
                     <CardTitle className="text-2xl font-bold text-foreground flex items-center gap-3">
                       <Zap className="w-6 h-6 text-primary" />
-                      Request Your Free Estimate
+                      Secure Estimate Request
                     </CardTitle>
                     <p className="mt-2 text-muted-foreground">
-                      Submit your project details and we will contact you within 24 hours with a free, no-obligation estimate.
+                      Share a few project details and we will follow up within 24 hours with a free, no-obligation estimate.
                     </p>
                   </div>
                   <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
                     <ShieldCheck className="h-4 w-4" />
-                    Reliable backup ready
+                    Free estimate
                   </div>
                 </div>
               </CardHeader>
 
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-                  <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-sm text-muted-foreground">
-                    The free web form provider is temporarily unavailable, so this request opens your email app with all details filled in. If email does not open, copy the details or call/text us directly.
-                  </div>
-
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="firstName">First Name *</Label>
@@ -424,18 +418,26 @@ const ContactForm = () => {
                     {errors.details && <p className="text-sm text-destructive mt-1">{errors.details}</p>}
                   </div>
 
-                  <Button
-                    type="submit"
-                    className="w-full bg-gradient-primary glow-primary hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 text-lg py-6 h-auto font-semibold gap-2"
-                  >
-                    <Send className="w-5 h-5" />
-                    Prepare Estimate Request
-                  </Button>
+                  <div className="space-y-3">
+                    <Button
+                      type="submit"
+                      className="w-full bg-gradient-primary glow-primary hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 text-lg py-6 h-auto font-semibold gap-2"
+                    >
+                      <Send className="w-5 h-5" />
+                      Send Estimate Request
+                    </Button>
+                    <p className="text-center text-xs text-muted-foreground">
+                      Your completed request opens in your email app so you can send it directly to our team.
+                    </p>
+                  </div>
 
                   <div className="rounded-lg border border-border bg-muted/20 p-4 text-sm text-muted-foreground">
-                    <p>
-                      Backup options stay available so you never lose the request.
-                    </p>
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                      <div>
+                        <p className="font-medium text-foreground">Prefer a direct handoff?</p>
+                        <p>Copy your completed request or call/text us now.</p>
+                      </div>
+                    </div>
                     <div className="mt-3 grid gap-2 sm:grid-cols-2">
                       <Button type="button" variant="outline" size="sm" onClick={copyEstimateDetails}>
                         <Copy className="w-4 h-4 mr-2" />
@@ -455,7 +457,7 @@ const ContactForm = () => {
                     <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-sm text-muted-foreground">
                       <p className="font-semibold text-foreground">Your estimate request is ready.</p>
                       <p>
-                        If your email app did not open, copy the details below or contact us directly at <a className="font-medium text-primary underline" href={phone.href}>{phone.display}</a>.
+                        If your email app did not open, copy the prepared details below or contact us directly at <a className="font-medium text-primary underline" href={phone.href}>{phone.display}</a>.
                       </p>
                       <Textarea
                         readOnly
