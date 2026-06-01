@@ -297,7 +297,7 @@ const ContactForm = () => {
                         value={formData.firstName}
                         onChange={(e) => updateField("firstName", e.target.value)}
                         required
-                        className="mt-1"
+                        className="mt-1 bg-muted/40 border-border"
                         autoComplete="given-name"
                       />
                       {errors.firstName && <p className="text-sm text-destructive mt-1">{errors.firstName}</p>}
@@ -310,7 +310,7 @@ const ContactForm = () => {
                         value={formData.lastName}
                         onChange={(e) => updateField("lastName", e.target.value)}
                         required
-                        className="mt-1"
+                        className="mt-1 bg-muted/40 border-border"
                         autoComplete="family-name"
                       />
                       {errors.lastName && <p className="text-sm text-destructive mt-1">{errors.lastName}</p>}
@@ -327,7 +327,7 @@ const ContactForm = () => {
                         value={formData.email}
                         onChange={(e) => updateField("email", e.target.value)}
                         required
-                        className="mt-1"
+                        className="mt-1 bg-muted/40 border-border"
                         autoComplete="email"
                       />
                       {errors.email && <p className="text-sm text-destructive mt-1">{errors.email}</p>}
@@ -341,7 +341,7 @@ const ContactForm = () => {
                         value={formData.phone}
                         onChange={(e) => updateField("phone", e.target.value)}
                         required
-                        className="mt-1"
+                        className="mt-1 bg-muted/40 border-border"
                         autoComplete="tel"
                       />
                       {errors.phone && <p className="text-sm text-destructive mt-1">{errors.phone}</p>}
@@ -377,7 +377,7 @@ const ContactForm = () => {
                         value={formData.city}
                         onChange={(e) => updateField("city", e.target.value)}
                         required
-                        className="mt-1"
+                        className="mt-1 bg-muted/40 border-border"
                         autoComplete="address-level2"
                       />
                       {errors.city && <p className="text-sm text-destructive mt-1">{errors.city}</p>}
@@ -409,7 +409,7 @@ const ContactForm = () => {
                       value={formData.details}
                       onChange={(e) => updateField("details", e.target.value)}
                       placeholder="Tell us about your project, any specific requirements, questions, or concerns..."
-                      className="mt-1 min-h-[120px]"
+                      className="mt-1 min-h-[120px] bg-muted/40 border-border"
                       maxLength={2000}
                     />
                     {errors.details && <p className="text-sm text-destructive mt-1">{errors.details}</p>}
