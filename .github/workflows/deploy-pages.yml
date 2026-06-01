@@ -35,6 +35,16 @@ jobs:
         env:
           SKIP_PRERENDER: "true"
 
+      - name: Write deploy marker
+        run: |
+          cat > dist/deploy-version.json <<EOF
+          {
+            "commit": "${GITHUB_SHA}",
+            "ref": "${GITHUB_REF}",
+            "builtAt": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          }
+          EOF
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
