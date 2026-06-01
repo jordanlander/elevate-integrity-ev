@@ -10,7 +10,6 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   CheckCircle,
   Clock,
-  Copy,
   Mail,
   MapPin,
   Phone,
@@ -21,7 +20,9 @@ import {
 import { useTrackingPhone } from "@/hooks/use-tracking-phone";
 
 const CONTACT_EMAIL = "integrityevsolutions@gmail.com";
-const MAILTO_SUBJECT = "Free estimate request - Integrity EV Solutions";
+const FORMSUBMIT_ACTION = `https://formsubmit.co/${CONTACT_EMAIL}`;
+const THANK_YOU_URL = "https://www.integrityevsolutions.com/thank-you";
+const FORM_SUBJECT = "New estimate request - Integrity EV Solutions";
 
 const contactFormSchema = z.object({
   firstName: z.string().trim().min(1, "First name is required").max(50, "First name must be less than 50 characters"),
@@ -65,39 +66,9 @@ const timelineOptions = [
   { value: "Flexible", label: "I'm flexible" },
 ];
 
-function buildEstimateSummary(data: ContactFormData, utmParams: Record<string, string>) {
-  const fullName = `${data.firstName.trim()} ${data.lastName.trim()}`.trim();
-  const bodyLines = [
-    "New estimate request from integrityevsolutions.com",
-    "",
-    `Name: ${fullName}`,
-    `Email: ${data.email.trim()}`,
-    `Phone: ${data.phone.trim()}`,
-    `Service needed: ${data.service}`,
-    `City: ${data.city.trim()}`,
-    `Preferred timeline: ${data.timeline || "Not specified"}`,
-    "",
-    "Project details:",
-    data.details?.trim() || "Not provided",
-    "",
-    "Lead attribution:",
-    `Source: ${utmParams.utm_source || "Not provided"}`,
-    `Medium: ${utmParams.utm_medium || "Not provided"}`,
-    `Campaign: ${utmParams.utm_campaign || "Not provided"}`,
-  ];
-
-  return bodyLines.join("\n");
-}
-
-function buildMailtoLink(data: ContactFormData, utmParams: Record<string, string>) {
-  return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(MAILTO_SUBJECT)}&body=${encodeURIComponent(buildEstimateSummary(data, utmParams))}`;
-}
-
 const ContactForm = () => {
   const [formData, setFormData] = useState<ContactFormData>(initialFormData);
   const [errors, setErrors] = useState<ContactFormErrors>({});
-  const [hasValidated, setHasValidated] = useState(false);
-  const [copyMessage, setCopyMessage] = useState("");
   const [utmParams, setUtmParams] = useState({
     utm_source: "",
     utm_medium: "",
@@ -134,7 +105,6 @@ const ContactForm = () => {
 
     if (result.success) {
       setErrors({});
-      setHasValidated(true);
       return true;
     }
 
@@ -147,32 +117,13 @@ const ContactForm = () => {
     });
 
     setErrors(fieldErrors);
-    setHasValidated(false);
-    setCopyMessage("");
     return false;
   };
 
-  const copyEstimateDetails = async () => {
-    if (!validateForm()) {
-      return;
-    }
-
-    const summary = buildEstimateSummary(formData, utmParams);
-    try {
-      await navigator.clipboard.writeText(summary);
-      setCopyMessage("Estimate details copied. Paste them into a text or email whenever you are ready.");
-    } catch {
-      setCopyMessage("Copy did not work in this browser. Select the prepared details below and copy them manually.");
-    }
-  };
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
     if (!validateForm()) {
-      return;
+      e.preventDefault();
     }
-
-    window.location.href = buildMailtoLink(formData, utmParams);
   };
 
   const contactMethods = [
@@ -279,18 +230,35 @@ const ContactForm = () => {
                       Secure Estimate Request
                     </CardTitle>
                     <p className="mt-2 text-muted-foreground">
-                      Share a few project details and we will follow up within 24 hours with a free, no-obligation estimate.
+                      Submit your project details and we will contact you within 24 hours with a free, no-obligation estimate.
                     </p>
                   </div>
                   <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
                     <ShieldCheck className="h-4 w-4" />
-                    Free estimate
+                    Free secure form
                   </div>
                 </div>
               </CardHeader>
 
               <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+                <form action={FORMSUBMIT_ACTION} method="POST" onSubmit={handleSubmit} className="space-y-6" noValidate>
+                  <input type="hidden" name="_next" value={THANK_YOU_URL} />
+                  <input type="hidden" name="_subject" value={FORM_SUBJECT} />
+                  <input type="hidden" name="_template" value="table" />
+                  <input type="hidden" name="_captcha" value="false" />
+                  <input type="hidden" name="_replyto" value={formData.email} />
+                  <input type="hidden" name="utm_source" value={utmParams.utm_source} />
+                  <input type="hidden" name="utm_medium" value={utmParams.utm_medium} />
+                  <input type="hidden" name="utm_campaign" value={utmParams.utm_campaign} />
+                  <input
+                    type="text"
+                    name="_honey"
+                    className="hidden"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                  />
+
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="firstName">First Name *</Label>
@@ -424,49 +392,12 @@ const ContactForm = () => {
                       className="w-full bg-gradient-primary glow-primary hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 text-lg py-6 h-auto font-semibold gap-2"
                     >
                       <Send className="w-5 h-5" />
-                      Send Estimate Request
+                      Send Secure Estimate Request
                     </Button>
                     <p className="text-center text-xs text-muted-foreground">
-                      Your completed request opens in your email app so you can send it directly to our team.
+                      Your request is sent securely to Integrity EV Solutions.
                     </p>
                   </div>
-
-                  <div className="rounded-lg border border-border bg-muted/20 p-4 text-sm text-muted-foreground">
-                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                      <div>
-                        <p className="font-medium text-foreground">Prefer a direct handoff?</p>
-                        <p>Copy your completed request or call/text us now.</p>
-                      </div>
-                    </div>
-                    <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                      <Button type="button" variant="outline" size="sm" onClick={copyEstimateDetails}>
-                        <Copy className="w-4 h-4 mr-2" />
-                        Copy Details
-                      </Button>
-                      <Button asChild type="button" variant="outline" size="sm">
-                        <a href={phone.href}>
-                          <Phone className="w-4 h-4 mr-2" />
-                          Call or Text {phone.display}
-                        </a>
-                      </Button>
-                    </div>
-                    {copyMessage && <p className="mt-2">{copyMessage}</p>}
-                  </div>
-
-                  {hasValidated && (
-                    <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-sm text-muted-foreground">
-                      <p className="font-semibold text-foreground">Your estimate request is ready.</p>
-                      <p>
-                        If your email app did not open, copy the prepared details below or contact us directly at <a className="font-medium text-primary underline" href={phone.href}>{phone.display}</a>.
-                      </p>
-                      <Textarea
-                        readOnly
-                        value={buildEstimateSummary(formData, utmParams)}
-                        className="mt-3 min-h-[160px] bg-background text-xs"
-                        aria-label="Estimate request details"
-                      />
-                    </div>
-                  )}
 
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-muted-foreground pt-4 border-t border-border">
                     <div className="flex items-center gap-2">
