@@ -422,13 +422,46 @@ const ContactForm = () => {
                     {errors.details && <p className="text-sm text-destructive mt-1">{errors.details}</p>}
                   </div>
 
+                  {/*
+                    INTENTIONAL: This form has NO backend submit. Actions must stay
+                    explicit (Open Email / Copy / Call) and clearly labeled. Do NOT
+                    relabel these as a generic "Send"/"Submit" button that implies a
+                    server submission — that misleads visitors. If a real backend is
+                    added, wire it up explicitly first.
+                  */}
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <Button
+                      type="submit"
+                      className="w-full bg-gradient-primary glow-primary hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 text-lg py-6 h-auto font-semibold gap-2"
+                    >
+                      <Mail className="w-5 h-5" />
+                      Open Email to Send
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={copyEstimateDetails}
+                      className="w-full text-lg py-6 h-auto font-semibold gap-2"
+                    >
+                      <Copy className="w-5 h-5" />
+                      Copy Request Details
+                    </Button>
+                  </div>
+
                   <Button
-                    type="submit"
-                    className="w-full bg-gradient-primary glow-primary hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 text-lg py-6 h-auto font-semibold gap-2"
+                    asChild
+                    variant="ghost"
+                    className="w-full gap-2 text-base font-medium"
                   >
-                    Send Request
-                    <ArrowRight className="w-5 h-5" />
+                    <a href={phone.href}>
+                      <Phone className="w-4 h-4" />
+                      Call or Text {phone.display}
+                    </a>
                   </Button>
+
+                  {copyMessage && !hasValidated && (
+                    <p className="text-sm text-muted-foreground">{copyMessage}</p>
+                  )}
 
                   {hasValidated && (
                     <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-sm text-muted-foreground">
