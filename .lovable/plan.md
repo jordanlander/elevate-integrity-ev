@@ -1,48 +1,39 @@
-I agree: we should stop patching the current contact form and rebuild the submission path cleanly.
+## Goal
+Replace the misleading single "Send Request" button (which silently opens a mailto draft) with an explicit, honest lead flow: clearly labeled email-app, copy-details, and call/text options — so no UI implies a real server submit that isn't happening. Add a source-code note so future edits don't reintroduce the disguised-submit pattern.
 
-## What is actually happening
-- The red message is coming from the site’s contact form error path, not from validation.
-- The live custom domain also appears out of sync with the latest route fix: `/index` is still serving the old 404 HTML publicly, so there may be a deployment/publish mismatch in addition to the form logic.
-- FormSubmit’s documentation endpoint is currently returning a Cloudflare 521 from this environment, which reinforces that this third-party path is too fragile for a customer-facing lead form.
+## Why
+The current button says "Send Request" but performs `window.location.href = mailto:...`. To a visitor that looks like a normal form post; it's actually opening their email client. That mismatch is the regression you flagged. The fix is to make the mechanism obvious in the button labels and helper text, not hidden behind a generic CTA.
 
-## Rebuild plan
+## Changes (all in `src/components/ContactForm.tsx`)
 
-### 1. Replace the current submission logic with a plain HTML form flow
-- Make the actual `<form>` use `method="POST"` and `action="https://formsubmit.co/integrityevsolutions@gmail.com"` directly.
-- Keep React validation before submit.
-- Remove the fetch/AJAX/iframe submit path entirely so there is no browser-side CORS/response parsing failure to show customers.
-- Add FormSubmit hidden fields directly in the form:
-  - `_captcha=false`
-  - `_subject=New EV Charger Lead - Integrity EV Solutions`
-  - `_template=table`
-  - `_next=<site thank-you route>`
-  - lead source / medium / campaign fields
+### 1. Restore explicit action buttons
+Replace the single "Send Request" button with clearly named actions:
+- **"Open Email to Send"** — opens the user's email app with the estimate pre-filled (the existing mailto). Label states what it does.
+- **"Copy Request Details"** — copies the formatted summary to clipboard for manual paste.
+- **"Call or Text {phone}"** — direct `tel:` action using `useTrackingPhone`.
 
-### 2. Add a dedicated thank-you route
-- Add `/thank-you` page with a clear success message and direct call/text option.
-- FormSubmit will redirect users there after a successful post.
-- This gives customers a reliable success screen instead of relying on JavaScript toast state.
+### 2. Honest helper text
+Add a short, plain notice above the actions: this form doesn't submit to a server — it prepares your request to send by email, copy, or phone. (Honest version of the note that was removed, no "fake submit".)
 
-### 3. Remove the destructive submission toast from the contact form
-- Keep red error feedback only for client-side validation.
-- Do not show “Submission Failed” for FormSubmit transport issues, because those are the false alarms customers are seeing.
-- If validation passes, let the native form submit happen.
+### 3. Keep validation + post-action helper
+- Keep zod validation gating all actions.
+- Keep the "ready to send / copy / call" helper block with the readonly summary textarea as the reliable fallback.
 
-### 4. Preserve existing lead capture details
-- Keep all current fields: first name, last name, email, phone, service, city, timeline, details.
-- Keep UTM persistence from localStorage/search params.
-- Keep current styling and mobile layout.
-- Keep centralized lead capture via `#contact` and no Supabase.
+### 4. Source-code guard note
+Add a clear comment block at the top of the submit/actions section, e.g.:
 
-### 5. Fix deployment-visible routing gaps
-- Keep `/index` mapped to the homepage in React.
-- Add `/index` to prerender routes so the GitHub Pages build no longer publishes stale/404 HTML for that route.
-- Add `/thank-you` to prerender routes as well.
+```text
+// INTENTIONAL: This form has NO backend submit. Actions must stay explicit
+// (Open Email / Copy / Call) and clearly labeled. Do NOT relabel these as a
+// generic "Send"/"Submit" button that implies a server submission — that
+// misleads visitors. If a real backend is added, wire it up explicitly first.
+```
 
-### 6. Verify after implementation
-- Test the form in preview with a validation failure.
-- Test a successful submission path enough to confirm it leaves the form instead of showing the red error.
-- Check the public `/index` mismatch is addressed in the code so the next publish fixes the custom domain.
+### 5. Revert the dark redesign? (your call)
+The dark "high-tech" section is a separate change. I can keep it or revert the section back to the lighter styling — tell me which. The button-flow fix above is independent of the color theme.
 
-## Result
-Customers will either see field-level validation errors before submission, or they’ll be sent to a dedicated thank-you page after submitting. The current false red “Submission Failed” toast will be removed from the customer path.
+## What stays the same
+All fields, zod validation, `useTrackingPhone` DNI, UTM capture, contact cards, and the no-Supabase architecture.
+
+## Verify
+Reload `#contact`, confirm: button labels state exactly what they do, email-app action opens a pre-filled draft, copy works, call/text works, and validation blocks empty/invalid forms.
