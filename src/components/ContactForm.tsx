@@ -408,30 +408,13 @@ const ContactForm = () => {
                     {errors.details && <p className="text-sm text-destructive mt-1">{errors.details}</p>}
                   </div>
 
-                  <div className="grid sm:grid-cols-2 gap-3">
-                    <Button
-                      type="submit"
-                      className="w-full bg-gradient-accent glow-accent hover:scale-[1.02] transition-all duration-300 text-lg py-6 h-auto font-semibold"
-                    >
-                      <Send className="w-5 h-5 mr-2" />
-                      Open Email to Send
-                    </Button>
-                    <Button
-                      asChild
-                      variant="outline"
-                      className="w-full text-lg py-6 h-auto font-semibold"
-                      onClick={(e) => {
-                        if (!validateForm()) {
-                          e.preventDefault();
-                        }
-                      }}
-                    >
-                      <a href={mailtoLink}>
-                        <ExternalLink className="w-5 h-5 mr-2" />
-                        Email Manually
-                      </a>
-                    </Button>
-                  </div>
+                  <Button
+                    type="submit"
+                    className="w-full bg-gradient-primary glow-primary hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 text-lg py-6 h-auto font-semibold gap-2"
+                  >
+                    Send Request
+                    <ArrowRight className="w-5 h-5" />
+                  </Button>
 
                   {hasValidated && (
                     <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-sm text-muted-foreground">
