@@ -266,26 +266,21 @@ const ContactForm = () => {
             </div>
           </div>
 
-          <div className="lg:col-span-2">
-            <Card className="border-0 glow-primary">
+          <div className="lg:col-span-8">
+            <Card className="border border-border bg-card overflow-hidden glow-primary">
+              <div className="h-1.5 w-full bg-gradient-electric" />
               <CardHeader>
                 <CardTitle className="text-2xl font-bold text-foreground flex items-center gap-3">
                   <Zap className="w-6 h-6 text-primary" />
                   Request Your Free Estimate
                 </CardTitle>
                 <p className="text-muted-foreground">
-                  Fill out the form below, then choose email or call/text. Your details stay on this page until you send them from your email app.
+                  Tell us about your project and our Tesla-certified team will get back to you within 24 hours.
                 </p>
               </CardHeader>
 
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-                  <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-sm text-muted-foreground">
-                    <p>
-                      <strong className="text-foreground">No backend required:</strong> this form opens your email app with the estimate details already filled in. If email does not open, call or text {phone.display}.
-                    </p>
-                  </div>
-
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="firstName">First Name *</Label>
