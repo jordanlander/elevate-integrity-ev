@@ -206,8 +206,15 @@ const ContactForm = () => {
   ];
 
   return (
-    <section className="py-20 bg-muted/30" id="contact">
-      <div className="container mx-auto px-4">
+    <section
+      className="dark relative overflow-hidden bg-background py-24 text-foreground"
+      id="contact"
+    >
+      {/* High-tech electric backdrop */}
+      <div className="pointer-events-none absolute inset-0 opacity-[0.07] [background-image:linear-gradient(hsl(var(--electric-cyan))_1px,transparent_1px),linear-gradient(90deg,hsl(var(--electric-cyan))_1px,transparent_1px)] [background-size:40px_40px]" />
+      <div className="pointer-events-none absolute -top-24 left-1/2 h-72 w-[40rem] -translate-x-1/2 rounded-full bg-primary/20 blur-[120px]" />
+      <div className="pointer-events-none absolute bottom-0 right-0 h-72 w-72 rounded-full bg-electric-cyan/10 blur-[120px]" />
+      <div className="container relative mx-auto px-4">
         <div className="text-center mb-16">
           <Badge className="mb-4 bg-gradient-primary text-white">Get Your Free Estimate</Badge>
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
