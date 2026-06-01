@@ -201,7 +201,7 @@ const ContactForm = () => {
 
   return (
     <section
-      className="dark relative overflow-hidden bg-background py-24 text-foreground"
+      className="relative overflow-hidden bg-background py-24 text-foreground"
       id="contact"
     >
       <div className="pointer-events-none absolute inset-0 opacity-[0.07] [background-image:linear-gradient(hsl(var(--electric-cyan))_1px,transparent_1px),linear-gradient(90deg,hsl(var(--electric-cyan))_1px,transparent_1px)] [background-size:40px_40px]" />
