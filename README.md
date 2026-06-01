@@ -64,7 +64,14 @@ This project is built with:
 
 Simply open [Lovable](https://lovable.dev/projects/c867c9ff-0855-4c02-9fb5-52a46e6c3988) and click on Share -> Publish.
 
-This repo also includes a GitHub Pages workflow. Pushing to `main` builds the Vite app and publishes `dist` to GitHub Pages. The custom domain is configured by `CNAME` and `public/CNAME`.
+## Deployment channels (important)
+
+This project has TWO separate deployment channels. The Lovable preview is NOT the live site.
+
+1. **Lovable published site** — updates only when you use Share -> Publish in Lovable. Editing in Lovable updates the preview, not the published URL, until you publish.
+2. **GitHub Pages** — the canonical GitHub deployment. Pushing to `main` runs `.github/workflows/deploy-pages.yml`, which builds the Vite app and publishes `dist`. The custom domain is configured by `CNAME` and `public/CNAME`.
+
+There is only one GitHub Pages workflow (`deploy-pages.yml`) to avoid two builds racing to publish different output. Each GitHub Pages build writes `dist/deploy-version.json` with the commit SHA and build time — load `/deploy-version.json` on the live site to confirm exactly what commit is deployed.
 
 ## Can I connect a custom domain to my Lovable project?
 
