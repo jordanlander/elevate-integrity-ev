@@ -356,7 +356,7 @@ const ContactForm = () => {
                       value={formData.service}
                       onChange={(e) => updateField("service", e.target.value)}
                       required
-                      className="mt-1 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      className="mt-1 flex h-10 w-full rounded-md border border-border bg-muted/40 px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     >
                       <option value="">Select the service you need</option>
                       {serviceOptions.map((option) => (
@@ -389,7 +389,7 @@ const ContactForm = () => {
                         name="timeline"
                         value={formData.timeline}
                         onChange={(e) => updateField("timeline", e.target.value)}
-                        className="mt-1 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                        className="mt-1 flex h-10 w-full rounded-md border border-border bg-muted/40 px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                       >
                         <option value="">When do you need this completed?</option>
                         {timelineOptions.map((option) => (
