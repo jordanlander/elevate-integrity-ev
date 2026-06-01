@@ -10,11 +10,10 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   CheckCircle,
   Clock,
-  ExternalLink,
   Mail,
   MapPin,
   Phone,
-  Send,
+  ArrowRight,
   Zap,
 } from "lucide-react";
 import { useTrackingPhone } from "@/hooks/use-tracking-phone";
