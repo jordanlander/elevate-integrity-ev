@@ -21,8 +21,6 @@ import {
 import { useTrackingPhone } from "@/hooks/use-tracking-phone";
 
 const CONTACT_EMAIL = "integrityevsolutions@gmail.com";
-const FORMSUBMIT_ACTION = "https://formsubmit.co/integrityevsolutions@gmail.com";
-const THANK_YOU_URL = "https://www.integrityevsolutions.com/thank-you";
 const MAILTO_SUBJECT = "Free estimate request - Integrity EV Solutions";
 
 const contactFormSchema = z.object({
@@ -87,10 +85,14 @@ function buildEstimateSummary(data: ContactFormData, utmParams: Record<string, s
     `Medium: ${utmParams.utm_medium || "Not provided"}`,
     `Campaign: ${utmParams.utm_campaign || "Not provided"}`,
     "",
-    "Delivery mode: native FormSubmit POST",
+    "Delivery mode: customer email handoff",
   ];
 
   return bodyLines.join("\n");
+}
+
+function buildMailtoLink(data: ContactFormData, utmParams: Record<string, string>) {
+  return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(MAILTO_SUBJECT)}&body=${encodeURIComponent(buildEstimateSummary(data, utmParams))}`;
 }
 
 const ContactForm = () => {
@@ -167,9 +169,12 @@ const ContactForm = () => {
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (!validateForm()) {
-      e.preventDefault();
+      return;
     }
+
+    window.location.href = buildMailtoLink(formData, utmParams);
   };
 
   const contactMethods = [
@@ -276,34 +281,21 @@ const ContactForm = () => {
                       Request Your Free Estimate
                     </CardTitle>
                     <p className="mt-2 text-muted-foreground">
-                      Submit your project details securely. We will contact you within 24 hours with a free, no-obligation estimate.
+                      Submit your project details and we will contact you within 24 hours with a free, no-obligation estimate.
                     </p>
                   </div>
                   <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
                     <ShieldCheck className="h-4 w-4" />
-                    Free secure form
+                    Reliable backup ready
                   </div>
                 </div>
               </CardHeader>
 
               <CardContent>
-                <form
-                  action={FORMSUBMIT_ACTION}
-                  method="POST"
-                  encType="multipart/form-data"
-                  onSubmit={handleSubmit}
-                  className="space-y-6"
-                  noValidate
-                >
-                  <input type="hidden" name="_captcha" value="false" />
-                  <input type="hidden" name="_template" value="table" />
-                  <input type="hidden" name="_subject" value={MAILTO_SUBJECT} />
-                  <input type="hidden" name="_next" value={THANK_YOU_URL} />
-                  <input type="hidden" name="_replyto" value={formData.email} />
-                  <input type="hidden" name="lead_source" value={utmParams.utm_source || "Not provided"} />
-                  <input type="hidden" name="lead_medium" value={utmParams.utm_medium || "Not provided"} />
-                  <input type="hidden" name="lead_campaign" value={utmParams.utm_campaign || "Not provided"} />
-                  <input type="text" name="_honey" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
+                <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+                  <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-sm text-muted-foreground">
+                    The free web form provider is temporarily unavailable, so this request opens your email app with all details filled in. If email does not open, copy the details or call/text us directly.
+                  </div>
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
@@ -437,12 +429,12 @@ const ContactForm = () => {
                     className="w-full bg-gradient-primary glow-primary hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 text-lg py-6 h-auto font-semibold gap-2"
                   >
                     <Send className="w-5 h-5" />
-                    Send Secure Estimate Request
+                    Prepare Estimate Request
                   </Button>
 
                   <div className="rounded-lg border border-border bg-muted/20 p-4 text-sm text-muted-foreground">
                     <p>
-                      If the form does not continue, use the backup options below. We keep the phone number dynamic for tracking.
+                      Backup options stay available so you never lose the request.
                     </p>
                     <div className="mt-3 grid gap-2 sm:grid-cols-2">
                       <Button type="button" variant="outline" size="sm" onClick={copyEstimateDetails}>
@@ -459,13 +451,19 @@ const ContactForm = () => {
                     {copyMessage && <p className="mt-2">{copyMessage}</p>}
                   </div>
 
-                  {hasValidated && copyMessage && (
-                    <Textarea
-                      readOnly
-                      value={buildEstimateSummary(formData, utmParams)}
-                      className="min-h-[160px] bg-background text-xs"
-                      aria-label="Estimate request details"
-                    />
+                  {hasValidated && (
+                    <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-sm text-muted-foreground">
+                      <p className="font-semibold text-foreground">Your estimate request is ready.</p>
+                      <p>
+                        If your email app did not open, copy the details below or contact us directly at <a className="font-medium text-primary underline" href={phone.href}>{phone.display}</a>.
+                      </p>
+                      <Textarea
+                        readOnly
+                        value={buildEstimateSummary(formData, utmParams)}
+                        className="mt-3 min-h-[160px] bg-background text-xs"
+                        aria-label="Estimate request details"
+                      />
+                    </div>
                   )}
 
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-muted-foreground pt-4 border-t border-border">
