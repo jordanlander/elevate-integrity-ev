@@ -420,7 +420,7 @@ const ContactForm = () => {
                     <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-sm text-muted-foreground">
                       <p className="font-semibold text-foreground">Your estimate request is ready to send.</p>
                       <p>
-                        If your email app did not open, call or text <a className="font-medium text-primary underline" href={phone.href}>{phone.display}</a> or email <a className="font-medium text-primary underline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+                        Prefer to reach us directly? Call or text <a className="font-medium text-primary underline" href={phone.href}>{phone.display}</a> or email <a className="font-medium text-primary underline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
                       </p>
                       <div className="mt-3 space-y-2">
                         <Button type="button" variant="outline" size="sm" onClick={copyEstimateDetails}>
