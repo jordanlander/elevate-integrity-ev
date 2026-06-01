@@ -10,11 +10,10 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   CheckCircle,
   Clock,
-  ExternalLink,
   Mail,
   MapPin,
   Phone,
-  Send,
+  ArrowRight,
   Zap,
 } from "lucide-react";
 import { useTrackingPhone } from "@/hooks/use-tracking-phone";
@@ -220,13 +219,13 @@ const ContactForm = () => {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-12">
-          <div className="space-y-6">
+        <div className="grid lg:grid-cols-12 gap-8 items-start">
+          <div className="lg:col-span-4 space-y-4">
             {contactMethods.map((method, index) => (
-              <Card key={index} className="hover:shadow-xl transition-all duration-300 border-0 glow-primary group">
+              <Card key={index} className="border border-border bg-card hover:border-primary hover:shadow-lg transition-all duration-300 group">
                 <CardContent className="p-6">
                   <div className="flex items-start space-x-4">
-                    <div className={`${method.gradient} text-white p-3 rounded-lg group-hover:scale-110 transition-transform duration-300`}>
+                    <div className={`${method.gradient} text-white p-3 rounded-xl group-hover:scale-110 transition-transform duration-300`}>
                       {method.icon}
                     </div>
                     <div className="flex-1">
@@ -267,26 +266,21 @@ const ContactForm = () => {
             </div>
           </div>
 
-          <div className="lg:col-span-2">
-            <Card className="border-0 glow-primary">
+          <div className="lg:col-span-8">
+            <Card className="border border-border bg-card overflow-hidden glow-primary">
+              <div className="h-1.5 w-full bg-gradient-electric" />
               <CardHeader>
                 <CardTitle className="text-2xl font-bold text-foreground flex items-center gap-3">
                   <Zap className="w-6 h-6 text-primary" />
                   Request Your Free Estimate
                 </CardTitle>
                 <p className="text-muted-foreground">
-                  Fill out the form below, then choose email or call/text. Your details stay on this page until you send them from your email app.
+                  Tell us about your project and our Tesla-certified team will get back to you within 24 hours.
                 </p>
               </CardHeader>
 
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-                  <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-sm text-muted-foreground">
-                    <p>
-                      <strong className="text-foreground">No backend required:</strong> this form opens your email app with the estimate details already filled in. If email does not open, call or text {phone.display}.
-                    </p>
-                  </div>
-
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="firstName">First Name *</Label>
@@ -414,36 +408,19 @@ const ContactForm = () => {
                     {errors.details && <p className="text-sm text-destructive mt-1">{errors.details}</p>}
                   </div>
 
-                  <div className="grid sm:grid-cols-2 gap-3">
-                    <Button
-                      type="submit"
-                      className="w-full bg-gradient-accent glow-accent hover:scale-[1.02] transition-all duration-300 text-lg py-6 h-auto font-semibold"
-                    >
-                      <Send className="w-5 h-5 mr-2" />
-                      Open Email to Send
-                    </Button>
-                    <Button
-                      asChild
-                      variant="outline"
-                      className="w-full text-lg py-6 h-auto font-semibold"
-                      onClick={(e) => {
-                        if (!validateForm()) {
-                          e.preventDefault();
-                        }
-                      }}
-                    >
-                      <a href={mailtoLink}>
-                        <ExternalLink className="w-5 h-5 mr-2" />
-                        Email Manually
-                      </a>
-                    </Button>
-                  </div>
+                  <Button
+                    type="submit"
+                    className="w-full bg-gradient-primary glow-primary hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 text-lg py-6 h-auto font-semibold gap-2"
+                  >
+                    Send Request
+                    <ArrowRight className="w-5 h-5" />
+                  </Button>
 
                   {hasValidated && (
                     <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-sm text-muted-foreground">
                       <p className="font-semibold text-foreground">Your estimate request is ready to send.</p>
                       <p>
-                        If your email app did not open, call or text <a className="font-medium text-primary underline" href={phone.href}>{phone.display}</a> or email <a className="font-medium text-primary underline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+                        Prefer to reach us directly? Call or text <a className="font-medium text-primary underline" href={phone.href}>{phone.display}</a> or email <a className="font-medium text-primary underline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
                       </p>
                       <div className="mt-3 space-y-2">
                         <Button type="button" variant="outline" size="sm" onClick={copyEstimateDetails}>
