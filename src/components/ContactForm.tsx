@@ -13,7 +13,8 @@ import {
   Mail,
   MapPin,
   Phone,
-  ArrowRight,
+  ExternalLink,
+  Copy,
   Zap,
 } from "lucide-react";
 import { useTrackingPhone } from "@/hooks/use-tracking-phone";
