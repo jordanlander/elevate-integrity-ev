@@ -13,7 +13,6 @@ import {
   Mail,
   MapPin,
   Phone,
-  ExternalLink,
   Copy,
   Zap,
 } from "lucide-react";
