@@ -289,6 +289,12 @@ const ContactForm = () => {
 
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+                  <div className="rounded-lg border border-border bg-muted/30 p-4 text-sm text-muted-foreground">
+                    This form does not submit to a server. Fill it out, then send your
+                    request the way you prefer: open it in your email app, copy the
+                    details, or call/text us directly.
+                  </div>
+
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="firstName">First Name *</Label>
