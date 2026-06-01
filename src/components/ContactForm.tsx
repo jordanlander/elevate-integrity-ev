@@ -219,13 +219,13 @@ const ContactForm = () => {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-12">
-          <div className="space-y-6">
+        <div className="grid lg:grid-cols-12 gap-8 items-start">
+          <div className="lg:col-span-4 space-y-4">
             {contactMethods.map((method, index) => (
-              <Card key={index} className="hover:shadow-xl transition-all duration-300 border-0 glow-primary group">
+              <Card key={index} className="border border-border bg-card hover:border-primary hover:shadow-lg transition-all duration-300 group">
                 <CardContent className="p-6">
                   <div className="flex items-start space-x-4">
-                    <div className={`${method.gradient} text-white p-3 rounded-lg group-hover:scale-110 transition-transform duration-300`}>
+                    <div className={`${method.gradient} text-white p-3 rounded-xl group-hover:scale-110 transition-transform duration-300`}>
                       {method.icon}
                     </div>
                     <div className="flex-1">
