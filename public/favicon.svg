@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Integrity EV Solutions favicon</title>
+  <desc id="desc">A branded Integrity EV icon with initials and an electric bolt.</desc>
+  <defs>
+    <linearGradient id="bg" x1="88" y1="72" x2="430" y2="444" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#071827"/>
+      <stop offset="0.58" stop-color="#0b3441"/>
+      <stop offset="1" stop-color="#0f766e"/>
+    </linearGradient>
+    <linearGradient id="bolt" x1="214" y1="104" x2="322" y2="360" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#67e8f9"/>
+      <stop offset="1" stop-color="#a3e635"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="108" fill="url(#bg)"/>
+  <circle cx="256" cy="256" r="184" fill="none" stroke="#67e8f9" stroke-opacity="0.28" stroke-width="24"/>
+  <path d="M291 74 154 282h88l-30 156 146-226h-93l26-138Z" fill="url(#bolt)"/>
+  <path d="M138 368h46V146h-46v222Zm210-181c-18-27-48-43-86-43h-54v224h56c38 0 68-16 86-43 16-24 24-47 24-69s-8-45-26-69Zm-38 112c-10 16-26 24-49 24h-8V189h8c23 0 39 8 49 24 9 13 13 28 13 43s-4 30-13 43Z" fill="#f8fafc" fill-opacity="0.94"/>
+</svg>
