@@ -1,0 +1,23 @@
+{
+  "name": "Integrity EV Solutions",
+  "short_name": "Integrity EV",
+  "description": "Licensed Georgia electricians for EV chargers, generators, panels, and electrical service.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#071827",
+  "theme_color": "#0f766e",
+  "icons": [
+    {
+      "src": "/favicon.svg?v=20260601",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/integrity-logo.png?v=20260601",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
